@@ -17,7 +17,7 @@
   ; @param (map) options
   ;  {:path (string)}
   [{:keys [path] :as options}]
-  (let [directory-path (str path "documentation")]
+  (let [directory-path (str path "/documentation")]
        (if (io/directory-exists? directory-path)
            (io/empty-directory!  directory-path)
            (io/create-directory! directory-path))))

@@ -66,4 +66,4 @@
 ;           ⌄ my-submodule
 ;             ...
 
-(docs/create-documentation! {:path "submodules/my-submodule-api"})
+;(docs/create-documentation! {:path "submodules/my-submodule-api"})
