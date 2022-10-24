@@ -25,35 +25,77 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn read-redirects!
+(defn read-refer
+  [api-content symbol value])
+  ; TODO
+
+(defn read-alias
+  [api-content symbol value]
+  (let [alias (string/before-first-occurence value "/")]
+       value))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn read-def
+  ; @param (string) api-content
+  ; @param (integer) cursor
+  ;
+  ; @return (map)
+  [api-content cursor]
+  (let [symbol (-> api-content (string/part cursor)
+                               (string/after-first-occurence " ")
+                               (string/trim)
+                               (string/before-first-occurence " "))
+        value  (-> api-content (string/part cursor)
+                               (string/after-first-occurence symbol)
+                               (string/trim)
+                               (string/before-first-occurence ")"))]
+       (if-let [aliased? (string/contains-part? value "/")]
+               {symbol (read-alias api-content symbol value)}
+               {symbol (read-refer api-content symbol value)})))
+
+(defn read-defs
+  ; @param (string) api-content
+  ;
+  ; @return (map)
   [api-content]
-  (letfn [(f [result api-content cursor]
-             (let [api-content (string/part api-content cursor)]
-                  (if-let [cursor (string/first-index-of api-content "(def ")]
-                          (let [symbol (-> api-content (string/after-first-occurence  "(def ")
-                                                       (string/before-first-occurence " "))]
-                               (f (assoc result symbol true) api-content (inc cursor)))
-                          (return result))))]
-         (f {} api-content 0)))
+  (letfn [(f [result n]
+             (if-let [cursor (string/nth-dex-of api-content "(def " n)]
+                     (let [def (read-def api-content cursor)]
+                          (f (merge result def)
+                             (inc n)))
+                     (return result)))]
+         (f {} 1)))
 
-(defn read-api!
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn read-api
+  ; @param (string) api-filepath
+  ;
+  ; @return (map)
   [api-filepath]
-  (read-redirects! (io/read-file api-filepath)))
+  (let [api-content (io/read-file api-filepath)]
+       (read-defs api-content)))
 
-(defn read-directory!
+(defn read-directory
   ; @param (map) options
   ;  {:path (string)}
   ; @param (string) layer
   ;  "clj", "cljc", "cljs"
   ; @param (string) directory-name
   ;
-  ; @return (?)
+  ; @return (map)
   [{:keys [path] :as options} layer directory-name]
   (let [api-filepath (str path "/source-code/"layer"/"directory-name"/api."layer)]
        (if (io/file-exists? api-filepath)
-           (read-api!       api-filepath))))
+           (read-api        api-filepath))))
 
-(defn read-layer!
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn read-layer
   ; @param (map) options
   ;  {:path (string)}
   ; @param (string) layer
@@ -65,18 +107,73 @@
         directory-list (io/subdirectory-list layer-path)]
        (letfn [(f [result directory-path]
                   (let [directory-name (io/directory-path->directory-name directory-path)]
-                       (assoc result directory-name (read-directory! options layer directory-name))))]
+                       (assoc result directory-name (read-directory options layer directory-name))))]
               (reduce f {} directory-list))))
 
-(defn read-layers!
+(defn read-layers
   ; @param (map) options
   ;  {:path (string)}
+  ;
+  ; @return (map)
+  ;  {"clj" (map)
+  ;   "cljc" (map)
+  ;   "cljs" (map)}
   [{:keys [path] :as options}]
   (letfn [(f [result layer]
              (let [layer-path (str path "/source-code/" (name layer))]
                   (if (io/directory-exists? layer-path)
-                      (assoc result layer (read-layer! options layer)))))]
-         (reset! state/LAYERS (reduce f {} ["clj" "cljc" "cljs"]))))
+                      (assoc result layer (read-layer options layer)))))]
+         (reduce f {} ["clj" "cljc" "cljs"])))
+
+(defn import-layers!
+  ; @param (map) options
+  [options]
+  (let [layers (read-layers options)]
+       (reset! state/LAYERS layers)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+ ;; ----------------------------------------------------------------------------
+ ;; ----------------------------------------------------------------------------
+
+(defn process-def!
+  ; @param (map) options
+  ; @param (string) layer
+  ; @param (string) directory-name
+  ; @param (string) symbol
+  ; @param (string) value
+  [options layer directory-name symbol value])
+
+(defn process-directory!
+  ; @param (map) options
+  ; @param (string) layer
+  ; @param (string) directory-name
+  ; @param (map) directory-data
+  [options layer directory-name directory-data]
+  (letfn [(f [_ symbol value]
+             (process-def! options layer directory-name symbol value))]
+         (reduce-kv f {} directory-data)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn process-layer!
+  ; @param (map) options
+  ; @param (string) layer
+  ; @param (map) layer-data
+  [options layer layer-data]
+  (letfn [(f [_ directory-name directory-data]
+             (process-directory! options layer directory-name directory-data))]
+         (reduce-kv f {} layer-data)))
+
+(defn process-layers!
+  ; @param (map) options
+  [options]
+  (let [layers @state/LAYERS]
+       (letfn [(f [_ layer layer-data]
+                  (process-layer! options layer layer-data))]
+              (reduce-kv f {} layers))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -86,12 +183,13 @@
   ;  {:path (string)}
   ;
   ; @usage
-  ;  (docs/create-documentation! {...})
+  ;  (create-documentation! {...})
   ;
   ; @usage
-  ;  (docs/create-documentation! {:path "submodules/my-repository/"})
+  ;  (create-documentation! {:path "submodules/my-repository/"})
   [options]
   (let [options (prototypes/options-prototype options)]
-       (initialize!  options)
-       (read-layers! options)
+       (initialize!     options)
+       (import-layers!  options)
+       (process-layers! options)
        (str @state/LAYERS)))

@@ -8,8 +8,9 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-; A submodule forráskódja a source-code mappában legyen, clj, cljc és cljs
-; mappákra felosztva!
+; A submodule forráskódja a source-code mappában legyen!
+;
+; A submodule forráskódja clj, cljc és cljs mappákra legyen felosztva!
 ;
 ; A submodule forráskódja ezekben a clj, cljc és cljs mappákban legyen elhelyezve!
 ;
@@ -28,6 +29,11 @@
 ;         ⌄ cljs
 ;           ⌄ my-submodule
 ;             api.cljs
+
+; Az api fájlokban a függvények és konstansok átirányításai (def ...) függvénnyel
+; történjen!
+;
+; Az átirányításokban ne használj docstring szöveget!
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
