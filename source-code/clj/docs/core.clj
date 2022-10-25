@@ -44,13 +44,13 @@
   ; @return (map)
   [api-content cursor]
   (let [symbol (-> api-content (string/part cursor)
-                               (string/after-first-occurence " ")
+                               (string/after-first-occurence " " {:return? :xxxxxxxxxxx})
                                (string/trim)
-                               (string/before-first-occurence " "))
+                               (string/before-first-occurence " " {:return? :xxxxxxxxxxx}))
         value  (-> api-content (string/part cursor)
-                               (string/after-first-occurence symbol)
+                               (string/after-first-occurence symbol {:return? :xxxxxxxxxxx})
                                (string/trim)
-                               (string/before-first-occurence ")"))]
+                               (string/before-first-occurence ")" {:return? :xxxxxxxxxxx}))]
        (if-let [aliased? (string/contains-part? value "/")]
                {symbol (read-alias api-content symbol value)}
                {symbol (read-refer api-content symbol value)})))
