@@ -1,13 +1,12 @@
 
-;; -- Namespace ---------------------------------------------------------------
-;; ----------------------------------------------------------------------------
-
 (ns docs.core
     (:require [docs.config       :as config]
+              [docs.helpers      :as helpers]
               [docs.prototypes   :as prototypes]
               [docs.state        :as state]
               [io.api            :as io]
               [mid-fruits.candy  :refer [return]]
+              [mid-fruits.regex  :refer [re-match?]]
               [mid-fruits.string :as string]))
 
 ;; ----------------------------------------------------------------------------
@@ -26,13 +25,38 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-refer
-  [api-content symbol value])
+  [api-content cursor])
   ; TODO
 
+(defn read-refers
+  [api-content])
+  ; TODO
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
 (defn read-alias
-  [api-content symbol value]
-  (let [alias (string/before-first-occurence value "/")]
-       value))
+  ; @param (string) api-content
+  ; @param (integer) cursor
+  ;
+  ; @return (map)
+  [api-content cursor]
+  (let [[namespace alias] (-> api-content (string/part cursor)
+                                          (helpers/first-alias))]
+       {namespace alias}))
+
+(defn read-aliases
+  ; @param (string) api-content
+  ;
+  ; @return (map)
+  [api-content]
+  (letfn [(f [result n]
+             (if-let [cursor (string/nth-dex-of api-content "[" n)]
+                     (let [alias (read-alias api-content cursor)]
+                          (f (merge result alias)
+                             (inc n)))
+                     (return result)))]
+         (f {} 1)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -43,17 +67,9 @@
   ;
   ; @return (map)
   [api-content cursor]
-  (let [symbol (-> api-content (string/part cursor)
-                               (string/after-first-occurence " " {:return? :xxxxxxxxxxx})
-                               (string/trim)
-                               (string/before-first-occurence " " {:return? :xxxxxxxxxxx}))
-        value  (-> api-content (string/part cursor)
-                               (string/after-first-occurence symbol {:return? :xxxxxxxxxxx})
-                               (string/trim)
-                               (string/before-first-occurence ")" {:return? :xxxxxxxxxxx}))]
-       (if-let [aliased? (string/contains-part? value "/")]
-               {symbol (read-alias api-content symbol value)}
-               {symbol (read-refer api-content symbol value)})))
+  (let [[symbol value] (-> api-content (string/part cursor)
+                                       (helpers/first-def))]
+       {symbol value}))
 
 (defn read-defs
   ; @param (string) api-content
@@ -75,9 +91,14 @@
   ; @param (string) api-filepath
   ;
   ; @return (map)
+  ;  {"aliases" (map)
+  ;   "defs" (map)
+  ;   "refers" (map)}
   [api-filepath]
   (let [api-content (io/read-file api-filepath)]
-       (read-defs api-content)))
+       {"aliases" (read-aliases api-content)
+        "defs"    (read-defs    api-content)
+        "refers"  (read-refers  api-content)}))
 
 (defn read-directory
   ; @param (map) options

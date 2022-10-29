@@ -1,7 +1,4 @@
 
-;; -- Namespace ---------------------------------------------------------------
-;; ----------------------------------------------------------------------------
-
 (ns docs.prototypes
     (:require [mid-fruits.candy  :refer [param]]
               [mid-fruits.string :as string]))
