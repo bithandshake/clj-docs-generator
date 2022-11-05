@@ -6,6 +6,75 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn layer-path
+  ; @param (map) options
+  ;  {:path (string)}
+  ; @param (string) layer-name
+  ;
+  ; @example
+  ;  (layer-path {:path "my-submodules/my-repository"} "clj")
+  ;  =>
+  ;  "my-submodules/my-repository/source-code/clj"
+  ;
+  ; @return (string)
+  [{:keys [path]} layer-name]
+  (str path "/source-code/"layer-name))
+
+(defn api-filepath
+  ; @param (map) options
+  ;  {:path (string)}
+  ; @param (string) layer-name
+  ;
+  ; @example
+  ;  (api-filepath {:path "my-submodules/my-repository"} "clj" "my-directory")
+  ;  =>
+  ;  "my-submodules/my-repository/source-code/clj/my-directory/api.clj"
+  ;
+  ; @return (string)
+  [{:keys [path]} layer-name directory-name]
+  (str path "/source-code/"layer-name"/"directory-name"/api."layer-name))
+
+(defn code-filepath
+  ; @param (map) options
+  ;  {:path (string)}
+  ; @param (string) layer-name
+  ; @param (string) alias
+  ;
+  ; @example
+  ;  (code-filepath {:path "my-submodules/my-repository"} "clj" "my-directory" "my-subdirectory.my-file")
+  ;  =>
+  ;  "my-submodules/my-repository/source-code/clj/my-directory/my-subdirectory/my-file.clj"
+  ;
+  ; @return (string)
+  [{:keys [path]} layer-name directory-name alias]
+  (let [relative-filepath (string/replace-part alias "." "/")]
+       (str path "/source-code/"layer-name"/"directory-name"/"relative-filepath"."layer-name)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn first-refer
+  ; @param (string) n
+  ;
+  ; @example
+  ;  (first-refer "... [my-namespace :refer [my-refer your-refer]] ...")
+  ;  =>
+  ;  {"my-refer" "my-namespace"}
+  ;
+  ; @return (map)
+  [n]
+  (let [open-bracket-position  (syntax/open-bracket-position  n)
+        close-bracket-position (syntax/close-bracket-position n)
+        bracket-content        (string/part n (inc open-bracket-position) close-bracket-position)]
+       (if (string/contains-part? bracket-content " :refer ")
+           (let [namespace (-> bracket-content (string/before-first-occurence " "        {:return? false}))
+                 refer     (-> bracket-content (string/after-first-occurence  " :refer " {:return? false})
+                                               (string/after-first-occurence  "["        {:return? false})
+                                               (string/before-first-occurence "]"        {:return? false})
+                                               (string/split                  #" "))]
+                (letfn [(f [refer name] (assoc refer name namespace))]
+                       (reduce f {} refer))))))
+
 (defn first-alias
   ; @param (string) n
   ;
@@ -15,25 +84,37 @@
   ;  ["my-namespace" "my-alias"]
   ;
   ; @return (strings in vector)
+  ;  [(string) namespace
+  ;   (string) alias]
   [n]
-  (let [namespace ""
-        alias     ""]
-       [namespace alias]))
+  (let [open-bracket-position  (syntax/open-bracket-position  n)
+        close-bracket-position (syntax/close-bracket-position n)
+        bracket-content        (string/part n (inc open-bracket-position) close-bracket-position)]
+       (if (string/contains-part? bracket-content " :as ")
+           (let [namespace (-> bracket-content (string/before-first-occurence " "     {:return? false}))
+                 alias     (-> bracket-content (string/after-first-occurence  " :as " {:return? false})
+                                               (string/before-first-occurence " "     {:return? true}))]
+                [namespace alias])
+           (let [namespace (-> bracket-content (string/before-first-occurence " "     {:return? true}))
+                 alias namespace]
+                [namespace alias]))))
 
 (defn first-def
   ; @param (string) n
   ;
   ; @example
-  ;  (first-def "... (def my-symbol my-value) (def ...")
+  ;  (first-def "... (def my-name my-value) (def ...")
   ;  =>
-  ;  ["my-symbol" "my-value"]
+  ;  ["my-name" "my-value"]
   ;
   ; @return (strings in vector)
+  ;  [(string) name
+  ;   (string) value]
   [n]
-  (let [symbol (-> n (string/after-first-occurence  " "   {:return? false})
-                     (string/trim)
-                     (string/before-first-occurence " "   {:return? false}))
-        value  (-> n (string/after-first-occurence symbol {:return? false})
-                     (string/trim)
-                     (string/before-first-occurence ")"   {:return? false}))]
-       [symbol value]))
+  (let [name  (-> n (string/after-first-occurence  " " {:return? false})
+                    (string/trim)
+                    (string/before-first-occurence " " {:return? false}))
+        value (-> n (string/after-first-occurence name {:return? false})
+                    (string/trim)
+                    (string/before-first-occurence ")" {:return? false}))]
+       [name value]))

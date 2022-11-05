@@ -12,21 +12,21 @@
 ; A submodule forráskódja ezekben a clj, cljc és cljs mappákban legyen elhelyezve!
 ;
 ; Az api.clj, api.cljc és api.cljs ezekben a forráskód mappákban legyen elhelyezve!
-
+;
 ; ⌄ my-project
-;   ⌄ submodules
+;   ⌄ my-submodules
 ;     ⌄ my-repository
 ;       ⌄ source-code
 ;         ⌄ clj
-;           ⌄ my-submodule
+;           ⌄ my-directory
 ;             api.clj
 ;         ⌄ cljc
-;           ⌄ my-submodule
+;           ⌄ my-directory
 ;             api.cljc
 ;         ⌄ cljs
-;           ⌄ my-submodule
+;           ⌄ my-directory
 ;             api.cljs
-
+;
 ; Az api fájlokban a függvények és konstansok átirányításai (def ...) függvénnyel
 ; történjen!
 ;
@@ -37,26 +37,26 @@
 
 ; A submodule forráskód fájljaiban a :require meghívások mindig az api fájlhoz
 ; viszonyítva történjenek!
-
+;
 ; ⌄ my-project
-;   ⌄ submodules
+;   ⌄ my-submodules
 ;     ⌄ my-repository
 ;       ⌄ source-code
 ;         ⌄ clj
-;           ⌄ my-submodule
+;           ⌄ my-directory
 ;             api.clj
-;             ⌄ my-handler
-;               events.clj
-;               subs.clj
-
+;             ⌄ my-subdirectory
+;               my-file.clj
+;               your-file.clj
+;
 ; (ns my-submodule.my-handler.events
-;     (:require [my-submodule.my-handler.subs :as my-handler.subs]))
+;     (:require [my-directory.my-subdirectory.my-file :as my-subdirectory.my-file]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
 ; ⌄ my-project
-;   ⌄ submodules
+;   ⌄ my-submodules
 ;     ⌄ my-repository
 ;       ⌄ source-code
 ;         ⌄ clj
@@ -68,5 +68,5 @@
 ;         ⌄ cljs
 ;           ⌄ my-submodule
 ;             ...
-
-;(docs/create-documentation! {:path "submodules/my-submodule-api"})
+;
+; (docs/create-documentation! {:path "my-submodules/my-repository"})
