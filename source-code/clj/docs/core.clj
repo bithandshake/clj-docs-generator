@@ -8,7 +8,7 @@
               [docs.state        :as state]
               [io.api            :as io]
               [mid-fruits.candy  :refer [return]]
-              [mid-fruits.regex  :refer [re-match?]]
+              [regex.api         :refer [re-match?]]
               [mid-fruits.string :as string]))
 
 ;; ----------------------------------------------------------------------------
