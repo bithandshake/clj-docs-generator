@@ -13,25 +13,47 @@
 
 ---
 
-### Constants
+### MY-VALUE
 
-* <strong>MY-CONSTANT</strong>
-* <strong>YOUR-CONSTANT</strong>
+<code>
+@constant (string)
+</code>
 
 ---
 
-### Functions
-<p>my-function</p>
+### YOUR-VALUE
 
-* @param (string)(opt) my-param
-* @param (*) your-param
+<code>
+@constant (integer)
+</code>
 
-* @usage
-<p>(my-function "my-value" 123)</p>
+---
 
-* @example
-<p>(my-function "my-value" 123)</p>
-<p>=></p>
-<p>"my-value/123"</p>
+### my-function
 
-* @return (string)
+<code>
+@param (string)(opt) my-param
+
+@param (*) your-param
+</code>
+
+<code>
+@usage
+
+(my-function "my-value" 123)
+</code>
+
+<code>
+@example
+
+(my-function "my-value" 123)
+</code>
+
+<code>
+=>
+"my-value/123"
+</code>
+
+<code>
+@return (string)
+</code>
