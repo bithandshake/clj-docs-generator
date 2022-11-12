@@ -1,9 +1,11 @@
 
-(ns docs.api
-    (:require [docs.core.engine :as core.engine]))
+(ns docs.print.state)
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-; docs.core.engine
-(def create-documentation! core.engine/create-documentation!)
+; @atom (map)
+;  {:clj (map)
+;   :cljc (map)
+;   :cljs (map)}
+(def LAYERS (atom {}))

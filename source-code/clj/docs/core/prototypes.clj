@@ -1,5 +1,5 @@
 
-(ns docs.prototypes
+(ns docs.core.prototypes
     (:require [candy.api         :refer [param]]
               [mid-fruits.string :as string]))
 

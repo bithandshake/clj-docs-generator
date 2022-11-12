@@ -1,5 +1,5 @@
 
-(ns docs.helpers
+(ns docs.import.helpers
     (:require [mid-fruits.string :as string]
               [syntax.api        :as syntax]))
 
@@ -28,27 +28,12 @@
   ; @example
   ;  (api-filepath {:path "my-submodules/my-repository"} "clj" "my-directory")
   ;  =>
-  ;  "my-submodules/my-repository/source-code/clj/my-directory/api.clj"
+  ;  "my-submodules/my-repository/source-code/clj/my_directory/api.clj"
   ;
   ; @return (string)
   [{:keys [path]} layer-name directory-name]
-  (str path "/source-code/"layer-name"/"directory-name"/api."layer-name))
-
-(defn code-filepath
-  ; @param (map) options
-  ;  {:path (string)}
-  ; @param (string) layer-name
-  ; @param (string) alias
-  ;
-  ; @example
-  ;  (code-filepath {:path "my-submodules/my-repository"} "clj" "my-directory" "my-subdirectory.my-file")
-  ;  =>
-  ;  "my-submodules/my-repository/source-code/clj/my-directory/my-subdirectory/my-file.clj"
-  ;
-  ; @return (string)
-  [{:keys [path]} layer-name directory-name alias]
-  (let [relative-filepath (string/replace-part alias "." "/")]
-       (str path "/source-code/"layer-name"/"directory-name"/"relative-filepath"."layer-name)))
+  (let [directory-name (string/replace-part directory-name "-" "_")]
+       (str path "/source-code/"layer-name"/"directory-name"/api."layer-name)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
