@@ -1,8 +1,8 @@
 
 (ns docs.engine
-    (:require [docs.helpers      :as helpers]
+    (:require [candy.api         :refer [return]]
+              [docs.helpers      :as helpers]
               [docs.state        :as state]
-              [mid-fruits.candy  :refer [return]]
               [mid-fruits.string :as string]))
 
 ;; ----------------------------------------------------------------------------

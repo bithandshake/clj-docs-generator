@@ -1,13 +1,13 @@
 
 (ns docs.core
-    (:require [docs.config       :as config]
+    (:require [candy.api         :refer [return]]
+              [docs.config       :as config]
               [docs.engine       :as engine]
               [docs.helpers      :as helpers]
               [docs.prototypes   :as prototypes]
               [docs.reader       :as reader]
               [docs.state        :as state]
               [io.api            :as io]
-              [mid-fruits.candy  :refer [return]]
               [regex.api         :refer [re-match?]]
               [mid-fruits.string :as string]))
 

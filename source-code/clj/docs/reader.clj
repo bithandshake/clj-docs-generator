@@ -1,9 +1,9 @@
 
 (ns docs.reader
-    (:require [docs.helpers      :as helpers]
+    (:require [candy.api         :refer [return]]
+              [docs.helpers      :as helpers]
               [docs.state        :as state]
               [io.api            :as io]
-              [mid-fruits.candy  :refer [return]]
               [mid-fruits.string :as string]))
 
 ;; ----------------------------------------------------------------------------
