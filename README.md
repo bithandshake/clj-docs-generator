@@ -4,6 +4,3 @@
 
 # Documentation book is releasing soon ...
   2023.01.01.
-
-My link is [My link1](README2.md)
-My link is [My link2](/README2.md)
