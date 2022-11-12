@@ -5,9 +5,9 @@
 ---
 
 ### api files
-* [sample/api.clj](clj/sample/api.md)
-* [sample/api.cljc](cljc/sample/api.md)
-* [sample/api.cljs](cljs/sample/api.md)
+* [sample/api.clj](clj/sample/API.md)
+* [sample/api.cljc](cljc/sample/API.md)
+* [sample/api.cljs](cljs/sample/API.md)
 
 ---
 
