@@ -1,9 +1,9 @@
 
 (ns docs.process.engine
     (:require [candy.api            :refer [return]]
+              [docs.import.state    :as import.state]
               [docs.process.helpers :as process.helpers]
               [docs.process.state   :as process.state]
-              [docs.reader.state    :as reader.state]
               [io.api               :as io]
               [regex.api            :as regex]
               [mid-fruits.string    :as string]
@@ -238,7 +238,7 @@
   ; @return (?)
   [options layer-name directory-name name value]
   (let [alias (or (string/before-first-occurence value "/" {:return? false})
-                  (get-in @reader.state/LAYERS [layer-name directory-name "refers" value]))
+                  (get-in @import.state/LAYERS [layer-name directory-name "refers" value]))
         code-filepath (process.helpers/code-filepath options layer-name directory-name alias)]
        (if-let [file-content (io/read-file code-filepath)]
                (process-code file-content name)
@@ -263,7 +263,7 @@
   ;
   ; @return (map)
   [options layer-name directory-name]
-  (let [defs (get-in @reader.state/LAYERS [layer-name directory-name "defs"])]
+  (let [defs (get-in @import.state/LAYERS [layer-name directory-name "defs"])]
        (letfn [(f [result name value]
                   (assoc result name (process-def options layer-name directory-name name value)))]
               (reduce-kv f {} defs))))
@@ -301,7 +301,7 @@
   ;
   ; @return (map)
   [options layer-name]
-  (let [layer-data (get @reader.state/LAYERS layer-name)]
+  (let [layer-data (get @import.state/LAYERS layer-name)]
        (letfn [(f [layer-data directory-name directory-data]
                   (assoc layer-data directory-name (process-directory options layer-name directory-name)))]
               (reduce-kv f {} layer-data))))
@@ -312,7 +312,7 @@
 (defn process-layers!
   ; @param (map) options
   [options]
-  (let [layers @reader.state/LAYERS]
+  (let [layers @import.state/LAYERS]
        (letfn [(f [_ layer-name _]
                   (let [layer-data (process-layer options layer-name)]
                        (swap! process.state/LAYERS assoc layer-name layer-data)))]

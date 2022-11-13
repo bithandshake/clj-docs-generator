@@ -22,7 +22,7 @@
   ; @return (?)
   [options layer-name directory-name name value])
   ;(let [alias (or (string/before-first-occurence value "/" {:return? false})
-  ;                (get-in @reader.state/LAYERS [layer-name directory-name "refers" value])
+  ;                (get-in @import.state/LAYERS [layer-name directory-name "refers" value])
   ;      code-filepath (process.helpers/code-filepath options layer-name directory-name alias)
   ;;     (if-let [file-content (io/read-file code-filepath)]
     ;           (process-code file-content name)
