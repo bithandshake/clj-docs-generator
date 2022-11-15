@@ -89,13 +89,12 @@
   ; @example
   ;  (import-first-def "... (def my-name my-value) (def your-name your-value) ..." 42)
   ;  =>
-  ;  {"my-name" "my-value"}
+  ;  ["my-name" "my-value"]
   ;
-  ; @return (map)
+  ; @return (strings in vector)
   [api-content cursor]
-  (let [[name value] (-> api-content (string/part cursor)
-                                     (import.helpers/first-def))]
-       {name value}))
+  (-> api-content (string/part cursor)
+                  (import.helpers/first-def)))
 
 (defn import-defs
   ; @param (string) api-content
@@ -106,15 +105,15 @@
   ;  {"my-name"   "my-value"
   ;   "your-name" "your-value"}
   ;
-  ; @return (map)
+  ; @return (strings in vectors in vector)
   [api-content]
   (letfn [(f [defs n]
              (if-let [cursor (string/nth-dex-of api-content "(def " n)]
                      (let [def (import-first-def api-content cursor)]
-                          (f (merge defs def)
+                          (f (conj defs def)
                              (inc n)))
                      (return defs)))]
-         (f {} 1)))
+         (f [] 1)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -131,14 +130,14 @@
   ;  =>
   ;  {"aliases" {"my-namespace"   "my-alias"
   ;              "your-namespace" "your-alias"}
-  ;   "defs"    {"my-name"        "my-value"
-  ;              "your-name"      "your-value"}
-  ;   "refers"  {"my-refer"       "my-namespace"
-  ;              "your-refer"     "your-namespace"}}
+  ;   "defs"    [["my-name"   "my-value"]
+  ;              ["your-name" "your-value"]]
+  ;   "refers"  {"my-refer"   "my-namespace"
+  ;              "your-refer" "your-namespace"}}
   ;
   ; @return (map)
   ;  {"aliases" (map)
-  ;   "defs" (map)
+  ;   "defs" (strings in vectors in vector)
   ;   "refers" (map)}
   [{:keys [path] :as options} layer-name directory-name]
   (let [api-filepath (import.helpers/api-filepath options layer-name directory-name)
@@ -161,10 +160,10 @@
   ;  =>
   ;  {"my-directory" {"aliases" {"my-namespace"   "my-alias"
   ;                              "your-namespace" "your-alias"}
-  ;                   "defs"    {"my-name"        "my-value"
-  ;                              "your-name"      "your-value"}
-  ;                   "refers"  {"my-refer"       "my-namespace"
-  ;                              "your-refer"     "your-namespace"}}}
+  ;                   "defs"    [["my-name"   "my-value"]
+  ;                              ["your-name" "your-value"]]
+  ;                   "refers"  {"my-refer"   "my-namespace"
+  ;                              "your-refer" "your-namespace"}}}
   ;
   ; @return (map)
   [{:keys [path] :as options} layer-name]
@@ -187,10 +186,10 @@
   ;  =>
   ;  {"clj" {"my-directory" {"aliases" {"my-namespace"   "my-alias"
   ;                                     "your-namespace" "your-alias"}
-  ;                          "defs"    {"my-name"        "my-value"
-  ;                                     "your-name"      "your-value"}
-  ;                          "refers"  {"my-refer"       "my-namespace"
-  ;                                     "your-refer"     "your-namespace"}}}}
+  ;                          "defs"    [["my-name"   "my-value"]
+  ;                                     ["your-name" "your-value"]]
+  ;                          "refers"  {"my-refer"   "my-namespace"
+  ;                                     "your-refer" "your-namespace"}}}}
   ;   "cljc" {...}
   ;   "cljs" {...}}
   ;

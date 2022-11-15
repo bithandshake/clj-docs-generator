@@ -42,6 +42,11 @@
 ```
 
 ```
+@usage
+ (my-function "my-value" 456)
+```
+
+```
 @example
  (my-function "my-value" 123)
  =>

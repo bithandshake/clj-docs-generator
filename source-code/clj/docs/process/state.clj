@@ -9,3 +9,6 @@
 ;   :cljc (map)
 ;   :cljs (map)}
 (def LAYERS (atom {}))
+
+; @atom (map)
+(def COVER (atom {}))

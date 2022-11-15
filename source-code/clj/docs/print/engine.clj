@@ -1,101 +1,235 @@
 
 (ns docs.print.engine
-    (:require [candy.api          :refer [return]]
-              [docs.print.state   :as print.state]
-              [docs.process.state :as process.state]))
+    (:require [docs.process.state :as process.state]
+              [io.api             :as io]
+              [mid-fruits.string  :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn print-def
+(defn print-api-function-params
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) directory-name
-  ; @param (string) name
-  ; @param (string) value
+  ; @param (map) function-data
   ;
-  ; @example
-  ;  (print-def {:path "my-submodules/my-repository"} "clj" "my-directory")
-  ;  =>
-  ;  (?)
-  ;
-  ; @return (?)
-  [options layer-name directory-name name value])
-  ;(let [alias (or (string/before-first-occurence value "/" {:return? false})
-  ;                (get-in @import.state/LAYERS [layer-name directory-name "refers" value])
-  ;      code-filepath (process.helpers/code-filepath options layer-name directory-name alias)
-  ;;     (if-let [file-content (io/read-file code-filepath)]
-    ;           (process-code file-content name)
-               ; Ha a code-filepath útvonalon nem olvasható be forráskód fájl tartalma,
-               ; akkor megpróbálja a cljc rétegben elérni a fájlt, mert előfordulhat,
-               ; hogy a clj vagy cljs réteg api fájlja közvetlenül a cljc rétegből
-               ; irányít át függvényeket vagy konstansokat.
-    ;           (let [code-filepath (process.helpers/code-filepath options "cljc" directory-name alias)
-    ;                 file-content  (io/read-file code-filepath)
-    ;                (process-code file-content name)])
+  ; @return (string)
+  [_ _ _ function-data]
+  (let [params (get-in function-data ["header" "params"])]
+       (if (-> params empty? not)
+           (str "\n\n```\n" (string/join params "\n") "\n```"))))
 
-(defn print-defs
+(defn print-api-function-usages
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [_ _ _ function-data]
+  (let [usages (get-in function-data ["header" "usages"])]
+       (if (-> usages empty? not)
+           (letfn [(f [usages usage]
+                      (str usages "\n\n```\n"usage"\n```"))]
+                  (reduce f "" usages)))))
+
+(defn print-api-function-examples
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [_ _ _ function-data]
+  (let [examples (get-in function-data ["header" "examples"])]
+       (if (-> examples empty? not)
+           (letfn [(f [examples example]
+                      (str examples "\n\n```\n"example"\n```"))]
+                  (reduce f "" examples)))))
+
+(defn print-api-function-return
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [_ _ _ function-data]
+  (if-let [return (get-in function-data ["header" "return"])]
+          (str "\n\n```\n"return"\n```")))
+
+(defn print-api-function-header
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [options layer-name directory-name function-data]
+  (str (print-api-function-params   options layer-name directory-name function-data)
+       (print-api-function-usages   options layer-name directory-name function-data)
+       (print-api-function-examples options layer-name directory-name function-data)
+       (print-api-function-return   options layer-name directory-name function-data)))
+
+(defn print-api-function
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [options layer-name directory-name function-data]
+  (let [function-name (get function-data "name")]
+       (str "\n\n---\n\n### "function-name"\n###### "layer-name"/"directory-name"/api."layer-name
+            (print-api-function-header options layer-name directory-name function-data))))
+
+(defn print-api-functions
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) directory-name
   ;
-  ; @example
-  ;  (print-defs {:path "my-submodules/my-repository"} "clj" "my-directory")
-  ;  =>
-  ;  {}
-  ;
-  ; @return (map)
+  ; @return (string)
   [options layer-name directory-name]
-  (let [defs (get-in @process.state/LAYERS [layer-name directory-name "defs"])]
-       (letfn [(f [result name value]
-                  (assoc result name (print-def options layer-name directory-name name value)))]
-              (reduce-kv f {} defs))))
+  (let [functions (get-in @process.state/LAYERS [layer-name directory-name "functions"])]
+       (letfn [(f [functions function-data]
+                  (str functions (print-api-function options layer-name directory-name function-data)))]
+              (reduce f "" functions))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn print-directory
+(defn print-api-constants
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) directory-name
   ;
-  ; @example
-  ;  (print-directory {:path "my-submodules/my-repository"} "clj" "my-directory")
-  ;  =>
-  ;  {}
-  ;
-  ; @return (map)
-  ;  {}
-  [options layer-name directory-name]
-  {"?" (print-defs options layer-name directory-name)})
+  ; @return (string)
+  [_ layer-name directory-name])
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn print-layer
+(defn print-api-require
   ; @param (map) options
   ; @param (string) layer-name
+  ; @param (string) directory-name
   ;
-  ; @example
-  ;  (print-layer {:path "my-submodules/my-repository"} "clj")
-  ;  =>
-  ;  {"my-directory" {}}
+  ; @return (string)
+  [_ layer-name directory-name]
+  (str "\n\n---\n\n### Require\n\n```\n(ns my-namespace\n    (:require ["directory-name".api :as "directory-name"]))\n```"))
+
+(defn print-api-subtitle
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
   ;
-  ; @return (map)
+  ; @return (string)
+  [_ layer-name directory-name]
+  (str "\n<p>Documentation of the <strong>"directory-name"/api."layer-name"</strong> namespace</p>"))
+
+(defn print-api-title
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ;
+  ; @return (string)
+  [_ layer-name directory-name]
+  (str "\n# <strong>"directory-name"/api."layer-name"</strong>"))
+
+(defn print-api
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ;
+  ; @return (string)
+  [options layer-name directory-name]
+  (str (print-api-title     options layer-name directory-name)
+       (print-api-subtitle  options layer-name directory-name)
+       (print-api-require   options layer-name directory-name)
+       (print-api-constants options layer-name directory-name)
+       (print-api-functions options layer-name directory-name)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn print-directory!
+  ; @param (map) options
+  ;  {:path (string)}
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  [{:keys [path] :as options} layer-name directory-name]
+  (let [api-doc-filepath (str path"/documentation/"layer-name"/"directory-name"/API.md")
+        api-doc          (print-api options layer-name directory-name)]
+       (io/write-file! api-doc-filepath api-doc {:create? true})))
+
+(defn print-layer!
+  ; @param (map) options
+  ; @param (string) layer-name
   [options layer-name]
   (let [layer-data (get @process.state/LAYERS layer-name)]
-       (letfn [(f [layer-data directory-name directory-data]
-                  (assoc layer-data directory-name (print-directory options layer-name directory-name)))]
-              (reduce-kv f {} layer-data))))
-
-;; ----------------------------------------------------------------------------
-;; ----------------------------------------------------------------------------
+       (letfn [(f [_ directory-name _] (print-directory! options layer-name directory-name))]
+              (reduce-kv f nil layer-data))))
 
 (defn print-layers!
   ; @param (map) options
   [options]
-  (let [layers @process.state/LAYERS]
-       (letfn [(f [_ layer-name _]
-                  (let [layer-data (print-layer options layer-name)]
-                       (swap! print.state/LAYERS assoc layer-name layer-data)))]
-              (reduce-kv f nil layers))))
+  (letfn [(f [_ layer-name _] (print-layer! options layer-name))]
+         (reduce-kv f nil @process.state/LAYERS)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn print-cover-description
+  ; @param (map) options
+  ;
+  ; @return (string)
+  [_]
+  (let [description (get @process.state/COVER "description")]
+       (str "\n\n---\n\n"description)))
+
+(defn print-cover-links
+  ; @param (map) options
+  ;
+  ; @return (string)
+  [_]
+  (let [links (get @process.state/COVER "links")]
+       (letfn [(f [links link]
+                  (str links"\n"link))]
+              (reduce f "\n\n---\n\n### api files" links))))
+
+(defn print-cover-subtitle
+  ; @param (map) options
+  ;
+  ; @return (string)
+  [_]
+  (let [subtitle (get @process.state/COVER "subtitle")]
+       (str "\n"subtitle)))
+
+(defn print-cover-title
+  ; @param (map) options
+  ;
+  ; @return (string)
+  [_]
+  (let [title (get @process.state/COVER "title")]
+       (str "\n"title)))
+
+(defn print-cover
+  ; @param (map) options
+  ;
+  ; @return (string)
+  [options]
+  (str (print-cover-title       options)
+       (print-cover-subtitle    options)
+       (print-cover-links       options)
+       (print-cover-description options)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn print-cover!
+  ; @param (map) options
+  ;  {:path (string)}
+  [{:keys [path] :as options}]
+  (let [cover-filepath (str path"/documentation/COVER.md")
+        cover          (print-cover options)]
+       (io/write-file! cover-filepath cover {:create? true})))
