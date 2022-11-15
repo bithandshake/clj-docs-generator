@@ -2,6 +2,7 @@
 (ns docs.core.engine
     (:require [candy.api            :refer [return]]
               [docs.core.prototypes :as core.prototypes]
+              [docs.detect.engine   :as detect.engine]
               [docs.import.engine   :as import.engine]
               [docs.print.engine    :as print.engine]
               [docs.process.engine  :as process.engine]
@@ -30,6 +31,21 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn debug
+  []
+  (str "<pre style=\"background:#fafafa\">"
+       ;(get-in @import.state/LAYERS  ["clj"])
+       ;"------------------------------------------------"
+       ;(get-in @read.state/LAYERS ["clj"])
+       (get-in (some (fn [%] (if (= "copy-file!" (get % "name")) %))
+                     (get-in @read.state/LAYERS ["clj" "io" "functions"]))
+               ["header" "usages" 0 "call"])
+       "</pre>"))
+       ;"------------------------------------------------"
+       ;(get-in @process.state/LAYERS  [])
+       ;"------------------------------------------------")))
+       ;(get-in @process.state/LAYERS ["clj"]))))
+
 (defn create-documentation!
   ; @param (map) options
   ;  {:path (string)}
@@ -42,18 +58,11 @@
   [options]
   (let [options (core.prototypes/options-prototype options)]
        (initialize!                    options)
+       (detect.engine/detect-layers!   options)
        (import.engine/import-layers!   options)
        (read.engine/read-layers!       options)
        (process.engine/process-layers! options)
        (process.engine/process-cover!  options)
        (print.engine/print-cover!      options)
-       (print.engine/print-layers!     options)
-
-       ; TEMP
-       (str ;(get-in @import.state/LAYERS  ["clj"])
-            "------------------------------------------------"
-            (get-in @read.state/LAYERS ["clj"])
-            "------------------------------------------------"
-            ;(get-in @process.state/LAYERS  [])
-            "------------------------------------------------")))
-            ;(get-in @process.state/LAYERS ["clj"]))))
+       (print.engine/print-layers!     options)))
+      ;(debug)

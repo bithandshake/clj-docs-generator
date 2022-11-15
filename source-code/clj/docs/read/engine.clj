@@ -17,9 +17,10 @@
   ; @param (string) header
   ;
   ; @example
-  ;  (read-function-return "...")
+  ;  (read-function-return "... @return (map) {:my-key (string)}")
   ;  =>
-  ;  (?)
+  ;  {"sample" {:my-key (string)}
+  ;   "types" "map"}
   ;
   ; @return (map)
   ;  {"sample" (string)
@@ -58,7 +59,7 @@
   ;   {...}]
   [header]
   (letfn [(f [usages n]
-             (if-let [cursor (string/nth-dex-of header "@usage" n)]
+             (if-let [cursor (string/nth-dex-of header "  ; @usage" n)]
                      (let [usage (read-function-first-usage header cursor)]
                           (f (conj usages usage)
                              (inc n)))
@@ -98,7 +99,7 @@
   ;   {...}]
   [header]
   (letfn [(f [examples n]
-             (if-let [cursor (string/nth-dex-of header "@example" n)]
+             (if-let [cursor (string/nth-dex-of header "  ; @example" n)]
                      (let [example (read-function-first-example header cursor)]
                           (f (conj examples example)
                              (inc n)))
@@ -142,7 +143,7 @@
   ;   {...}]
   [header]
   (letfn [(f [params n]
-             (if-let [cursor (string/nth-dex-of header "@param" n)]
+             (if-let [cursor (string/nth-dex-of header "  ; @param" n)]
                      (let [param (read-function-first-param header cursor)]
                           (f (conj params param)
                              (inc n)))
@@ -153,6 +154,7 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-header
+
   ; @param (string) code
   ; @param (string) name
   ;
@@ -169,13 +171,13 @@
   [code name]
   ; A letfn térben definiált függvények is rendelkezhetnek paraméter dokumentációval,
   ; ezért szükséges csak a függvény fejlécében olvasni!
-  (if-let [args-pos (regex/first-dex-of code #"[\n][ ]{1,}[\[]")]
-          (let [header   (-> code (string/part 0 args-pos)
-                                  (string/after-first-occurence name {:return? false}))]
-               {"params"   (read-function-params   header)
-                "examples" (read-function-examples header)
-                "usages"   (read-function-usages   header)
-                "return"   (read-function-return   header)})))
+  (let [header (-> code (string/from-first-occurence   "\n  ;"  {:return? false})
+                        (string/before-first-occurence "\n  ([" {:return? true})
+                        (string/before-first-occurence "\n  ["  {:return? true}))]
+       {"params"   (read-function-params   header)
+        "examples" (read-function-examples header)
+        "usages"   (read-function-usages   header)
+        "return"   (read-function-return   header)}))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

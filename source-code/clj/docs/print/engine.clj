@@ -1,11 +1,31 @@
 
 (ns docs.print.engine
-    (:require [docs.process.state :as process.state]
+    (:require [docs.print.helpers :as print.helpers]
+              [docs.process.state :as process.state]
               [io.api             :as io]
               [mid-fruits.string  :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
+
+(defn print-api-function-require
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [_ _ directory-name function-data]
+  (let [function-name (get    function-data "name")
+        params        (get-in function-data ["header" "params"])]
+       (str "\n\n```\n@require\n(ns my-namespace (:require ["directory-name".api :as "directory-name" :refer ["function-name"]]))"
+            "\n\n("directory-name"/"function-name
+            (if-not (empty? params) " ...") ")"
+            "\n("function-name
+            (if-not (empty? params)
+                    (let [tab (string/multiply " " (-> directory-name count inc))]
+                         (str tab " ...")))
+            ")\n```")))
 
 (defn print-api-function-params
   ; @param (map) options
@@ -30,7 +50,7 @@
   (let [usages (get-in function-data ["header" "usages"])]
        (if (-> usages empty? not)
            (letfn [(f [usages usage]
-                      (str usages "\n\n```\n"usage"\n```"))]
+                      (str usages "\n\n```"usage"```"))]
                   (reduce f "" usages)))))
 
 (defn print-api-function-examples
@@ -44,7 +64,7 @@
   (let [examples (get-in function-data ["header" "examples"])]
        (if (-> examples empty? not)
            (letfn [(f [examples example]
-                      (str examples "\n\n```\n"example"\n```"))]
+                      (str examples "\n\n```"example"```"))]
                   (reduce f "" examples)))))
 
 (defn print-api-function-return
@@ -66,7 +86,8 @@
   ;
   ; @return (string)
   [options layer-name directory-name function-data]
-  (str (print-api-function-params   options layer-name directory-name function-data)
+  (str (print-api-function-require  options layer-name directory-name function-data)
+       (print-api-function-params   options layer-name directory-name function-data)
        (print-api-function-usages   options layer-name directory-name function-data)
        (print-api-function-examples options layer-name directory-name function-data)
        (print-api-function-return   options layer-name directory-name function-data)))
@@ -80,7 +101,8 @@
   ; @return (string)
   [options layer-name directory-name function-data]
   (let [function-name (get function-data "name")]
-       (str "\n\n---\n\n### "function-name"\n###### "layer-name"/"directory-name"/api."layer-name
+       (str "\n\n### "function-name
+           ;"\n###### "layer-name"/"directory-name"/api."layer-name
             (print-api-function-header options layer-name directory-name function-data))))
 
 (defn print-api-functions
@@ -90,10 +112,12 @@
   ;
   ; @return (string)
   [options layer-name directory-name]
-  (let [functions (get-in @process.state/LAYERS [layer-name directory-name "functions"])]
+  (let [functions (get-in @process.state/LAYERS [layer-name directory-name "functions"])
+        functions (print.helpers/sort-functions functions)]
        (letfn [(f [functions function-data]
-                  (str functions (print-api-function options layer-name directory-name function-data)))]
-              (reduce f "" functions))))
+                  (if functions (str functions "\n\n---" (print-api-function options layer-name directory-name function-data))
+                                (str functions           (print-api-function options layer-name directory-name function-data))))]
+              (reduce f nil functions))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -125,7 +149,7 @@
   ;
   ; @return (string)
   [_ layer-name directory-name]
-  (str "\n<p>Documentation of the <strong>"directory-name"/api."layer-name"</strong> namespace</p>"))
+  (str "\n<p>Documentation of the <strong>"directory-name"/api."layer-name"</strong> file</p>"))
 
 (defn print-api-title
   ; @param (map) options
@@ -134,7 +158,7 @@
   ;
   ; @return (string)
   [_ layer-name directory-name]
-  (str "\n# <strong>"directory-name"/api."layer-name"</strong>"))
+  (str "\n# <strong>"directory-name".api</strong> namespace</p>"))
 
 (defn print-api
   ; @param (map) options
@@ -145,7 +169,7 @@
   [options layer-name directory-name]
   (str (print-api-title     options layer-name directory-name)
        (print-api-subtitle  options layer-name directory-name)
-       (print-api-require   options layer-name directory-name)
+       ;(print-api-require   options layer-name directory-name)
        (print-api-constants options layer-name directory-name)
        (print-api-functions options layer-name directory-name)))
 

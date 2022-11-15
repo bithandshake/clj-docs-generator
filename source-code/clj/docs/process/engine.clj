@@ -9,29 +9,6 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn process-function-examples
-  ; @param (map) options
-  ; @param (string) layer-name
-  ; @param (string) directory-name
-  ; @param (map) function-data
-  ;  {"header"
-  ;    {"examples" (maps in vector)(opt)
-  ;      [{"call" (string)}]}}
-  ;
-  ; @example
-  ;  (process-function-examples {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
-  ;  =>
-  ;  ["@example\n  (my-function ...)"]
-  ;
-  ; @return (?)
-  [_ _ _ function-data]
-  (if-let [examples (get-in function-data ["header" "examples"])]
-          (letfn [(f [examples example]
-                     (let [call   (get example "call")
-                           result (get example "result")]
-                          (conj examples (str "@example\n "call"\n =>\n "result))))]
-                 (reduce f [] examples))))
-
 (defn process-function-params
   ; @param (map) options
   ; @param (string) layer-name
@@ -60,6 +37,51 @@
                                             " "name))))]
                  (reduce f [] params))))
 
+(defn process-function-usages
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;  {"header"
+  ;    {"usages" (maps in vector)(opt)
+  ;      [{"call" (string)}]}}
+  ;
+  ; @example
+  ;  (process-function-usages {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  =>
+  ;  ["\n@usage ..."]
+  ;
+  ; @return (strings in vector)
+  [_ _ _ function-data]
+  (if-let [usages (get-in function-data ["header" "usages"])]
+          (letfn [(f [usages usage]
+                     (let [call (get usage "call")]
+                          (conj usages (str "\n@usage"call))))]
+                 (reduce f [] usages))))
+
+(defn process-function-examples
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;  {"header"
+  ;    {"examples" (maps in vector)(opt)
+  ;      [{"call" (string)}]}}
+  ;
+  ; @example
+  ;  (process-function-examples {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  =>
+  ;  ["\n@example ..."]
+  ;
+  ; @return (?)
+  [_ _ _ function-data]
+  (if-let [examples (get-in function-data ["header" "examples"])]
+          (letfn [(f [examples example]
+                     (let [call   (get example "call")
+                           result (get example "result")]
+                          (conj examples (str "\n@example"call"=>"result))))]
+                 (reduce f [] examples))))
+
 (defn process-function-return
   ; @param (map) options
   ; @param (string) layer-name
@@ -78,28 +100,6 @@
   [_ _ _ function-data]
   (if-let [types (get-in function-data ["header" "return" "types"])]
           (str "@return ("types")")))
-
-(defn process-function-usages
-  ; @param (map) options
-  ; @param (string) layer-name
-  ; @param (string) directory-name
-  ; @param (map) function-data
-  ;  {"header"
-  ;    {"usages" (maps in vector)(opt)
-  ;      [{"call" (string)}]}}
-  ;
-  ; @example
-  ;  (process-function-usages {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
-  ;  =>
-  ;  ["@usage\n  (my-function ...)"]
-  ;
-  ; @return (strings in vector)
-  [_ _ _ function-data]
-  (if-let [usages (get-in function-data ["header" "usages"])]
-          (letfn [(f [usages usage]
-                     (let [call (get usage "call")]
-                          (conj usages (str "@usage\n  "call))))]
-                 (reduce f [] usages))))
 
 (defn process-function-header
   ; @param (map) options
@@ -237,7 +237,7 @@
   [_ layer-name links]
   (let [layer-data (get @read.state/LAYERS layer-name)]
        (letfn [(f [links directory-name _]
-                  (conj links (str "* ["directory-name"/api."layer-name"]("layer-name"/"directory-name"/API.md)")))]
+                  (conj links (str "* ["directory-name".api]("layer-name"/"directory-name"/API.md) ["layer-name"]")))]
               (reduce-kv f links layer-data))))
 
 (defn process-cover-links

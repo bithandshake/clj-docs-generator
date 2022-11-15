@@ -28,77 +28,6 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn return
-  ; @param (string) n
-  ;
-  ; @example
-  ;  (return "... ; @return (map) {...} ...")
-  ;  =>
-  ;  {"sample" "{...}" "types" "map"}
-  ;
-  ; @return (map)
-  ;  {"sample" (string)
-  ;   "types" (string)}
-  [n]
-  (let [types (-> n (string/after-first-occurence  "@return" {:return? false})
-                    (string/after-first-occurence  "("       {:return? false})
-                    (string/before-first-occurence ")"       {:return? false}))]
-       (if-let [sample (-> n (string/after-first-occurence  "@return" {:return? false})
-                             (string/after-first-occurence  ")"       {:return? false})
-                             (string/before-first-occurence ";\n"     {:return? false}))]
-               {"sample" sample "types" types}
-               {                "types" types})))
-
-;; ----------------------------------------------------------------------------
-;; ----------------------------------------------------------------------------
-
-(defn first-usage
-  ; @param (string) n
-  ;
-  ; @example
-  ;  (first-usage "... ; @usage (my-function ...) ...")
-  ;  =>
-  ;  {"call" "(my-function ...)"}
-  ;
-  ; @return (map)
-  ;  {"call" (string)}
-  [n]
-  (if-let [call (-> n (string/after-first-occurence  "@usage"   {:return? false})
-                      (string/after-first-occurence  "("        {:return? false})
-                      (string/before-first-occurence ";\n"      {:return? false})
-                      (string/before-last-occurence  ")"        {:return? false}))]
-          (let [call (syntax/paren call)]
-               {"call" call})))
-
-;; ----------------------------------------------------------------------------
-;; ----------------------------------------------------------------------------
-
-(defn first-example
-  ; @param (string) n
-  ;
-  ; @example
-  ;  (first-example "... ; @example (my-function ...) => 123 ...")
-  ;  =>
-  ;  {"call" "(my-function ...)" "result" 123}
-  ;
-  ; @return (map)
-  ;  {"call" (string)
-  ;   "result" (string)}
-  [n]
-  (if-let [call (-> n (string/after-first-occurence  "@example" {:return? false})
-                      (string/after-first-occurence  "("        {:return? false})
-                      (string/before-first-occurence "=>"       {:return? false})
-                      (string/before-last-occurence  ")"        {:return? false}))]
-          (let [call   (syntax/paren call)
-                result (-> n (string/after-first-occurence  "=>"  {:return? false})
-                             (string/before-first-occurence ";\n" {:return? false})
-                             (string/remove-part "  ;")
-                             (string/trim))]
-               {"call" call "result" result})))
-
-;; ----------------------------------------------------------------------------
-;; ----------------------------------------------------------------------------
-
 (defn first-param
   ; @param (string) n
   ;
@@ -123,13 +52,82 @@
   ;   "sample" (string)
   ;   "types" (string)}}
   [n]
-  (let [param-name (-> n (string/after-first-occurence  "@param"   {:return? false})
-                         (string/after-first-occurence  ")"        {:return? false})
-                         (string/after-first-occurence  " "        {:return? false})
-                         (string/before-first-occurence "\n"       {:return? false})
-                         (string/before-first-occurence " "        {:return? true}))
-        optional?  (-> n (string/before-first-occurence param-name {:return? false})
+  (let [param-name (-> n (string/after-first-occurence  "  ; @param" {:return? false})
+                         (string/before-first-occurence "\n"         {:return? false})
+                         (string/after-last-occurence   ")"          {:return? false})
+                         (string/trim))
+        optional?  (-> n (string/before-first-occurence param-name   {:return? false})
                          (string/contains-part?         "(opt)"))
-        types      (-> n (string/after-first-occurence  "("        {:return? false})
-                         (string/before-first-occurence ")"        {:return? false}))]
+        types      (-> n (string/after-first-occurence  "("          {:return? false})
+                         (string/before-first-occurence ")"          {:return? false}))]
       {"name" param-name "optional?" optional? "types" types}))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn first-usage
+  ; @param (string) n
+  ;
+  ; @example
+  ;  (first-usage "...")
+  ;  =>
+  ;  {"call" "..."}
+  ;
+  ; @return (map)
+  ;  {"call" (string)}
+  [n]
+  ; 1.
+  ; 2.
+  ; 3. A tartalommal rendelkező sorok elejéről eltávolítja a "  ; " részt
+  ; 4. Törli a következő bekezdés előtti üres sorokat ("  ;")
+  (let [call (-> n (string/after-first-occurence  "  ; @usage" {:return? false})
+                   (string/before-first-occurence "  ; @"      {:return? true})
+                   (string/remove-part            "  ; ")
+                   (string/remove-part            "  ;\n"))]
+       {"call" call}))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn first-example
+  ; @param (string) n
+  ;
+  ; @example
+  ;  (first-example "... ; @example (my-function ...) => 123 ...")
+  ;  =>
+  ;  {"call" "(my-function ...)" "result" 123}
+  ;
+  ; @return (map)
+  ;  {"call" (string)
+  ;   "result" (string)}
+  [n]
+  (let [call   (-> n (string/after-first-occurence  "  ; @example" {:return? false})
+                     (string/before-first-occurence "  ; =>"       {:return? false})
+                     (string/remove-part            "  ; "))
+        result (-> n (string/after-first-occurence  "  ; =>"       {:return? false})
+                     (string/before-first-occurence "  ; @"        {:return? true})
+                     (string/remove-part            "  ; ")
+                     (string/remove-part            "  ;\n"))]
+       {"call" call "result" result}))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn return
+  ; @param (string) n
+  ;
+  ; @example
+  ;  (return "... ; @return (map) {...} ...")
+  ;  =>
+  ;  {"sample" "{...}" "types" "map"}
+  ;
+  ; @return (map)
+  ;  {"sample" (string)
+  ;   "types" (string)}
+  [n]
+  (let [types  (-> n (string/after-first-occurence  "  ; @return" {:return? false})
+                     (string/after-first-occurence  "("           {:return? false})
+                     (string/before-first-occurence ")"           {:return? false}))
+        sample (-> n (string/after-first-occurence  "  ; @return" {:return? false})
+                     (string/after-first-occurence  ")"           {:return? false}))]
+       {"sample" sample "types" types}))
