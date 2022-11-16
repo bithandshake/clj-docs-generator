@@ -35,9 +35,6 @@
   ;
   ; @return (string)
   [file-content name]
-  (when (= name "subscription-vector?")
-        (println name)
-        (println file-content))
   ; open-pattern: "(defn my-function"
   ;
   ; BUG#7710
@@ -82,7 +79,7 @@
                                   ; valószínüleg valamelyik kommentben egyenlőtlenül
                                   ; vannak elhelyezve a zárójelek vagy esetleg egy string
                                   ; tartalmaz ";", amit a függvény kommentnek érzékel!
-                                  (println "Ooops! Syntax error in function " name)
+                                  (println "Ooops! It looks like there is a syntax error in the function \"" name "\"")
                                   (return function-content))
                               (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
                                       (let [comment (-> function-content (string/part start-pos)
