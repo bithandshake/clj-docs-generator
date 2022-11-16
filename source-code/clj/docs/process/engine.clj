@@ -4,7 +4,9 @@
               [docs.process.helpers :as process.helpers]
               [docs.process.state   :as process.state]
               [docs.read.state      :as read.state]
-              [mid-fruits.string    :as string]))
+              [mid-fruits.map       :as map]
+              [mid-fruits.string    :as string]
+              [mid-fruits.vector    :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -21,7 +23,7 @@
   ;      {"types" (string)}}}
   ;
   ; @example
-  ;  (process-function-params {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  (process-function-params {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
   ;  =>
   ;  ["@param (string)(opt) my-param"]
   ;
@@ -47,7 +49,7 @@
   ;      [{"call" (string)}]}}
   ;
   ; @example
-  ;  (process-function-usages {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  (process-function-usages {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
   ;  =>
   ;  ["\n@usage ..."]
   ;
@@ -69,7 +71,7 @@
   ;      [{"call" (string)}]}}
   ;
   ; @example
-  ;  (process-function-examples {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  (process-function-examples {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
   ;  =>
   ;  ["\n@example ..."]
   ;
@@ -92,7 +94,7 @@
   ;      {"types" (string)}}}
   ;
   ; @example
-  ;  (process-function-return {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  (process-function-return {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
   ;  =>
   ;  "@return(string)"
   ;
@@ -108,7 +110,7 @@
   ; @param (map) function-data
   ;
   ; @example
-  ;  (process-function-header {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  (process-function-header {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
   ;  =>
   ;  (?)
   ;
@@ -130,7 +132,7 @@
   ; @param (map) function-data
   ;
   ; @example
-  ;  (process-function {:path "my-submodules/my-repository"} "clj" "my-directory" {...})
+  ;  (process-function {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
   ;  =>
   ;  (?)
   ;
@@ -148,7 +150,7 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (process-functions {:path "my-submodules/my-repository"} "clj" "my-directory")
+  ;  (process-functions {:path "my-submodules/my-repository"} "clj" "my_directory")
   ;  =>
   ;  {}
   ;
@@ -168,7 +170,7 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (process-directory {:path "my-submodules/my-repository"} "clj" "my-directory")
+  ;  (process-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
   ;  =>
   ;  {}
   ;
@@ -188,7 +190,7 @@
   ; @example
   ;  (process-layer {:path "my-submodules/my-repository"} "clj")
   ;  =>
-  ;  {"my-directory" {}}
+  ;  {"my_directory" {}}
   ;
   ; @return (map)
   [options layer-name]
@@ -233,14 +235,17 @@
   ; @example
   ;  (process-layer-links {...} "clj" [])
   ;  =>
-  ;  [... "* [my-directory/api.clj](clj/my-directory/API.md)" ...]
+  ;  [... "* [my-directory.api](clj/my_directory/API.md) [clj]" ...]
   ;
   ; @return (strings in vector)
   [_ layer-name links]
-  (let [layer-data (get @read.state/LAYERS layer-name)]
-       (letfn [(f [links directory-name _]
-                  (conj links (str "* ["directory-name".api]("layer-name"/"directory-name"/API.md) ["layer-name"]")))]
-              (reduce-kv f links layer-data))))
+  (let [layer-data      (get @read.state/LAYERS layer-name)
+        directory-names (map/get-keys layer-data)]
+       (letfn [(f [links directory-name]
+                  (let [directory_name directory-name
+                        directory-name (string/replace-part directory-name "_" "-")]
+                       (conj links (str "* ["directory-name".api]("layer-name"/"directory_name"/API.md) ["layer-name"]"))))]
+              (reduce f links (vector/abc-items directory-names)))))
 
 (defn process-cover-links
   ; @param (map) options
@@ -248,9 +253,9 @@
   ; @example
   ;  (process-layer-links {...})
   ;  =>
-  ;  ["* [my-directory/api.clj](clj/my-directory/API.md)"
-  ;   "* [my-directory/api.cljc](cljc/my-directory/API.md)"
-  ;   "* [my-directory/api.cljs](cljs/my-directory/API.md)"]
+  ;  ["* [my-directory.api](clj/my_directory/API.md) [clj]"
+  ;   "* [my-directory.api](cljc/my_directory/API.md) [cljc]"
+  ;   "* [my-directory.api](cljs/my_directory/API.md) [cljs]"]
   ;
   ; @return (strings in vector)
   [options]

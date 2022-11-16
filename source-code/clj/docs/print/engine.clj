@@ -34,8 +34,9 @@
   ;
   ; @return (string)
   [_ _ directory-name function-data]
-  (let [function-name (get    function-data "name")
-        params        (get-in function-data ["header" "params"])]
+  (let [function-name  (get    function-data "name")
+        params         (get-in function-data ["header" "params"])
+        directory-name (string/replace-part directory-name "_" "-")]
        (str "\n\n<details>"
             "\n<summary>Require</summary>"
             "\n\n```"
@@ -170,7 +171,8 @@
   ;
   ; @return (string)
   [_ layer-name directory-name]
-  (str "\n\n[README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > "directory-name".api"))
+  (let [directory-name (string/replace-part directory-name "_" "-")]
+       (str "\n\n<strong>[README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > "directory-name".api</strong>")))
 
 (defn print-api-subtitle
   ; @param (map) options
@@ -188,7 +190,8 @@
   ;
   ; @return (string)
   [_ layer-name directory-name]
-  (str "\n# <strong>"directory-name".api</strong> namespace"))
+  (let [directory-name (string/replace-part directory-name "_" "-")]
+       (str "\n# <strong>"directory-name".api</strong> namespace")))
 
 (defn print-api
   ; @param (map) options
@@ -239,7 +242,7 @@
   ;
   ; @return (string)
   [_]
-  (str "\n\n[README](../README.md) > DOCUMENTATION"))
+  (str "\n\n<strong>[README](../README.md) > DOCUMENTATION</strong>"))
 
 (defn print-cover-description
   ; @param (map) options

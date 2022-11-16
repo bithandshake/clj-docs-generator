@@ -26,7 +26,7 @@
   ; @param (string) layer-name
   ;
   ; @example
-  ;  (api-filepath {:path "my-submodules/my-repository"} "clj" "my-directory")
+  ;  (api-filepath {:path "my-submodules/my-repository"} "clj" "my_directory")
   ;  =>
   ;  "my-submodules/my-repository/source-code/clj/my_directory/api.clj"
   ;

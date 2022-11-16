@@ -1,6 +1,9 @@
 
 # docs-api
-  "Life is like riding a bicycle. To keep your balance, you must keep moving." – Albert Einstein
+> "Life is like riding a bicycle. To keep your balance, you must keep moving." – Albert Einstein
 
-# Documentation book is releasing soon ...
-  2023.01.01.
+### Overview
+...
+
+### Documentation
+The <strong>docs-api</strong> documentation is [available here](documentation/COVER.md).

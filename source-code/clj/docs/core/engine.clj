@@ -40,17 +40,13 @@
 (defn debug
   []
   (str "<pre style=\"background:#fafafa\">"
-       ;(get-in @import.state/LAYERS  ["clj"])
-       ;"------------------------------------------------"
-       ;(get-in @read.state/LAYERS ["clj"])
-       (get-in (some (fn [%] (if (= "copy-file!" (get % "name")) %))
-                     (get-in @read.state/LAYERS ["clj" "io" "functions"]))
-               ["header" "usages" 0 "call"])
+       "\nimported layers:\n"
+       (get-in @import.state/LAYERS  [])
+       "\nread layers:\n"
+       (get-in @read.state/LAYERS    [])
+       "\nprocessed layers:\n"
+       (get-in @process.state/LAYERS [])
        "</pre>"))
-       ;"------------------------------------------------"
-       ;(get-in @process.state/LAYERS  [])
-       ;"------------------------------------------------")))
-       ;(get-in @process.state/LAYERS ["clj"]))))
 
 (defn create-documentation!
   ; @param (map) options
@@ -62,8 +58,7 @@
   ; @usage
   ;  (create-documentation! {:path "my-submodules/my-repository"})
   ;
-  ; @return (boolean)
-  ;  Returns true if the documentation book generation went success otherwise returns false.
+  ; @return (string)
   [options]
   (let [options (core.prototypes/options-prototype options)]
        (initialize!                    options)
@@ -74,5 +69,4 @@
        (process.engine/process-cover!  options)
        (print.engine/print-cover!      options)
        (print.engine/print-layers!     options)
-      ;(debug)
-      (return true)))
+       (debug)))

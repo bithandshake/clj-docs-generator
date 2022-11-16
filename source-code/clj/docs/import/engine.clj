@@ -126,7 +126,7 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (import-directory "my-submodules/my-repository/source-code/clj/my-directory/api.clj")
+  ;  (import-directory "my-submodules/my-repository/source-code/clj/my_directory/api.clj")
   ;  =>
   ;  {"aliases" {"my-namespace"   "my-alias"
   ;              "your-namespace" "your-alias"}
@@ -158,7 +158,7 @@
   ; @example
   ;  (import-layer {:path "my-submodules/my-repository"} "clj")
   ;  =>
-  ;  {"my-directory" {"aliases" {"my-namespace"   "my-alias"
+  ;  {"my_directory" {"aliases" {"my-namespace"   "my-alias"
   ;                              "your-namespace" "your-alias"}
   ;                   "defs"    [["my-name"   "my-value"]
   ;                              ["your-name" "your-value"]]
@@ -184,7 +184,7 @@
   ; @example
   ;  (import-layers {:path "my-submodules/my-repository"})
   ;  =>
-  ;  {"clj" {"my-directory" {"aliases" {"my-namespace"   "my-alias"
+  ;  {"clj" {"my_directory" {"aliases" {"my-namespace"   "my-alias"
   ;                                     "your-namespace" "your-alias"}
   ;                          "defs"    [["my-name"   "my-value"]
   ;                                     ["your-name" "your-value"]]
@@ -201,7 +201,8 @@
   (letfn [(f [result layer-name]
              (let [layer-path (import.helpers/layer-path options layer-name)]
                   (if (io/directory-exists? layer-path)
-                      (assoc result layer-name (import-layer options layer-name)))))]
+                      (assoc  result layer-name (import-layer options layer-name))
+                      (return result))))]
          (reduce f {} ["clj" "cljc" "cljs"])))
 
 ;; ----------------------------------------------------------------------------

@@ -257,12 +257,12 @@
   ; @param (string) value
   ;
   ; @example
-  ;  (read-def {:path "my-submodules/my-repository"} "clj" "my-directory" "my-function" "my-namespace/my-function")
+  ;  (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "my-function" "my-namespace/my-function")
   ;  =>
   ;  {"function" {...}}
   ;
   ; @example
-  ;  (read-def {:path "my-submodules/my-repository"} "clj" "my-directory" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
+  ;  (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
   ;  =>
   ;  {"constant" {...}}
   ;
@@ -291,7 +291,7 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (read-defs {:path "my-submodules/my-repository"} "clj" "my-directory")
+  ;  (read-defs {:path "my-submodules/my-repository"} "clj" "my_directory")
   ;  =>
   ;  {"constants" [{...}]
   ;   "functions" [{...}]}
@@ -319,7 +319,7 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (read-directory {:path "my-submodules/my-repository"} "clj" "my-directory")
+  ;  (read-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
   ;  =>
   ;  {"constants" [{...}]
   ;   "functions" [{...}]}
@@ -340,7 +340,7 @@
   ; @example
   ;  (read-layer {:path "my-submodules/my-repository"} "clj")
   ;  =>
-  ;  {"my-directory" {}}
+  ;  {"my_directory" {}}
   ;
   ; @return (map)
   [options layer-name]

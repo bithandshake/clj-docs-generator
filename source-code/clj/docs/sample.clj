@@ -18,13 +18,13 @@
 ;     ⌄ my-repository
 ;       ⌄ source-code
 ;         ⌄ clj
-;           ⌄ my-directory
+;           ⌄ my_directory
 ;             api.clj
 ;         ⌄ cljc
-;           ⌄ my-directory
+;           ⌄ my_directory
 ;             api.cljc
 ;         ⌄ cljs
-;           ⌄ my-directory
+;           ⌄ my_directory
 ;             api.cljs
 ;
 ; Az api fájlokban a függvények és konstansok átirányításai (def ...) függvénnyel
@@ -43,10 +43,10 @@
 ;     ⌄ my-repository
 ;       ⌄ source-code
 ;         ⌄ clj
-;           ⌄ my-directory
+;           ⌄ my_directory
 ;             api.clj
-;             ⌄ my-subdirectory
-;               my-file.clj
+;             ⌄ my_subdirectory
+;               my_file.clj
 ;               your-file.clj
 ;
 ; (ns my-submodule.my-handler.events
@@ -60,13 +60,13 @@
 ;     ⌄ my-repository
 ;       ⌄ source-code
 ;         ⌄ clj
-;           ⌄ my-submodule
+;           ⌄ my_directory
 ;             ...
 ;         ⌄ cljc
-;           ⌄ my-submodule
+;           ⌄ my_directory
 ;             ...
 ;         ⌄ cljs
-;           ⌄ my-submodule
+;           ⌄ my_directory
 ;             ...
 ;
 ; (docs/create-documentation! {:path "my-submodules/my-repository"})

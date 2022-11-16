@@ -15,7 +15,7 @@
   ; @param (string) alias
   ;
   ; @example
-  ;  (code-filepath {:path "my-submodules/my-repository"} "clj" "my-directory" "my-subdirectory.my-file")
+  ;  (code-filepath {:path "my-submodules/my-repository"} "clj" "my_directory" "my-subdirectory.my-file")
   ;  =>
   ;  "my-submodules/my-repository/source-code/clj/my_directory/my_subdirectory/my_file.clj"
   ;
@@ -35,13 +35,20 @@
   ;
   ; @return (string)
   [file-content name]
+  (when (= name "subscription-vector?")
+        (println name)
+        (println file-content))
   ; open-pattern: "(defn my-function"
   ;
   ; BUG#7710
   ; Előfordulhat, hogy az end-pos értéke nil!
   ; Pl.: Ha a függvényben lévő valamelyik comment nem egyenlő számú nyitó és záró
   ;      zárójelet tartalmaz, akkor ...
-  (let [open-pattern (str "[(]defn[-]{0,}[ ]{1,}"name)]
+  ;
+  ; Ha a függvény neve kérdőjelre végződik, akkor a regex megsértődik a "function-name?\n"
+  ; kifejezésre, mert a kérdőjel különleges karakter, ezért azt külön kell kezelni!
+  (let [open-pattern (-> (str "[(]defn[-]{0,}[ ]{1,}"name"\n")
+                         (string/replace-part "?" "[?]"))]
        (if-let [start-pos (regex/first-dex-of file-content (re-pattern open-pattern))]
                (if-let [end-pos (-> file-content (string/part start-pos)
                                                  (syntax/close-paren-position))]
@@ -67,19 +74,23 @@
   ;
   ; @return (string)
   [file-content name]
-  (when (= name "get-scroll-direction")
-        (println name))
   (let [comment-pattern "[ ]{0,};"]
        (if-let [function-content (function-content file-content name)]
-               (letfn [(f [function-content]
-                          (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
-                                  (let [comment (-> function-content (string/part start-pos)
-                                                                     (string/before-first-occurence "\n" {:return? true}))]
-                                       (when (= name "get-scroll-direction")
-                                             (println (str "\""(string/replace-part comment "\n" "\\n" )"\"")))
-                                       (f (string/remove-first-occurence function-content (str comment "\n"))))
-                                  (return function-content)))]
-                      (f function-content)))))
+               (letfn [(f [function-content lap]
+                          (if (= lap 512)
+                              (do ; Ha az f függvény végtelen ciklusba kerül, akkor
+                                  ; valószínüleg valamelyik kommentben egyenlőtlenül
+                                  ; vannak elhelyezve a zárójelek vagy esetleg egy string
+                                  ; tartalmaz ";", amit a függvény kommentnek érzékel!
+                                  (println "Ooops! Syntax error in function " name)
+                                  (return function-content))
+                              (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
+                                      (let [comment (-> function-content (string/part start-pos)
+                                                                         (string/before-first-occurence "\n" {:return? true}))]
+                                           (f (string/remove-first-occurence function-content (str comment "\n"))
+                                              (inc lap)))
+                                      (return function-content))))]
+                      (f function-content 0)))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
