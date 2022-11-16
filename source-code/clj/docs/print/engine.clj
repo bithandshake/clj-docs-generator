@@ -8,30 +8,55 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn print-api-function-require
+(defn print-api-function-code
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
   ;
   ; @return (string)
+  [_ _ _ function-data]
+  (let [code (get function-data "code")]
+       (str "\n\n<details>"
+            "\n<summary>Source code</summary>"
+            "\n\n```"
+           ;"\n@code"
+            "\n"code
+            "\n```"
+            "\n\n</details>")))
+
+(defn print-api-function-require
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) directory-name
+  ; @param (map) function-data
+  ;  {}
+  ;
+  ; @return (string)
   [_ _ directory-name function-data]
   (let [function-name (get    function-data "name")
         params        (get-in function-data ["header" "params"])]
-       (str "\n\n```\n@require\n(ns my-namespace (:require ["directory-name".api :as "directory-name" :refer ["function-name"]]))"
+       (str "\n\n<details>"
+            "\n<summary>Require</summary>"
+            "\n\n```"
+           ;"\n@require"
+            "\n(ns my-namespace (:require ["directory-name".api :as "directory-name" :refer ["function-name"]]))"
             "\n\n("directory-name"/"function-name
             (if-not (empty? params) " ...") ")"
             "\n("function-name
             (if-not (empty? params)
                     (let [tab (string/multiply " " (-> directory-name count inc))]
                          (str tab " ...")))
-            ")\n```")))
+            ")"
+            "\n```"
+            "\n\n</details>")))
 
 (defn print-api-function-params
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
+  ;  {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -44,6 +69,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
+  ;  {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -58,6 +84,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
+  ;  {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -72,6 +99,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
+  ;  {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -86,17 +114,19 @@
   ;
   ; @return (string)
   [options layer-name directory-name function-data]
-  (str (print-api-function-require  options layer-name directory-name function-data)
-       (print-api-function-params   options layer-name directory-name function-data)
+  (str (print-api-function-params   options layer-name directory-name function-data)
        (print-api-function-usages   options layer-name directory-name function-data)
        (print-api-function-examples options layer-name directory-name function-data)
-       (print-api-function-return   options layer-name directory-name function-data)))
+       (print-api-function-return   options layer-name directory-name function-data)
+       (print-api-function-code     options layer-name directory-name function-data)
+       (print-api-function-require  options layer-name directory-name function-data)))
 
 (defn print-api-function
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
+  ;  {}
   ;
   ; @return (string)
   [options layer-name directory-name function-data]
@@ -116,7 +146,7 @@
         functions (print.helpers/sort-functions functions)]
        (letfn [(f [functions function-data]
                   (if functions (str functions "\n\n---" (print-api-function options layer-name directory-name function-data))
-                                (str functions           (print-api-function options layer-name directory-name function-data))))]
+                                (str functions "\n\n"    (print-api-function options layer-name directory-name function-data))))]
               (reduce f nil functions))))
 
 ;; ----------------------------------------------------------------------------
@@ -133,14 +163,14 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn print-api-require
+(defn print-api-breadcrumbs
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) directory-name
   ;
   ; @return (string)
   [_ layer-name directory-name]
-  (str "\n\n---\n\n### Require\n\n```\n(ns my-namespace\n    (:require ["directory-name".api :as "directory-name"]))\n```"))
+  (str "\n\n[README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > "directory-name".api"))
 
 (defn print-api-subtitle
   ; @param (map) options
@@ -158,7 +188,7 @@
   ;
   ; @return (string)
   [_ layer-name directory-name]
-  (str "\n# <strong>"directory-name".api</strong> namespace</p>"))
+  (str "\n# <strong>"directory-name".api</strong> namespace"))
 
 (defn print-api
   ; @param (map) options
@@ -167,11 +197,12 @@
   ;
   ; @return (string)
   [options layer-name directory-name]
-  (str (print-api-title     options layer-name directory-name)
-       (print-api-subtitle  options layer-name directory-name)
-       ;(print-api-require   options layer-name directory-name)
-       (print-api-constants options layer-name directory-name)
-       (print-api-functions options layer-name directory-name)))
+  (str (print-api-title       options layer-name directory-name)
+       (print-api-subtitle    options layer-name directory-name)
+       (print-api-breadcrumbs options layer-name directory-name)
+       (print-api-constants   options layer-name directory-name)
+       (print-api-functions   options layer-name directory-name)
+       "\n"))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -203,6 +234,13 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn print-cover-breadcrumbs
+  ; @param (map) options
+  ;
+  ; @return (string)
+  [_]
+  (str "\n\n[README](../README.md) > DOCUMENTATION"))
+
 (defn print-cover-description
   ; @param (map) options
   ;
@@ -219,7 +257,7 @@
   (let [links (get @process.state/COVER "links")]
        (letfn [(f [links link]
                   (str links"\n"link))]
-              (reduce f "\n\n---\n\n### api files" links))))
+              (reduce f "\n\n### Public namespaces" links))))
 
 (defn print-cover-subtitle
   ; @param (map) options
@@ -244,8 +282,10 @@
   [options]
   (str (print-cover-title       options)
        (print-cover-subtitle    options)
+       (print-cover-breadcrumbs options)
        (print-cover-links       options)
-       (print-cover-description options)))
+       (print-cover-description options)
+       "\n"))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

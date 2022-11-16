@@ -26,7 +26,7 @@
   ;  {"sample" (string)
   ;   "types" (string)}
   [header]
-  (read.helpers/return header))
+  (read.helpers/first-return header))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -154,12 +154,10 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-header
-
-  ; @param (string) code
-  ; @param (string) name
+  ; @param (string) header
   ;
   ; @example
-  ;  (read-function-header "..." "my-function")
+  ;  (read-function-header "...")
   ;  =>
   ;  (?)
   ;
@@ -168,16 +166,11 @@
   ;   "params" (maps in vector)
   ;   "return" (map)
   ;   "usages" (maps in vector)}
-  [code name]
-  ; A letfn térben definiált függvények is rendelkezhetnek paraméter dokumentációval,
-  ; ezért szükséges csak a függvény fejlécében olvasni!
-  (let [header (-> code (string/from-first-occurence   "\n  ;"  {:return? false})
-                        (string/before-first-occurence "\n  ([" {:return? true})
-                        (string/before-first-occurence "\n  ["  {:return? true}))]
-       {"params"   (read-function-params   header)
-        "examples" (read-function-examples header)
-        "usages"   (read-function-usages   header)
-        "return"   (read-function-return   header)}))
+  [header]
+  {"params"   (read-function-params   header)
+   "examples" (read-function-examples header)
+   "usages"   (read-function-usages   header)
+   "return"   (read-function-return   header)})
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -217,20 +210,12 @@
   ;     "usages" (maps in vector)}
   ;   "name" (string)}
   [file-content name]
-  ; pattern: "(defn my-function"
-  ;
-  ; BUG#7710
-  ; Előfordulhat, hogy az end-pos értéke nil!
-  ; Pl.: Ha a függvényben lévő valamelyik comment nem egyenlő számú nyitó és záró
-  ;      zárójelet tartalmaz, akkor ...
-  (let [pattern (str "[(]defn[-]{0,}[ ]{1,}"name)]
-       (if-let [start-pos (regex/first-dex-of file-content (re-pattern pattern))]
-               (if-let [end-pos (-> file-content (string/part start-pos)
-                                                 (syntax/close-paren-position))]
-                       (let [end-pos (+ end-pos start-pos)
-                             code    (string/part file-content start-pos end-pos)]
-                            {"header" (read-function-header code name)
-                             "name"   name})))))
+  (if-let [header (read.helpers/function-header file-content name)]
+          {"header" (read-function-header header)
+           "code"   (read.helpers/function-code file-content name)
+           "name"   name}
+          {"code"   (read.helpers/function-code file-content name)
+           "name"   name}))
 
 (defn read-code
   ; @param (string) file-content
@@ -316,7 +301,7 @@
   ;   "functions" (maps in vector)}
   [options layer-name directory-name]
   (let [defs (get-in @import.state/LAYERS [layer-name directory-name "defs"])]
-       (letfn [(f [result [name value]]
+       (letfn [(f [result [name value :as def]]
                   (let [def (read-def options layer-name directory-name name value)]
                        (if-let [function (get def "function")]
                                (update result "functions" vector/conj-item function)

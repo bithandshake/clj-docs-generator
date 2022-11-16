@@ -1,6 +1,7 @@
 
 (ns docs.read.helpers
-    (:require [regex.api         :as regex]
+    (:require [candy.api         :refer [return]]
+              [regex.api         :as regex]
               [mid-fruits.string :as string]
               [syntax.api        :as syntax]))
 
@@ -24,6 +25,61 @@
         relative-filepath (-> alias (string/replace-part "." "/")
                                     (string/replace-part "-" "_"))]
        (str path "/source-code/"layer-name"/"directory-name"/"relative-filepath"."layer-name)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn function-content
+  ; @param (string) file-content
+  ; @param (string) name
+  ;
+  ; @return (string)
+  [file-content name]
+  ; open-pattern: "(defn my-function"
+  ;
+  ; BUG#7710
+  ; Előfordulhat, hogy az end-pos értéke nil!
+  ; Pl.: Ha a függvényben lévő valamelyik comment nem egyenlő számú nyitó és záró
+  ;      zárójelet tartalmaz, akkor ...
+  (let [open-pattern (str "[(]defn[-]{0,}[ ]{1,}"name)]
+       (if-let [start-pos (regex/first-dex-of file-content (re-pattern open-pattern))]
+               (if-let [end-pos (-> file-content (string/part start-pos)
+                                                 (syntax/close-paren-position))]
+                       (let [end-pos (+ end-pos start-pos 1)]
+                            (string/part file-content start-pos end-pos))))))
+
+(defn function-header
+  ; @param (string) file-content
+  ; @param (string) name
+  ;
+  ; @return (string)
+  [file-content name]
+  ; A letfn térben definiált függvények is rendelkezhetnek paraméter dokumentációval,
+  ; ezért szükséges csak a függvény fejlécében olvasni!
+  (if-let [function-content (function-content file-content name)]
+          (-> function-content (string/from-first-occurence   "\n  ;"  {:return? false})
+                               (string/before-first-occurence "\n  ([" {:return? true})
+                               (string/before-first-occurence "\n  ["  {:return? true}))))
+
+(defn function-code
+  ; @param (string) file-content
+  ; @param (string) name
+  ;
+  ; @return (string)
+  [file-content name]
+  (when (= name "get-scroll-direction")
+        (println name))
+  (let [comment-pattern "[ ]{0,};"]
+       (if-let [function-content (function-content file-content name)]
+               (letfn [(f [function-content]
+                          (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
+                                  (let [comment (-> function-content (string/part start-pos)
+                                                                     (string/before-first-occurence "\n" {:return? true}))]
+                                       (when (= name "get-scroll-direction")
+                                             (println (str "\""(string/replace-part comment "\n" "\\n" )"\"")))
+                                       (f (string/remove-first-occurence function-content (str comment "\n"))))
+                                  (return function-content)))]
+                      (f function-content)))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -53,7 +109,7 @@
   ;   "types" (string)}}
   [n]
   (let [param-name (-> n (string/after-first-occurence  "  ; @param" {:return? false})
-                         (string/before-first-occurence "\n"         {:return? false})
+                         (string/before-first-occurence "\n"         {:return? true})
                          (string/after-last-occurence   ")"          {:return? false})
                          (string/trim))
         optional?  (-> n (string/before-first-occurence param-name   {:return? false})
@@ -80,10 +136,13 @@
   ; 2.
   ; 3. A tartalommal rendelkező sorok elejéről eltávolítja a "  ; " részt
   ; 4. Törli a következő bekezdés előtti üres sorokat ("  ;")
+  ; 5. Ha már nem következik utána több bekezdés, akkor lemaradna a végéről a sortörés,
+  ;    ezért szükésges biztosítani, hogy sortörésre végződjön!
   (let [call (-> n (string/after-first-occurence  "  ; @usage" {:return? false})
                    (string/before-first-occurence "  ; @"      {:return? true})
                    (string/remove-part            "  ; ")
-                   (string/remove-part            "  ;\n"))]
+                   (string/remove-part            "  ;\n")
+                   (string/ends-with!             "\n"))]
        {"call" call}))
 
 ;; ----------------------------------------------------------------------------
@@ -107,17 +166,18 @@
         result (-> n (string/after-first-occurence  "  ; =>"       {:return? false})
                      (string/before-first-occurence "  ; @"        {:return? true})
                      (string/remove-part            "  ; ")
-                     (string/remove-part            "  ;\n"))]
+                     (string/remove-part            "  ;\n")
+                     (string/ends-with!             "\n"))]
        {"call" call "result" result}))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn return
+(defn first-return
   ; @param (string) n
   ;
   ; @example
-  ;  (return "... ; @return (map) {...} ...")
+  ;  (first-return "... ; @return (map) {...} ...")
   ;  =>
   ;  {"sample" "{...}" "types" "map"}
   ;
