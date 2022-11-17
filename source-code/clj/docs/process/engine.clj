@@ -16,16 +16,16 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {"header"
-  ;    {"params" (map)(opt)
-  ;      {"name" (string)
-  ;      {"optional?" (boolean)
-  ;      {"types" (string)}}}
+  ; {"header"
+  ;   {"params" (map)(opt)
+  ;     {"name" (string)
+  ;     {"optional?" (boolean)
+  ;     {"types" (string)}}}
   ;
   ; @example
-  ;  (process-function-params {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
-  ;  =>
-  ;  ["@param (string)(opt) my-param"]
+  ; (process-function-params {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; =>
+  ; ["@param (string)(opt) my-param"]
   ;
   ; @return (strings in vector)
   [_ _ _ function-data]
@@ -33,10 +33,12 @@
           (letfn [(f [params param]
                      (let [name      (get param "name")
                            optional? (get param "optional?")
-                           types     (get param "types")]
+                           types     (get param "types")
+                           sample    (get param "sample")]
                           (conj params (str "@param ("types")"
                                             (if optional? "(opt)")
-                                            " "name))))]
+                                            " "name
+                                            (if sample (str "\n"sample))))))]
                  (reduce f [] params))))
 
 (defn process-function-usages
@@ -44,14 +46,14 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {"header"
-  ;    {"usages" (maps in vector)(opt)
-  ;      [{"call" (string)}]}}
+  ; {"header"
+  ;   {"usages" (maps in vector)(opt)
+  ;     [{"call" (string)}]}}
   ;
   ; @example
-  ;  (process-function-usages {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
-  ;  =>
-  ;  ["\n@usage ..."]
+  ; (process-function-usages {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; =>
+  ; ["\n@usage ..."]
   ;
   ; @return (strings in vector)
   [_ _ _ function-data]
@@ -66,14 +68,14 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {"header"
-  ;    {"examples" (maps in vector)(opt)
-  ;      [{"call" (string)}]}}
+  ; {"header"
+  ;   {"examples" (maps in vector)(opt)
+  ;     [{"call" (string)}]}}
   ;
   ; @example
-  ;  (process-function-examples {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
-  ;  =>
-  ;  ["\n@example ..."]
+  ; (process-function-examples {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; =>
+  ; ["\n@example ..."]
   ;
   ; @return (?)
   [_ _ _ function-data]
@@ -89,19 +91,23 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {"header"
-  ;    {"return" (map)(opt)
-  ;      {"types" (string)}}}
+  ; {"header"
+  ;   {"return" (map)(opt)
+  ;     {"sample" (string)(opt)
+  ;      "types" (string)(opt)}}}
   ;
   ; @example
-  ;  (process-function-return {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
-  ;  =>
-  ;  "@return(string)"
+  ; (process-function-return {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; =>
+  ; "@return(string)"
   ;
   ; @return (string)
   [_ _ _ function-data]
   (if-let [types (get-in function-data ["header" "return" "types"])]
-          (str "@return ("types")")))
+          (if-let [sample (get-in function-data ["header" "return" "sample"])]
+                  (str "@return ("types")"sample)
+                  (str "@return ("types")"))))
+
 
 (defn process-function-header
   ; @param (map) options
@@ -110,15 +116,15 @@
   ; @param (map) function-data
   ;
   ; @example
-  ;  (process-function-header {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
-  ;  =>
-  ;  (?)
+  ; (process-function-header {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; =>
+  ; (?)
   ;
   ; @return (map)
-  ;  {"examples" (strings in vector)
-  ;   "params" (strings in vector)
-  ;   "return" (string)
-  ;   "usages" (strings in vector)}
+  ; {"examples" (strings in vector)
+  ;  "params" (strings in vector)
+  ;  "return" (string)
+  ;  "usages" (strings in vector)}
   [options layer-name directory-name function-data]
   {"examples" (process-function-examples options layer-name directory-name function-data)
    "params"   (process-function-params   options layer-name directory-name function-data)
@@ -132,13 +138,13 @@
   ; @param (map) function-data
   ;
   ; @example
-  ;  (process-function {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
-  ;  =>
-  ;  (?)
+  ; (process-function {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; =>
+  ; (?)
   ;
   ; @return (map)
-  ;  {"header" (map)
-  ;   "name" (string)}
+  ; {"header" (map)
+  ;  "name" (string)}
   [options layer-name directory-name function-data]
   {"header" (process-function-header options layer-name directory-name function-data)
    "code"   (get function-data "code")
@@ -150,9 +156,9 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (process-functions {:path "my-submodules/my-repository"} "clj" "my_directory")
-  ;  =>
-  ;  {}
+  ; (process-functions {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; =>
+  ; {}
   ;
   ; @return (map)
   [options layer-name directory-name]
@@ -170,12 +176,12 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (process-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
-  ;  =>
-  ;  {}
+  ; (process-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; =>
+  ; {}
   ;
   ; @return (map)
-  ;  {}
+  ; {}
   [options layer-name directory-name]
   {;"constants" (process-constants options layer-name directory-name)
    "functions" (process-functions options layer-name directory-name)})
@@ -188,9 +194,9 @@
   ; @param (string) layer-name
   ;
   ; @example
-  ;  (process-layer {:path "my-submodules/my-repository"} "clj")
-  ;  =>
-  ;  {"my_directory" {}}
+  ; (process-layer {:path "my-submodules/my-repository"} "clj")
+  ; =>
+  ; {"my_directory" {}}
   ;
   ; @return (map)
   [options layer-name]
@@ -218,9 +224,9 @@
   ; @param (map) options
   ;
   ; @example
-  ;  (process-cover-description {...})
-  ;  =>
-  ;  "..."
+  ; (process-cover-description {...})
+  ; =>
+  ; "..."
   ;
   ; @return (string)
   [_]
@@ -233,9 +239,9 @@
   ; @param (strings in vector) links
   ;
   ; @example
-  ;  (process-layer-links {...} "clj" [])
-  ;  =>
-  ;  [... "* [my-directory.api](clj/my_directory/API.md) [clj]" ...]
+  ; (process-layer-links {...} "clj" [])
+  ; =>
+  ; [... "* [my-directory.api](clj/my_directory/API.md) [clj]" ...]
   ;
   ; @return (strings in vector)
   [_ layer-name links]
@@ -251,11 +257,11 @@
   ; @param (map) options
   ;
   ; @example
-  ;  (process-layer-links {...})
-  ;  =>
-  ;  ["* [my-directory.api](clj/my_directory/API.md) [clj]"
-  ;   "* [my-directory.api](cljc/my_directory/API.md) [cljc]"
-  ;   "* [my-directory.api](cljs/my_directory/API.md) [cljs]"]
+  ; (process-layer-links {...})
+  ; =>
+  ; ["* [my-directory.api](clj/my_directory/API.md) [clj]"
+  ;  "* [my-directory.api](cljc/my_directory/API.md) [cljc]"
+  ;  "* [my-directory.api](cljs/my_directory/API.md) [cljs]"]
   ;
   ; @return (strings in vector)
   [options]
@@ -266,12 +272,12 @@
 
 (defn process-cover-subtitle
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ;
   ; @example
-  ;  (process-cover-subtitle {...})
-  ;  =>
-  ;  "<p>Documentation of the <strong>my-repository</strong> Clojure / ClojureScript library</p>"
+  ; (process-cover-subtitle {...})
+  ; =>
+  ; "<p>Documentation of the <strong>my-repository</strong> Clojure / ClojureScript library</p>"
   ;
   ; @return (string)
   [{:keys [path]}]
@@ -286,12 +292,12 @@
 
 (defn process-cover-title
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ;
   ; @example
-  ;  (process-subtitle {...})
-  ;  =>
-  ;  "# <strong>my-repository</strong>"
+  ; (process-subtitle {...})
+  ; =>
+  ; "# <strong>my-repository</strong>"
   ;
   ; @return (string)
   [{:keys [path]}]

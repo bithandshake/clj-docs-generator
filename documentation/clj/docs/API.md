@@ -10,16 +10,17 @@
 
 ```
 @param (map) options
+{:path (string)}
 ```
 
 ```
 @usage
- (create-documentation! {...})
+(create-documentation! {...})
 ```
 
 ```
 @usage
- (create-documentation! {:path "my-submodules/my-repository"})
+(create-documentation! {:path "my-submodules/my-repository"})
 ```
 
 ```

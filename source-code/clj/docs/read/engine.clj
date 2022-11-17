@@ -17,16 +17,16 @@
   ; @param (string) header
   ;
   ; @example
-  ;  (read-function-return "... @return (map) {:my-key (string)}")
-  ;  =>
-  ;  {"sample" {:my-key (string)}
-  ;   "types" "map"}
+  ; (read-function-return "... @return (map) {:my-key (string)}")
+  ; =>
+  ; {"sample" {:my-key (string)}
+  ;  "types" "map"}
   ;
   ; @return (map)
-  ;  {"sample" (string)
-  ;   "types" (string)}
+  ; {"sample" (string)
+  ;  "types" (string)}
   [header]
-  (read.helpers/first-return header))
+  (read.helpers/function-return header))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -36,27 +36,27 @@
   ; @param (integer) cursor
   ;
   ; @example
-  ;  (read-function-first-usage "... ; @usage (my-function ...) ..." 42)
-  ;  =>
-  ;  {"call" "(my-function ...)"}
+  ; (read-function-first-usage "... ; @usage (my-function ...) ..." 42)
+  ; =>
+  ; {"call" "(my-function ...)"}
   ;
   ; @return (map)
-  ;  {"call" (string)}
+  ; {"call" (string)}
   [header cursor]
   (-> header (string/part cursor)
-             (read.helpers/first-usage)))
+             (read.helpers/function-first-usage)))
 
 (defn read-function-usages
   ; @param (string) header
   ;
   ; @example
-  ;  (read-function-usages "... ; @usage (my-function ...) ..." 42)
-  ;  =>
-  ;  [{"call" "(my-function ...)"}]
+  ; (read-function-usages "... ; @usage (my-function ...) ..." 42)
+  ; =>
+  ; [{"call" "(my-function ...)"}]
   ;
   ; @return (maps in vector)
-  ;  [{"call" (string)}
-  ;   {...}]
+  ; [{"call" (string)}
+  ;  {...}]
   [header]
   (letfn [(f [usages n]
              (if-let [cursor (string/nth-dex-of header "  ; @usage" n)]
@@ -74,29 +74,29 @@
   ; @param (integer) cursor
   ;
   ; @example
-  ;  (read-function-first-example "... ; @example (my-function ...) => 123 ..." 42)
-  ;  =>
-  ;  {"call" "(my-function ...)" "result" 123}
+  ; (read-function-first-example "... ; @example (my-function ...) => 123 ..." 42)
+  ; =>
+  ; {"call" "(my-function ...)" "result" 123}
   ;
   ; @return (map)
-  ;  {"call" (string)
-  ;   "result" (string)}
+  ; {"call" (string)
+  ;  "result" (string)}
   [header cursor]
   (-> header (string/part cursor)
-             (read.helpers/first-example)))
+             (read.helpers/function-first-example)))
 
 (defn read-function-examples
   ; @param (string) header
   ;
   ; @example
-  ;  (read-function-examples "... ; @example (my-function ...) => 123 ..." 42)
-  ;  =>
-  ;  [{"call" "(my-function ...)" "result" 123}]
+  ; (read-function-examples "... ; @example (my-function ...) => 123 ..." 42)
+  ; =>
+  ; [{"call" "(my-function ...)" "result" 123}]
   ;
   ; @return (maps in vector)
-  ;  [{"call" (string)
-  ;    "result" (string)}
-  ;   {...}]
+  ; [{"call" (string)
+  ;   "result" (string)}
+  ;  {...}]
   [header]
   (letfn [(f [examples n]
              (if-let [cursor (string/nth-dex-of header "  ; @example" n)]
@@ -114,33 +114,33 @@
   ; @param (integer) cursor
   ;
   ; @example
-  ;  (read-function-first-param "... ; @param (*)(opt) my-param ..." 42)
-  ;  =>
-  ;  {"name" "my-param" "optional?" true "types" "*"}
+  ; (read-function-first-param "... ; @param (*)(opt) my-param ..." 42)
+  ; =>
+  ; {"name" "my-param" "optional?" true "types" "*"}
   ;
   ; @return (map)
-  ;  {"name" (string)
-  ;   "optional?" (boolean)
-  ;   "sample" (string)
-  ;   "types" (string)}}
+  ; {"name" (string)
+  ;  "optional?" (boolean)
+  ;  "sample" (string)
+  ;  "types" (string)}}
   [header cursor]
   (-> header (string/part cursor)
-             (read.helpers/first-param)))
+             (read.helpers/function-first-param)))
 
 (defn read-function-params
   ; @param (string) header
   ;
   ; @example
-  ;  (read-function-params "...")
-  ;  =>
-  ;  (?)
+  ; (read-function-params "...")
+  ; =>
+  ; (?)
   ;
   ; @return (maps in vector)
-  ;  [{"name" (string)
-  ;    "optional?" (boolean)
-  ;    "sample" (string)
-  ;    "types" (string)}
-  ;   {...}]
+  ; [{"name" (string)
+  ;   "optional?" (boolean)
+  ;   "sample" (string)
+  ;   "types" (string)}
+  ;  {...}]
   [header]
   (letfn [(f [params n]
              (if-let [cursor (string/nth-dex-of header "  ; @param" n)]
@@ -157,15 +157,15 @@
   ; @param (string) header
   ;
   ; @example
-  ;  (read-function-header "...")
-  ;  =>
-  ;  (?)
+  ; (read-function-header "...")
+  ; =>
+  ; (?)
   ;
   ; @return (map)
-  ;  {"examples" (maps in vector)
-  ;   "params" (maps in vector)
-  ;   "return" (map)
-  ;   "usages" (maps in vector)}
+  ; {"examples" (maps in vector)
+  ;  "params" (maps in vector)
+  ;  "return" (map)
+  ;  "usages" (maps in vector)}
   [header]
   {"params"   (read-function-params   header)
    "examples" (read-function-examples header)
@@ -180,13 +180,13 @@
   ; @param (string) name
   ;
   ; @example
-  ;  (read-constant "..." "MY-CONSTANT")
-  ;  =>
-  ;  {"type" ["string"]}
+  ; (read-constant "..." "MY-CONSTANT")
+  ; =>
+  ; {"type" ["string"]}
   ;
   ; @return (map)
-  ;  {"name" (string)
-  ;   "type" (strings in vector)}
+  ; {"name" (string)
+  ;  "type" (strings in vector)}
   [file-content name]
   ; pattern: "(def MY-CONSTANT"
   (let [pattern (str "[(]def[ ]{1,}"name)]
@@ -198,17 +198,17 @@
   ; @param (string) name
   ;
   ; @example
-  ;  (read-function "..." "my-function")
-  ;  =>
-  ;  (?)
+  ; (read-function "..." "my-function")
+  ; =>
+  ; (?)
   ;
   ; @return (map)
-  ;  {"header" (map)
-  ;    {"examples" (maps in vector)
-  ;     "params" (maps in vector)
-  ;     "return" (map)
-  ;     "usages" (maps in vector)}
-  ;   "name" (string)}
+  ; {"header" (map)
+  ;   {"examples" (maps in vector)
+  ;    "params" (maps in vector)
+  ;    "return" (map)
+  ;    "usages" (maps in vector)}
+  ;  "name" (string)}
   [file-content name]
   (if-let [header (read.helpers/function-header file-content name)]
           {"header" (read-function-header header)
@@ -222,24 +222,24 @@
   ; @param (string) name
   ;
   ; @example
-  ;  (read-code "..." "my-function")
-  ;  =>
-  ;  {"function" {...}}
+  ; (read-code "..." "my-function")
+  ; =>
+  ; {"function" {...}}
   ;
   ; @example
-  ;  (read-code "..." "MY-CONSTANT")
-  ;  =>
-  ;  {"constant" {...}}
+  ; (read-code "..." "MY-CONSTANT")
+  ; =>
+  ; {"constant" {...}}
   ;
   ; @return (map)
-  ;  {"constant" (map)
-  ;    {"type" (strings in vector)}
-  ;   "function" (map)
-  ;    {"header" (map)
-  ;      {"examples" (maps in vector)
-  ;       "params" (maps in vector)
-  ;       "return" (map)
-  ;       "usages" (maps in vector)}}}
+  ; {"constant" (map)
+  ;   {"type" (strings in vector)}
+  ;  "function" (map)
+  ;   {"header" (map)
+  ;     {"examples" (maps in vector)
+  ;      "params" (maps in vector)
+  ;      "return" (map)
+  ;      "usages" (maps in vector)}}}
   [file-content name]
   (let [function-data (read-function file-content name)
         constant-data (read-constant file-content name)]
@@ -259,18 +259,18 @@
   ; @param (string) value
   ;
   ; @example
-  ;  (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "my-function" "my-namespace/my-function")
-  ;  =>
-  ;  {"function" {...}}
+  ; (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "my-function" "my-namespace/my-function")
+  ; =>
+  ; {"function" {...}}
   ;
   ; @example
-  ;  (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
-  ;  =>
-  ;  {"constant" {...}}
+  ; (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
+  ; =>
+  ; {"constant" {...}}
   ;
   ; @return (map)
-  ;  {"constant" (map)
-  ;   "function" (map)}
+  ; {"constant" (map)
+  ;  "function" (map)}
   [options layer-name directory-name name value]
   (let [alias (or (string/before-first-occurence value "/" {:return? false})
                   (get-in @import.state/LAYERS [layer-name directory-name "refers" value]))
@@ -293,14 +293,14 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (read-defs {:path "my-submodules/my-repository"} "clj" "my_directory")
-  ;  =>
-  ;  {"constants" [{...}]
-  ;   "functions" [{...}]}
+  ; (read-defs {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; =>
+  ; {"constants" [{...}]
+  ;  "functions" [{...}]}
   ;
   ; @return (map)
-  ;  {"constants" (maps in vector)
-  ;   "functions" (maps in vector)}
+  ; {"constants" (maps in vector)
+  ;  "functions" (maps in vector)}
   [options layer-name directory-name]
   (let [defs (get-in @import.state/LAYERS [layer-name directory-name "defs"])]
        (letfn [(f [result [name value :as def]]
@@ -321,14 +321,14 @@
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (read-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
-  ;  =>
-  ;  {"constants" [{...}]
-  ;   "functions" [{...}]}
+  ; (read-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; =>
+  ; {"constants" [{...}]
+  ;  "functions" [{...}]}
   ;
   ; @return (map)
-  ;  {"constants" (maps in vector)
-  ;   "functions" (maps in vector)}
+  ; {"constants" (maps in vector)
+  ;  "functions" (maps in vector)}
   [options layer-name directory-name]
   (read-defs options layer-name directory-name))
 
@@ -340,9 +340,9 @@
   ; @param (string) layer-name
   ;
   ; @example
-  ;  (read-layer {:path "my-submodules/my-repository"} "clj")
-  ;  =>
-  ;  {"my_directory" {}}
+  ; (read-layer {:path "my-submodules/my-repository"} "clj")
+  ; =>
+  ; {"my_directory" {}}
   ;
   ; @return (map)
   [options layer-name]

@@ -14,9 +14,9 @@
   ; @param (integer) cursor
   ;
   ; @example
-  ;  (import-first-refer "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ..." 42)
-  ;  =>
-  ;  {"my-refer" "my-namespace"}
+  ; (import-first-refer "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ..." 42)
+  ; =>
+  ; {"my-refer" "my-namespace"}
   ;
   ; @return (map)
   [api-content cursor]
@@ -27,10 +27,10 @@
   ; @param (string) api-content
   ;
   ; @example
-  ;  (import-refers "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ...")
-  ;  =>
-  ;  {"my-refer"   "my-namespace"
-  ;   "your-refer" "your-namespace"}
+  ; (import-refers "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ...")
+  ; =>
+  ; {"my-refer"   "my-namespace"
+  ;  "your-refer" "your-namespace"}
   ;
   ; @return (map)
   [api-content]
@@ -50,9 +50,9 @@
   ; @param (integer) cursor
   ;
   ; @example
-  ;  (import-first-alias "... [my-namespace :as my-alias] [your-namespace :as your-alias] ..." 42)
-  ;  =>
-  ;  {"my-namespace" "my-alias"}
+  ; (import-first-alias "... [my-namespace :as my-alias] [your-namespace :as your-alias] ..." 42)
+  ; =>
+  ; {"my-namespace" "my-alias"}
   ;
   ; @return (map)
   [api-content cursor]
@@ -64,10 +64,10 @@
   ; @param (string) api-content
   ;
   ; @example
-  ;  (import-aliases "... [my-namespace :as my-alias] [your-namespace :as your-alias] ...")
-  ;  =>
-  ;  {"my-namespace"   "my-alias"
-  ;   "your-namespace" "your-alias"}
+  ; (import-aliases "... [my-namespace :as my-alias] [your-namespace :as your-alias] ...")
+  ; =>
+  ; {"my-namespace"   "my-alias"
+  ;  "your-namespace" "your-alias"}
   ;
   ; @return (map)
   [api-content]
@@ -87,9 +87,9 @@
   ; @param (integer) cursor
   ;
   ; @example
-  ;  (import-first-def "... (def my-name my-value) (def your-name your-value) ..." 42)
-  ;  =>
-  ;  ["my-name" "my-value"]
+  ; (import-first-def "... (def my-name my-value) (def your-name your-value) ..." 42)
+  ; =>
+  ; ["my-name" "my-value"]
   ;
   ; @return (strings in vector)
   [api-content cursor]
@@ -100,10 +100,10 @@
   ; @param (string) api-content
   ;
   ; @example
-  ;  (import-defs "... (def my-name my-value) (def your-name your-value) ...")
-  ;  =>
-  ;  {"my-name"   "my-value"
-  ;   "your-name" "your-value"}
+  ; (import-defs "... (def my-name my-value) (def your-name your-value) ...")
+  ; =>
+  ; {"my-name"   "my-value"
+  ;  "your-name" "your-value"}
   ;
   ; @return (strings in vectors in vector)
   [api-content]
@@ -120,25 +120,25 @@
 
 (defn import-directory
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ; @param (string) layer-name
-  ;  "clj", "cljc", "cljs"
+  ; "clj", "cljc", "cljs"
   ; @param (string) directory-name
   ;
   ; @example
-  ;  (import-directory "my-submodules/my-repository/source-code/clj/my_directory/api.clj")
-  ;  =>
-  ;  {"aliases" {"my-namespace"   "my-alias"
-  ;              "your-namespace" "your-alias"}
-  ;   "defs"    [["my-name"   "my-value"]
-  ;              ["your-name" "your-value"]]
-  ;   "refers"  {"my-refer"   "my-namespace"
-  ;              "your-refer" "your-namespace"}}
+  ; (import-directory "my-submodules/my-repository/source-code/clj/my_directory/api.clj")
+  ; =>
+  ; {"aliases" {"my-namespace"   "my-alias"
+  ;             "your-namespace" "your-alias"}
+  ;  "defs"    [["my-name"   "my-value"]
+  ;             ["your-name" "your-value"]]
+  ;  "refers"  {"my-refer"   "my-namespace"
+  ;             "your-refer" "your-namespace"}}
   ;
   ; @return (map)
-  ;  {"aliases" (map)
-  ;   "defs" (strings in vectors in vector)
-  ;   "refers" (map)}
+  ; {"aliases" (map)
+  ;  "defs" (strings in vectors in vector)
+  ;  "refers" (map)}
   [{:keys [path] :as options} layer-name directory-name]
   (let [api-filepath (import.helpers/api-filepath options layer-name directory-name)
         api-content  (io/read-file api-filepath)]
@@ -151,19 +151,19 @@
 
 (defn import-layer
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ; @param (string) layer
-  ;  "clj", "cljc", "cljs"
+  ; "clj", "cljc", "cljs"
   ;
   ; @example
-  ;  (import-layer {:path "my-submodules/my-repository"} "clj")
-  ;  =>
-  ;  {"my_directory" {"aliases" {"my-namespace"   "my-alias"
-  ;                              "your-namespace" "your-alias"}
-  ;                   "defs"    [["my-name"   "my-value"]
-  ;                              ["your-name" "your-value"]]
-  ;                   "refers"  {"my-refer"   "my-namespace"
-  ;                              "your-refer" "your-namespace"}}}
+  ; (import-layer {:path "my-submodules/my-repository"} "clj")
+  ; =>
+  ; {"my_directory" {"aliases" {"my-namespace"   "my-alias"
+  ;                             "your-namespace" "your-alias"}
+  ;                  "defs"    [["my-name"   "my-value"]
+  ;                             ["your-name" "your-value"]]
+  ;                  "refers"  {"my-refer"   "my-namespace"
+  ;                             "your-refer" "your-namespace"}}}
   ;
   ; @return (map)
   [{:keys [path] :as options} layer-name]
@@ -179,24 +179,24 @@
 
 (defn import-layers
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ;
   ; @example
-  ;  (import-layers {:path "my-submodules/my-repository"})
-  ;  =>
-  ;  {"clj" {"my_directory" {"aliases" {"my-namespace"   "my-alias"
-  ;                                     "your-namespace" "your-alias"}
-  ;                          "defs"    [["my-name"   "my-value"]
-  ;                                     ["your-name" "your-value"]]
-  ;                          "refers"  {"my-refer"   "my-namespace"
-  ;                                     "your-refer" "your-namespace"}}}}
-  ;   "cljc" {...}
-  ;   "cljs" {...}}
+  ; (import-layers {:path "my-submodules/my-repository"})
+  ; =>
+  ; {"clj" {"my_directory" {"aliases" {"my-namespace"   "my-alias"
+  ;                                    "your-namespace" "your-alias"}
+  ;                         "defs"    [["my-name"   "my-value"]
+  ;                                    ["your-name" "your-value"]]
+  ;                         "refers"  {"my-refer"   "my-namespace"
+  ;                                    "your-refer" "your-namespace"}}}}
+  ;  "cljc" {...}
+  ;  "cljs" {...}}
   ;
   ; @return (map)
-  ;  {"clj" (map)
-  ;   "cljc" (map)
-  ;   "cljs" (map)}
+  ; {"clj" (map)
+  ;  "cljc" (map)
+  ;  "cljs" (map)}
   [{:keys [path] :as options}]
   (letfn [(f [result layer-name]
              (let [layer-path (import.helpers/layer-path options layer-name)]

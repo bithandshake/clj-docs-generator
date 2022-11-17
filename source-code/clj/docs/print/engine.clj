@@ -30,7 +30,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {}
+  ; {}
   ;
   ; @return (string)
   [_ _ directory-name function-data]
@@ -57,7 +57,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {}
+  ; {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -70,7 +70,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {}
+  ; {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -85,7 +85,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {}
+  ; {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -100,7 +100,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {}
+  ; {}
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -127,7 +127,7 @@
   ; @param (string) layer-name
   ; @param (string) directory-name
   ; @param (map) function-data
-  ;  {}
+  ; {}
   ;
   ; @return (string)
   [options layer-name directory-name function-data]
@@ -212,7 +212,7 @@
 
 (defn print-directory!
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ; @param (string) layer-name
   ; @param (string) directory-name
   [{:keys [path] :as options} layer-name directory-name]
@@ -295,7 +295,7 @@
 
 (defn print-cover!
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   [{:keys [path] :as options}]
   (let [cover-filepath (str path"/documentation/COVER.md")
         cover          (print-cover options)]

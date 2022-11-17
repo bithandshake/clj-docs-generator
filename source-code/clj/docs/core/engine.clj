@@ -22,7 +22,7 @@
 
 (defn initialize!
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   [{:keys [path] :as options}]
   (reset! detect.state/API-FILES nil)
   (reset! import.state/LAYERS    nil)
@@ -50,13 +50,13 @@
 
 (defn create-documentation!
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ;
   ; @usage
-  ;  (create-documentation! {...})
+  ; (create-documentation! {...})
   ;
   ; @usage
-  ;  (create-documentation! {:path "my-submodules/my-repository"})
+  ; (create-documentation! {:path "my-submodules/my-repository"})
   ;
   ; @return (string)
   [options]

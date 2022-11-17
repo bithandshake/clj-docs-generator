@@ -8,10 +8,10 @@
 
 (defn options-prototype
   ; @param (map) options
-  ;  {}
+  ; {}
   ;
   ; @return
-  ;  {}
+  ; {}
   [{:keys [path] :as options}]
   (merge {}
          (param options)

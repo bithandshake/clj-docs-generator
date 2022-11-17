@@ -10,14 +10,14 @@
 
 (defn code-filepath
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ; @param (string) layer-name
   ; @param (string) alias
   ;
   ; @example
-  ;  (code-filepath {:path "my-submodules/my-repository"} "clj" "my_directory" "my-subdirectory.my-file")
-  ;  =>
-  ;  "my-submodules/my-repository/source-code/clj/my_directory/my_subdirectory/my_file.clj"
+  ; (code-filepath {:path "my-submodules/my-repository"} "clj" "my_directory" "my-subdirectory.my-file")
+  ; =>
+  ; "my-submodules/my-repository/source-code/clj/my_directory/my_subdirectory/my_file.clj"
   ;
   ; @return (string)
   [{:keys [path]} layer-name directory-name alias]
@@ -40,7 +40,7 @@
   ; BUG#7710
   ; Előfordulhat, hogy az end-pos értéke nil!
   ; Pl.: Ha a függvényben lévő valamelyik comment nem egyenlő számú nyitó és záró
-  ;      zárójelet tartalmaz, akkor ...
+  ;     zárójelet tartalmaz, akkor ...
   ;
   ; Ha a függvény neve kérdőjelre végződik, akkor a regex megsértődik a "function-name?\n"
   ; kifejezésre, mert a kérdőjel különleges karakter, ezért azt külön kell kezelni!
@@ -93,29 +93,29 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn first-param
+(defn function-first-param
   ; @param (string) n
   ;
   ; @example
-  ;  (first-param "... ; @param (*) my-param ...")
-  ;  =>
-  ;  {"name" "my-param" "optional?" false "types" "*"}
+  ; (function-first-param "... ; @param (*) my-param ...")
+  ; =>
+  ; {"name" "my-param" "optional?" false "types" "*"}
   ;
   ; @example
-  ;  (first-param "... ; @param (*)(opt) my-param ...")
-  ;  =>
-  ;  {"name" "my-param" "optional?" true "types" "*"}
+  ; (function-first-param "... ; @param (*)(opt) my-param ...")
+  ; =>
+  ; {"name" "my-param" "optional?" true "types" "*"}
   ;
   ; @example
-  ;  (first-param "... ; @param (map) my-param {...} ...")
-  ;  =>
-  ;  {"name" "my-param" "optional?" false "sample" "{...}" "types" "map"}
+  ; (function-first-param "... ; @param (map) my-param {...} ...")
+  ; =>
+  ; {"name" "my-param" "optional?" false "sample" "{...}" "types" "map"}
   ;
   ; @return (map)
-  ;  {"name" (string)
-  ;   "optional?" (boolean)
-  ;   "sample" (string)
-  ;   "types" (string)}}
+  ; {"name" (string)
+  ;  "optional?" (boolean)
+  ;  "sample" (string)
+  ;  "types" (string)}}
   [n]
   (let [param-name (-> n (string/after-first-occurence  "  ; @param" {:return? false})
                          (string/before-first-occurence "\n"         {:return? true})
@@ -124,29 +124,36 @@
         optional?  (-> n (string/before-first-occurence param-name   {:return? false})
                          (string/contains-part?         "(opt)"))
         types      (-> n (string/after-first-occurence  "("          {:return? false})
-                         (string/before-first-occurence ")"          {:return? false}))]
-      {"name" param-name "optional?" optional? "types" types}))
+                         (string/before-first-occurence ")"          {:return? false}))
+        sample     (-> n (string/after-first-occurence  "  ; @param" {:return? false})
+                         (string/before-first-occurence "  ; @"      {:return? true})
+                         (string/after-first-occurence  "\n"         {:return? false})
+                         (string/remove-part            "  ; ")
+                         (string/remove-part            "  ;\n")
+                         (string/not-ends-with!         "\n")
+                         (string/use-nil))]
+      {"name" param-name "optional?" optional? "sample" sample "types" types}))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn first-usage
+(defn function-first-usage
   ; @param (string) n
   ;
   ; @example
-  ;  (first-usage "...")
-  ;  =>
-  ;  {"call" "..."}
+  ; (function-first-usage "...")
+  ; =>
+  ; {"call" "..."}
   ;
   ; @return (map)
-  ;  {"call" (string)}
+  ; {"call" (string)}
   [n]
   ; 1.
   ; 2.
   ; 3. A tartalommal rendelkező sorok elejéről eltávolítja a "  ; " részt
   ; 4. Törli a következő bekezdés előtti üres sorokat ("  ;")
   ; 5. Ha már nem következik utána több bekezdés, akkor lemaradna a végéről a sortörés,
-  ;    ezért szükésges biztosítani, hogy sortörésre végződjön!
+  ;   ezért szükésges biztosítani, hogy sortörésre végződjön!
   (let [call (-> n (string/after-first-occurence  "  ; @usage" {:return? false})
                    (string/before-first-occurence "  ; @"      {:return? true})
                    (string/remove-part            "  ; ")
@@ -157,17 +164,17 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn first-example
+(defn function-first-example
   ; @param (string) n
   ;
   ; @example
-  ;  (first-example "... ; @example (my-function ...) => 123 ...")
-  ;  =>
-  ;  {"call" "(my-function ...)" "result" 123}
+  ; (function-first-example "... ; @example (my-function ...) => 123 ...")
+  ; =>
+  ; {"call" "(my-function ...)" "result" 123}
   ;
   ; @return (map)
-  ;  {"call" (string)
-  ;   "result" (string)}
+  ; {"call" (string)
+  ;  "result" (string)}
   [n]
   (let [call   (-> n (string/after-first-occurence  "  ; @example" {:return? false})
                      (string/before-first-occurence "  ; =>"       {:return? false})
@@ -182,21 +189,23 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn first-return
+(defn function-return
   ; @param (string) n
   ;
   ; @example
-  ;  (first-return "... ; @return (map) {...} ...")
-  ;  =>
-  ;  {"sample" "{...}" "types" "map"}
+  ; (function-return "... ; @return (map) {...} ...")
+  ; =>
+  ; {"sample" "{...}" "types" "map"}
   ;
   ; @return (map)
-  ;  {"sample" (string)
-  ;   "types" (string)}
+  ; {"sample" (string)
+  ;  "types" (string)}
   [n]
   (let [types  (-> n (string/after-first-occurence  "  ; @return" {:return? false})
                      (string/after-first-occurence  "("           {:return? false})
                      (string/before-first-occurence ")"           {:return? false}))
         sample (-> n (string/after-first-occurence  "  ; @return" {:return? false})
-                     (string/after-first-occurence  ")"           {:return? false}))]
+                     (string/after-first-occurence  ")"           {:return? false})
+                     (string/remove-part            "  ; ")
+                     (string/remove-part            "  ;\n"))]
        {"sample" sample "types" types}))

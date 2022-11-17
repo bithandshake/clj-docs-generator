@@ -8,13 +8,13 @@
 
 (defn layer-path
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ; @param (string) layer-name
   ;
   ; @example
-  ;  (layer-path {:path "my-submodules/my-repository"} "clj")
-  ;  =>
-  ;  "my-submodules/my-repository/source-code/clj"
+  ; (layer-path {:path "my-submodules/my-repository"} "clj")
+  ; =>
+  ; "my-submodules/my-repository/source-code/clj"
   ;
   ; @return (string)
   [{:keys [path]} layer-name]
@@ -22,13 +22,13 @@
 
 (defn api-filepath
   ; @param (map) options
-  ;  {:path (string)}
+  ; {:path (string)}
   ; @param (string) layer-name
   ;
   ; @example
-  ;  (api-filepath {:path "my-submodules/my-repository"} "clj" "my_directory")
-  ;  =>
-  ;  "my-submodules/my-repository/source-code/clj/my_directory/api.clj"
+  ; (api-filepath {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; =>
+  ; "my-submodules/my-repository/source-code/clj/my_directory/api.clj"
   ;
   ; @return (string)
   [{:keys [path]} layer-name directory-name]
@@ -42,9 +42,9 @@
   ; @param (string) n
   ;
   ; @example
-  ;  (first-refer "... [my-namespace :refer [my-refer your-refer]] ...")
-  ;  =>
-  ;  {"my-refer" "my-namespace"}
+  ; (first-refer "... [my-namespace :refer [my-refer your-refer]] ...")
+  ; =>
+  ; {"my-refer" "my-namespace"}
   ;
   ; @return (map)
   [n]
@@ -64,13 +64,13 @@
   ; @param (string) n
   ;
   ; @example
-  ;  (first-alias "... [my-namespace :as my-alias] ...")
-  ;  =>
-  ;  ["my-namespace" "my-alias"]
+  ; (first-alias "... [my-namespace :as my-alias] ...")
+  ; =>
+  ; ["my-namespace" "my-alias"]
   ;
   ; @return (strings in vector)
-  ;  [(string) namespace
-  ;   (string) alias]
+  ; [(string) namespace
+  ;  (string) alias]
   [n]
   (let [open-bracket-position  (syntax/open-bracket-position  n)
         close-bracket-position (syntax/close-bracket-position n)
@@ -88,13 +88,13 @@
   ; @param (string) n
   ;
   ; @example
-  ;  (first-def "... (def my-name my-value) (def ...")
-  ;  =>
-  ;  ["my-name" "my-value"]
+  ; (first-def "... (def my-name my-value) (def ...")
+  ; =>
+  ; ["my-name" "my-value"]
   ;
   ; @return (strings in vector)
-  ;  [(string) name
-  ;   (string) value]
+  ; [(string) name
+  ;  (string) value]
   [n]
   (let [name  (-> n (string/after-first-occurence  " " {:return? false})
                     (string/trim)
