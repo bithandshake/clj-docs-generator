@@ -6,9 +6,9 @@
               [docs.read.state   :as read.state]
               [io.api            :as io]
               [regex.api         :as regex]
-              [mid-fruits.string :as string]
+              [string.api        :as string]
               [syntax.api        :as syntax]
-              [mid-fruits.vector :as vector]))
+              [vector.api        :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -241,10 +241,12 @@
   ;       "return" (map)
   ;       "usages" (maps in vector)}}}
   [file-content name]
-  (if-let [function (read-function file-content name)]
-          {"function" function}
-          (if-let [constant (read-constant file-content name)]
-                  {"constant" constant})))
+  (let [function-data (read-function file-content name)
+        constant-data (read-constant file-content name)]
+       (if-let [function-code (get function-data "code")]
+               {"function" function-data}
+               (if-let [constant-code (get constant-data "code")]
+                       {"constant" constant-data}))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -303,10 +305,10 @@
   (let [defs (get-in @import.state/LAYERS [layer-name directory-name "defs"])]
        (letfn [(f [result [name value :as def]]
                   (let [def (read-def options layer-name directory-name name value)]
-                       (if-let [function (get def "function")]
-                               (update result "functions" vector/conj-item function)
-                               (if-let [constant (get def "constant")]
-                                       (update result "constants" vector/conj-item constant)
+                       (if-let [function-data (get def "function")]
+                               (update result "functions" vector/conj-item function-data)
+                               (if-let [constant-data (get def "constant")]
+                                       (update result "constants" vector/conj-item constant-data)
                                        (return result)))))]
               (reduce f {} defs))))
 

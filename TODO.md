@@ -8,4 +8,4 @@ re-frame reg-eket is dokumentálni kell
 
 ?a sample file-ok legyenek bekötve?
 
-a konsansok is függvényként vannak require-ölve
+a konsansokat is be kell olvasni

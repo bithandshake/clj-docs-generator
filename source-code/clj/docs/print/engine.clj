@@ -3,7 +3,7 @@
     (:require [docs.print.helpers :as print.helpers]
               [docs.process.state :as process.state]
               [io.api             :as io]
-              [mid-fruits.string  :as string]))
+              [string.api         :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

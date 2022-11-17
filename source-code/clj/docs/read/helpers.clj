@@ -1,9 +1,9 @@
 
 (ns docs.read.helpers
-    (:require [candy.api         :refer [return]]
-              [regex.api         :as regex]
-              [mid-fruits.string :as string]
-              [syntax.api        :as syntax]))
+    (:require [candy.api  :refer [return]]
+              [regex.api  :as regex]
+              [string.api :as string]
+              [syntax.api :as syntax]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -81,6 +81,7 @@
                                   ; tartalmaz ";", amit a függvény kommentnek érzékel!
                                   (println "Ooops! It looks like there is a syntax error in the function \"" name "\"")
                                   (return function-content))
+
                               (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
                                       (let [comment (-> function-content (string/part start-pos)
                                                                          (string/before-first-occurence "\n" {:return? true}))]

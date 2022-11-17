@@ -13,7 +13,7 @@
               [docs.read.state      :as read.state]
               [io.api               :as io]
               [regex.api            :refer [re-match?]]
-              [mid-fruits.string    :as string]))
+              [string.api           :as string]))
 
 
 

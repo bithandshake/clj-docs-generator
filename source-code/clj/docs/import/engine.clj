@@ -4,7 +4,7 @@
               [docs.import.helpers :as import.helpers]
               [docs.import.state   :as import.state]
               [io.api              :as io]
-              [mid-fruits.string   :as string]))
+              [string.api          :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

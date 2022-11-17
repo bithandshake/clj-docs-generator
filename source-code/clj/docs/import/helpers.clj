@@ -1,7 +1,7 @@
 
 (ns docs.import.helpers
-    (:require [mid-fruits.string :as string]
-              [syntax.api        :as syntax]))
+    (:require [string.api :as string]
+              [syntax.api :as syntax]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

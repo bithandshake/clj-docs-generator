@@ -4,9 +4,9 @@
               [docs.process.helpers :as process.helpers]
               [docs.process.state   :as process.state]
               [docs.read.state      :as read.state]
-              [mid-fruits.map       :as map]
-              [mid-fruits.string    :as string]
-              [mid-fruits.vector    :as vector]))
+              [map.api              :as map]
+              [string.api           :as string]
+              [vector.api           :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

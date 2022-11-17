@@ -1,7 +1,7 @@
 
 (ns docs.core.prototypes
-    (:require [candy.api         :refer [param]]
-              [mid-fruits.string :as string]))
+    (:require [candy.api  :refer [param]]
+              [string.api :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
