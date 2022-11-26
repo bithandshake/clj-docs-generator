@@ -34,13 +34,13 @@
   ;
   ; @return (map)
   [api-content]
-  (letfn [(f [refers n]
-             (if-let [cursor (string/nth-dex-of api-content "[" n)]
+  (letfn [(f [refers skip]
+             (if-let [cursor (string/nth-dex-of api-content "[" skip)]
                      (let [refer (import-first-refer api-content cursor)]
                           (f (merge refers refer)
-                             (inc n)))
+                             (inc   skip)))
                      (return refers)))]
-         (f {} 1)))
+         (f {} 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -71,13 +71,13 @@
   ;
   ; @return (map)
   [api-content]
-  (letfn [(f [aliases n]
-             (if-let [cursor (string/nth-dex-of api-content "[" n)]
+  (letfn [(f [aliases skip]
+             (if-let [cursor (string/nth-dex-of api-content "[" skip)]
                      (let [alias (import-first-alias api-content cursor)]
                           (f (merge aliases alias)
-                             (inc n)))
+                             (inc  skip)))
                      (return aliases)))]
-         (f {} 1)))
+         (f {} 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -107,13 +107,13 @@
   ;
   ; @return (strings in vectors in vector)
   [api-content]
-  (letfn [(f [defs n]
-             (if-let [cursor (string/nth-dex-of api-content "(def " n)]
+  (letfn [(f [defs skip]
+             (if-let [cursor (string/nth-dex-of api-content "(def " skip)]
                      (let [def (import-first-def api-content cursor)]
                           (f (conj defs def)
-                             (inc n)))
+                             (inc  skip)))
                      (return defs)))]
-         (f [] 1)))
+         (f [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

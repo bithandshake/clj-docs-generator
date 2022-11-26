@@ -58,13 +58,13 @@
   ; [{"call" (string)}
   ;  {...}]
   [header]
-  (letfn [(f [usages n]
-             (if-let [cursor (string/nth-dex-of header "  ; @usage" n)]
+  (letfn [(f [usages skip]
+             (if-let [cursor (string/nth-dex-of header "  ; @usage" skip)]
                      (let [usage (read-function-first-usage header cursor)]
                           (f (conj usages usage)
-                             (inc n)))
+                             (inc  skip)))
                      (return usages)))]
-         (f [] 1)))
+         (f [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -98,13 +98,13 @@
   ;   "result" (string)}
   ;  {...}]
   [header]
-  (letfn [(f [examples n]
-             (if-let [cursor (string/nth-dex-of header "  ; @example" n)]
+  (letfn [(f [examples skip]
+             (if-let [cursor (string/nth-dex-of header "  ; @example" skip)]
                      (let [example (read-function-first-example header cursor)]
                           (f (conj examples example)
-                             (inc n)))
+                             (inc  skip)))
                      (return examples)))]
-         (f [] 1)))
+         (f [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -142,13 +142,13 @@
   ;   "types" (string)}
   ;  {...}]
   [header]
-  (letfn [(f [params n]
-             (if-let [cursor (string/nth-dex-of header "  ; @param" n)]
+  (letfn [(f [params skip]
+             (if-let [cursor (string/nth-dex-of header "  ; @param" skip)]
                      (let [param (read-function-first-param header cursor)]
                           (f (conj params param)
-                             (inc n)))
+                             (inc  skip)))
                      (return params)))]
-         (f [] 1)))
+         (f [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
