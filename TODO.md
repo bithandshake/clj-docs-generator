@@ -1,13 +1,13 @@
 
-Megvizsgálni a függvény beolvasásakor, hogy #?(:clj ) ...
-(minek?)
+- Megvizsgálni a függvény beolvasásakor, hogy #?(:clj ) ...
+  (minek?)
 
-A detect engine keresse meg az api fájlokat, hogy a project-emulatort is be leheessn olvasni
+- A detect engine keresse meg az api fájlokat, hogy a project-emulatort is be leheessn olvasni
 
-re-frame reg-eket is dokumentálni kell
+- re-frame reg-eket is dokumentálni kell
 
-?a sample file-ok legyenek bekötve?
+- ?a sample file-ok legyenek bekötve?
 
-a konsansokat is be kell olvasni
+- a konsansokat is be kell olvasni
 
-ha többszörösen van átirányitva egy fgv.
+- ha többszörösen van átirányitva egy fgv.
