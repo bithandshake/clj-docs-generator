@@ -1,12 +1,5 @@
 
 # docs-api
 
-> "Life is like riding a bicycle. To keep your balance, you must keep moving." – Albert Einstein
-
-### Overview
-
-...
-
-### Documentation
-
-The <strong>docs-api</strong> documentation is [available here](documentation/COVER.md).
+The <strong>docs-api</strong> library is in the pre-beta stage. 
+It is not recommended to use it in product releases!
