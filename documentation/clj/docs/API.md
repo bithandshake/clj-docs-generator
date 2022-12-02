@@ -1,16 +1,16 @@
 
 # <strong>docs.api</strong> namespace
-<p>Documentation of the <strong>docs/api.clj</strong> file</p>
 
-<strong>[README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > docs.api</strong>
-
-
+<strong>[README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > </strong>source-code/clj/docs/api.clj
 
 ### create-documentation!
 
 ```
 @param (map) options
-{:path (string)}
+{:abs-path (string)
+ :code-dirs (strings in vector)
+ :lib-name (string)
+ :output-dir (string)}
 ```
 
 ```
@@ -20,7 +20,10 @@
 
 ```
 @usage
-(create-documentation! {:path "my-submodules/my-repository"})
+(create-documentation! {:abs-path   "submodules/my-repository"
+                        :code-dirs  ["source-code/clj"]
+                        :output-dir "documentation"
+                        :lib-name   "my-repository"})
 ```
 
 ```
@@ -42,7 +45,7 @@
        (process.engine/process-cover!  options)
        (print.engine/print-cover!      options)
        (print.engine/print-layers!     options)
-       (debug)))
+       (debug options)))
 ```
 
 </details>
@@ -51,10 +54,10 @@
 <summary>Require</summary>
 
 ```
-(ns my-namespace (:require [docs.api :as docs :refer [create-documentation!]]))
+(ns my-namespace (:require [docs.api :refer [create-documentation!]]))
 
-(docs/create-documentation! ...)
-(create-documentation!      ...)
+(docs.api/create-documentation! ...)
+(create-documentation!          ...)
 ```
 
 </details>

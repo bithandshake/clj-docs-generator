@@ -61,7 +61,7 @@
   ; (create-documentation! {...})
   ;
   ; @usage
-  ; (create-documentation! {:abs-path   "my-repository/source-code"
+  ; (create-documentation! {:abs-path   "submodules/my-repository"
   ;                         :code-dirs  ["source-code/clj"]
   ;                         :output-dir "documentation"
   ;                         :lib-name   "my-repository"})

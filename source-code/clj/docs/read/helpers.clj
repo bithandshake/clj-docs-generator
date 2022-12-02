@@ -19,6 +19,8 @@
   ;
   ; @return (string)
   [{:keys [abs-path code-dirs] :as options} layer-name api-filepath alias]
+  ; If the reader cannot find a namespace in the same code-dir with the api file,
+  ; it tries to detect it as a .cljc file and looks up every code-dir to find.
   (letfn [(f0 [[namespace %]] (if (= % alias) namespace))
           (f1 [code-dir namespace] (str abs-path "/" code-dir "/" (-> namespace (string/replace-part "." "/")
                                                                                 (string/replace-part "-" "_"))
@@ -36,9 +38,9 @@
   ; @param (string) alias
   ;
   ; @example
-  ; (code-filepath {...} "clj" "my-repository/source-code/api.clj" "my-subdirectory.my-file")
+  ; (code-filepath {...} "clj" "my-repository/source-code/my_directory/api.clj" "my-directory.my-file")
   ; =>
-  ; "my-repository/source-code/my_subdirectory/my_file.clj"
+  ; "my-repository/source-code/my_directory/my_file.clj"
   ;
   ; @return (string)
   [{:keys [abs-path] :as options} layer-name api-filepath alias]

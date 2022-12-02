@@ -138,9 +138,9 @@
   ; @param (string) api-filepath
   ;
   ; @example
-  ; (import-api-file "my-repository/source-code/api.clj")
+  ; (import-api-file {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
-  ; {"namespace" "my-library.api"
+  ; {"namespace" "my-directory.api"
   ;  "aliases" {"my-namespace"   "my-alias"
   ;             "your-namespace" "your-alias"}
   ;  "defs"    [["my-name"   "my-value"]
@@ -170,13 +170,13 @@
   ; @example
   ; (import-layer {...} "clj")
   ; =>
-  ; {"my-repository/source-code/api.clj" {"namespace" "my-library.api"
-  ;                                       "aliases" {"my-namespace"   "my-alias"
-  ;                                                  "your-namespace" "your-alias"}
-  ;                                       "defs"    [["my-name"   "my-value"]
-  ;                                                  ["your-name" "your-value"]]
-  ;                                       "refers"  {"my-refer"   "my-namespace"
-  ;                                                  "your-refer" "your-namespace"}}}
+  ; {"my-repository/source-code/my_directory/api.clj" {"namespace" "api"
+  ;                                                    "aliases" {"my-namespace"   "my-alias"
+  ;                                                               "your-namespace" "your-alias"}
+  ;                                                    "defs"    [["my-name"   "my-value"]
+  ;                                                               ["your-name" "your-value"]]
+  ;                                                    "refers"  {"my-refer"   "my-namespace"
+  ;                                                               "your-refer" "your-namespace"}}}
   ;
   ; @return (map)
   [options layer-name]
@@ -191,13 +191,13 @@
   ; @example
   ; (import-layers {...})
   ; =>
-  ; {"clj" {"my-repository/source-code/api.clj" {"namespace" "my-library.api"
-  ;                                              "aliases" {"my-namespace"   "my-alias"}
-  ;                                                         "your-namespace" "your-alias"}
-  ;                                              "defs"    [["my-name"   "my-value"]
-  ;                                                         ["your-name" "your-value"]]
-  ;                                              "refers"  {"my-refer"   "my-namespace"
-  ;                                                         "your-refer" "your-namespace"}}}}
+  ; {"clj" {"my-repository/source-code/my_directory/api.clj" {"namespace" "api"
+  ;                                                           "aliases" {"my-namespace"   "my-alias"}
+  ;                                                                      "your-namespace" "your-alias"}
+  ;                                                           "defs"    [["my-name"   "my-value"]
+  ;                                                                      ["your-name" "your-value"]]
+  ;                                                           "refers"  {"my-refer"   "my-namespace"
+  ;                                                                      "your-refer" "your-namespace"}}}}
   ;  "cljc" {...}
   ;  "cljs" {...}}
   ;

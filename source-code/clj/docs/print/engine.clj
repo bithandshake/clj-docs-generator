@@ -293,7 +293,8 @@
 
 (defn print-cover!
   ; @param (map) options
-  ; {}
+  ; {:abs-path (string)
+  ;  :output-dir (strs)}
   [{:keys [abs-path output-dir] :as options}]
   (let [cover-filepath (str abs-path"/"output-dir"/COVER.md")
         cover          (print-cover options)]

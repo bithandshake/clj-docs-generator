@@ -259,12 +259,12 @@
   ; @param (string) value
   ;
   ; @example
-  ; (read-def {...} "clj" "my-repository/source-code/api.clj" "my-function" "my-namespace/my-function")
+  ; (read-def {...} "clj" "my-repository/source-code/my_directory/api.clj" "my-function" "my-namespace/my-function")
   ; =>
   ; {"function" {...}}
   ;
   ; @example
-  ; (read-def {...} "clj" "my-repository/source-code/api.clj" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
+  ; (read-def {...} "clj" "my-repository/source-code/my_directory/api.clj" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
   ; =>
   ; {"constant" {...}}
   ;
@@ -293,7 +293,7 @@
   ; @param (string) api-filepath
   ;
   ; @example
-  ; (read-defs {...} "clj" "my-repository/source-code/api.clj")
+  ; (read-defs {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {"constants" [{...}]
   ;  "functions" [{...}]}
@@ -321,7 +321,7 @@
   ; @param (string) api-filepath
   ;
   ; @example
-  ; (read-api-file {...} "clj" "my-repository/source-code/api.clj")
+  ; (read-api-file {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {"constants" [{...}]
   ;  "functions" [{...}]}
@@ -342,7 +342,8 @@
   ; @example
   ; (read-layer {...} "clj")
   ; =>
-  ; {"my-repository/source-code/api.clj" {}}
+  ; {"my-repository/source-code/my_directory/api.clj" {...}
+  ;  "..." {...}}
   ;
   ; @return (map)
   [options layer-name]

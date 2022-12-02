@@ -26,6 +26,20 @@
 
 (defn detect-layers!
   ; @param (map) options
+  ;
+  ; @usage
+  ; (detect-layers! {...})
+  ;
+  ; @example
+  ; (detect-layers! {:abs-path "submodules/my-repository"
+  ;                  :code-dirs ["source-code/clj"]})
+  ; =>
+  ; {"clj" [["source-code/clj" "submodules/my-repository/source-code/my_directory/api.clj"]]}
+  ;
+  ; @result (map)
+  ; {"clj" (vectors in vector)
+  ;  "cljc" (vectors in vector)
+  ;  "cljs" (vectors in vector)}
   [{:keys [code-dirs] :as options}]
   (letfn [(f [layers code-dir]
              (let [{:strs [clj cljc cljs]} (detect-code-dir! options code-dir)]

@@ -24,7 +24,7 @@
   ;     {"types" (string)}}}
   ;
   ; @example
-  ; (process-function-params {...} "clj" "my-repository/source-code/api.clj" {...})
+  ; (process-function-params {...} "clj" "my-repository/source-code/my_directory/api.clj" {...})
   ; =>
   ; ["@param (string)(opt) my-param"]
   ;
@@ -52,7 +52,7 @@
   ;     [{"call" (string)}]}}
   ;
   ; @example
-  ; (process-function-usages {...} "clj" "my-repository/source-code/api.clj" {...})
+  ; (process-function-usages {...} "clj" "my-repository/source-code/my_directory/api.clj" {...})
   ; =>
   ; ["\n@usage ..."]
   ;
@@ -74,7 +74,7 @@
   ;     [{"call" (string)}]}}
   ;
   ; @example
-  ; (process-function-examples {...} "clj" "my-repository/source-code/api.clj" {...})
+  ; (process-function-examples {...} "clj" "my-repository/source-code/my_directory/api.clj" {...})
   ; =>
   ; ["\n@example ..."]
   ;
@@ -98,7 +98,7 @@
   ;      "types" (string)(opt)}}}
   ;
   ; @example
-  ; (process-function-return {...} "clj" "my-repository/source-code/api.clj" {...})
+  ; (process-function-return {...} "clj" "my-repository/source-code/amy_directory/pi.clj" {...})
   ; =>
   ; "@return(string)"
   ;
@@ -117,7 +117,7 @@
   ; @param (map) function-data
   ;
   ; @example
-  ; (process-function-header {...} "clj" "my-repository/source-code/api.clj" {...})
+  ; (process-function-header {...} "clj" "my-repository/source-code/my_directory/api.clj" {...})
   ; =>
   ; (?)
   ;
@@ -139,7 +139,7 @@
   ; @param (map) function-data
   ;
   ; @example
-  ; (process-function {...} "clj" "my-repository/source-code/api.clj" {...})
+  ; (process-function {...} "clj" "my-repository/source-code/my_directory/api.clj" {...})
   ; =>
   ; (?)
   ;
@@ -157,7 +157,7 @@
   ; @param (string) api-filepath
   ;
   ; @example
-  ; (process-functions {...} "clj" "my-repository/source-code/api.clj")
+  ; (process-functions {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {}
   ;
@@ -177,7 +177,7 @@
   ; @param (string) api-filepath
   ;
   ; @example
-  ; (process-api-file {...} "clj" "my-repository/source-code/api.clj")
+  ; (process-api-file {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {}
   ;
@@ -197,7 +197,8 @@
   ; @example
   ; (process-layer {...} "clj")
   ; =>
-  ; {"my-repository/source-code/api.clj" {}}
+  ; {"my-repository/source-code/my_directory/api.clj" {...}
+  ;  "..." {...}}
   ;
   ; @return (map)
   [options layer-name]
