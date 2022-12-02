@@ -1,14 +1,12 @@
 
-(ns docs.process.state)
+(ns docs.core.helpers)
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-; @atom (map)
-;  {"clj" (map)
-;   "cljc" (map)
-;   "cljs" (map)}
-(def LAYERS (atom {}))
-
-; @atom (map)
-(def COVER (atom {}))
+(defn output-path
+  ; @param (map) options
+  ;
+  ; @return (string)
+  [{:keys [abs-path output-dir]}]
+  (str abs-path "/" output-dir))

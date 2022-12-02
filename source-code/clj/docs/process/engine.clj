@@ -1,6 +1,7 @@
 
 (ns docs.process.engine
     (:require [candy.api            :refer [return]]
+              [docs.import.state    :as import.state]
               [docs.process.helpers :as process.helpers]
               [docs.process.state   :as process.state]
               [docs.read.state      :as read.state]
@@ -14,7 +15,7 @@
 (defn process-function-params
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ; @param (map) function-data
   ; {"header"
   ;   {"params" (map)(opt)
@@ -23,7 +24,7 @@
   ;     {"types" (string)}}}
   ;
   ; @example
-  ; (process-function-params {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; (process-function-params {...} "clj" "my-repository/source-code/api.clj" {...})
   ; =>
   ; ["@param (string)(opt) my-param"]
   ;
@@ -44,14 +45,14 @@
 (defn process-function-usages
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ; @param (map) function-data
   ; {"header"
   ;   {"usages" (maps in vector)(opt)
   ;     [{"call" (string)}]}}
   ;
   ; @example
-  ; (process-function-usages {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; (process-function-usages {...} "clj" "my-repository/source-code/api.clj" {...})
   ; =>
   ; ["\n@usage ..."]
   ;
@@ -66,14 +67,14 @@
 (defn process-function-examples
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ; @param (map) function-data
   ; {"header"
   ;   {"examples" (maps in vector)(opt)
   ;     [{"call" (string)}]}}
   ;
   ; @example
-  ; (process-function-examples {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; (process-function-examples {...} "clj" "my-repository/source-code/api.clj" {...})
   ; =>
   ; ["\n@example ..."]
   ;
@@ -89,7 +90,7 @@
 (defn process-function-return
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ; @param (map) function-data
   ; {"header"
   ;   {"return" (map)(opt)
@@ -97,7 +98,7 @@
   ;      "types" (string)(opt)}}}
   ;
   ; @example
-  ; (process-function-return {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; (process-function-return {...} "clj" "my-repository/source-code/api.clj" {...})
   ; =>
   ; "@return(string)"
   ;
@@ -112,11 +113,11 @@
 (defn process-function-header
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ; @param (map) function-data
   ;
   ; @example
-  ; (process-function-header {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; (process-function-header {...} "clj" "my-repository/source-code/api.clj" {...})
   ; =>
   ; (?)
   ;
@@ -125,66 +126,66 @@
   ;  "params" (strings in vector)
   ;  "return" (string)
   ;  "usages" (strings in vector)}
-  [options layer-name directory-name function-data]
-  {"examples" (process-function-examples options layer-name directory-name function-data)
-   "params"   (process-function-params   options layer-name directory-name function-data)
-   "return"   (process-function-return   options layer-name directory-name function-data)
-   "usages"   (process-function-usages   options layer-name directory-name function-data)})
+  [options layer-name api-filepath function-data]
+  {"examples" (process-function-examples options layer-name api-filepath function-data)
+   "params"   (process-function-params   options layer-name api-filepath function-data)
+   "return"   (process-function-return   options layer-name api-filepath function-data)
+   "usages"   (process-function-usages   options layer-name api-filepath function-data)})
 
 (defn process-function
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ; @param (map) function-data
   ;
   ; @example
-  ; (process-function {:path "my-submodules/my-repository"} "clj" "my_directory" {...})
+  ; (process-function {...} "clj" "my-repository/source-code/api.clj" {...})
   ; =>
   ; (?)
   ;
   ; @return (map)
   ; {"header" (map)
   ;  "name" (string)}
-  [options layer-name directory-name function-data]
-  {"header" (process-function-header options layer-name directory-name function-data)
+  [options layer-name api-filepath function-data]
+  {"header" (process-function-header options layer-name api-filepath function-data)
    "code"   (get function-data "code")
    "name"   (get function-data "name")})
 
 (defn process-functions
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ;
   ; @example
-  ; (process-functions {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; (process-functions {...} "clj" "my-repository/source-code/api.clj")
   ; =>
   ; {}
   ;
   ; @return (map)
-  [options layer-name directory-name]
-  (let [functions (get-in @read.state/LAYERS [layer-name directory-name "functions"])]
+  [options layer-name api-filepath]
+  (let [functions (get-in @read.state/LAYERS [layer-name api-filepath "functions"])]
        (letfn [(f [result function-data]
-                  (conj result (process-function options layer-name directory-name function-data)))]
+                  (conj result (process-function options layer-name api-filepath function-data)))]
               (reduce f [] functions))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn process-directory
+(defn process-api-file
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ;
   ; @example
-  ; (process-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; (process-api-file {...} "clj" "my-repository/source-code/api.clj")
   ; =>
   ; {}
   ;
   ; @return (map)
   ; {}
-  [options layer-name directory-name]
-  {;"constants" (process-constants options layer-name directory-name)
-   "functions" (process-functions options layer-name directory-name)})
+  [options layer-name api-filepath]
+  {"functions" (process-functions options layer-name api-filepath)})
+  ;"constants" (process-constants options layer-name api-filepath)
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -194,15 +195,15 @@
   ; @param (string) layer-name
   ;
   ; @example
-  ; (process-layer {:path "my-submodules/my-repository"} "clj")
+  ; (process-layer {...} "clj")
   ; =>
-  ; {"my_directory" {}}
+  ; {"my-repository/source-code/api.clj" {}}
   ;
   ; @return (map)
   [options layer-name]
   (let [layer-data (get @read.state/LAYERS layer-name)]
-       (letfn [(f [layer-data directory-name directory-data]
-                  (assoc layer-data directory-name (process-directory options layer-name directory-name)))]
+       (letfn [(f [layer-data api-filepath api-data]
+                  (assoc layer-data api-filepath (process-api-file options layer-name api-filepath)))]
               (reduce-kv f {} layer-data))))
 
 ;; ----------------------------------------------------------------------------
@@ -235,33 +236,33 @@
 
 (defn process-layer-links
   ; @param (map) options
+  ;  {:abs-path (string)
+  ;   :output-dir (string)}
   ; @param (string) layer-name
   ; @param (strings in vector) links
   ;
-  ; @example
-  ; (process-layer-links {...} "clj" [])
-  ; =>
-  ; [... "* [my-directory.api](clj/my_directory/API.md) [clj]" ...]
-  ;
   ; @return (strings in vector)
-  [_ layer-name links]
-  (let [layer-data      (get @read.state/LAYERS layer-name)
-        directory-names (map/get-keys layer-data)]
-       (letfn [(f [links directory-name]
-                  (let [directory_name directory-name
-                        directory-name (string/replace-part directory-name "_" "-")]
-                       (conj links (str "* ["directory-name".api]("layer-name"/"directory_name"/API.md) ["layer-name"]"))))]
-              (reduce f links (vector/abc-items directory-names)))))
+  [{:keys [abs-path output-dir] :as options} layer-name links]
+  (let [layer-data (get @read.state/LAYERS layer-name)
+        api-files  (map/get-keys layer-data)]
+       ; Az f0 függvény vizsgálja, hogy az api fájlban van-e bármilyen átirányitás
+       ; ha nincs akkor nem készül hozzá API.md fájl ezért a linket sem szükséges betenni a COVER.md fájlba
+       (letfn [(f0 [api-filepath] (or (vector/nonempty? (get-in @read.state/LAYERS [layer-name api-filepath "functions"]))
+                                      (vector/nonempty? (get-in @read.state/LAYERS [layer-name api-filepath "constants"]))))
+               (f [links api-filepath]
+                  (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
+                        md-path   (process.helpers/md-path options layer-name api-filepath)
+                        rel-path  (-> md-path (string/not-starts-with! abs-path)
+                                              (string/not-starts-with! "/")
+                                              (string/not-starts-with! output-dir)
+                                              (string/not-starts-with! "/"))]
+                       (if (f0 api-filepath)
+                           (conj   links (str "* ["api-namespace"]("rel-path"/API.md) ["layer-name"]"))
+                           (return links))))]
+              (reduce f links (vector/abc-items api-files)))))
 
 (defn process-cover-links
   ; @param (map) options
-  ;
-  ; @example
-  ; (process-layer-links {...})
-  ; =>
-  ; ["* [my-directory.api](clj/my_directory/API.md) [clj]"
-  ;  "* [my-directory.api](cljc/my_directory/API.md) [cljc]"
-  ;  "* [my-directory.api](cljs/my_directory/API.md) [cljs]"]
   ;
   ; @return (strings in vector)
   [options]
@@ -272,7 +273,7 @@
 
 (defn process-cover-subtitle
   ; @param (map) options
-  ; {:path (string)}
+  ; {:lib-name (string)}
   ;
   ; @example
   ; (process-cover-subtitle {...})
@@ -280,19 +281,18 @@
   ; "<p>Documentation of the <strong>my-repository</strong> Clojure / ClojureScript library</p>"
   ;
   ; @return (string)
-  [{:keys [path]}]
-  (let [clj-library?    (process.helpers/clj-library?)
-        cljs-library?   (process.helpers/cljs-library?)
-        repository-name (string/after-first-occurence path "/" {:return? true})]
-       (str "<p>Documentation of the <strong>"repository-name"</strong>"
-                            (if clj-library?  " Clojure ")
-                            (if (and clj-library? cljs-library?) "/")
-                            (if cljs-library? " ClojureScript ")
-                            "library</p>")))
+  [{:keys [lib-name]}]
+  (let [clj-library?  (process.helpers/clj-library?)
+        cljs-library? (process.helpers/cljs-library?)]
+       (str "<p>Documentation of the <strong>"lib-name"</strong>"
+            (if clj-library?  " Clojure ")
+            (if (and clj-library? cljs-library?) "/")
+            (if cljs-library? " ClojureScript ")
+            "library</p>")))
 
 (defn process-cover-title
   ; @param (map) options
-  ; {:path (string)}
+  ; {:lib-name (string)}
   ;
   ; @example
   ; (process-subtitle {...})
@@ -300,9 +300,8 @@
   ; "# <strong>my-repository</strong>"
   ;
   ; @return (string)
-  [{:keys [path]}]
-  (let [repository-name (string/after-first-occurence path "/" {:return? true})]
-       (str "# <strong>"repository-name"</strong>")))
+  [{:keys [lib-name]}]
+  (str "# <strong>"lib-name"</strong>"))
 
 (defn process-cover
   ; @param (map) options

@@ -1,30 +1,53 @@
 
 (ns docs.read.helpers
-    (:require [candy.api  :refer [return]]
-              [regex.api  :as regex]
-              [string.api :as string]
-              [syntax.api :as syntax]))
+    (:require [candy.api           :refer [return]]
+              [docs.detect.helpers :as detect.helpers]
+              [docs.import.state   :as import.state]
+              [io.api              :as io]
+              [regex.api           :as regex]
+              [string.api          :as string]
+              [syntax.api          :as syntax]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
+
+(defn alter-filepath
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) api-filepath
+  ; @param (string) alias
+  ;
+  ; @return (string)
+  [{:keys [abs-path code-dirs] :as options} layer-name api-filepath alias]
+  (letfn [(f0 [[namespace %]] (if (= % alias) namespace))
+          (f1 [code-dir namespace] (str abs-path "/" code-dir "/" (-> namespace (string/replace-part "." "/")
+                                                                                (string/replace-part "-" "_"))
+                                                                  ".cljc"))]
+         (let [namespace (some f0 (get-in @import.state/LAYERS [layer-name api-filepath "aliases"]))]
+              (letfn [(f3 [code-dir] (let [alter-filepath (f1 code-dir namespace)]
+                                          (if (io/file-exists? alter-filepath)
+                                              (return          alter-filepath))))]
+                     (some f3 code-dirs)))))
 
 (defn code-filepath
   ; @param (map) options
-  ; {:path (string)}
   ; @param (string) layer-name
+  ; @param (string) api-filepath
   ; @param (string) alias
   ;
   ; @example
-  ; (code-filepath {:path "my-submodules/my-repository"} "clj" "my_directory" "my-subdirectory.my-file")
+  ; (code-filepath {...} "clj" "my-repository/source-code/api.clj" "my-subdirectory.my-file")
   ; =>
-  ; "my-submodules/my-repository/source-code/clj/my_directory/my_subdirectory/my_file.clj"
+  ; "my-repository/source-code/my_subdirectory/my_file.clj"
   ;
   ; @return (string)
-  [{:keys [path]} layer-name directory-name alias]
-  (let [directory-name    (string/replace-part directory-name "-" "_")
-        relative-filepath (-> alias (string/replace-part "." "/")
-                                    (string/replace-part "-" "_"))]
-       (str path "/source-code/"layer-name"/"directory-name"/"relative-filepath"."layer-name)))
+  [{:keys [abs-path] :as options} layer-name api-filepath alias]
+  (letfn [(f [[namespace %]] (if (= % alias) namespace))]
+         (let [code-dir  (detect.helpers/code-dir options layer-name api-filepath alias)
+               namespace (some f (get-in @import.state/LAYERS [layer-name api-filepath "aliases"]))]
+              (str abs-path "/" code-dir "/" (-> namespace (string/replace-part "." "/")
+                                                           (string/replace-part "-" "_"))
+                                         "." (name layer-name)))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

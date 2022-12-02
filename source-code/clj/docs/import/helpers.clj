@@ -6,38 +6,6 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn layer-path
-  ; @param (map) options
-  ; {:path (string)}
-  ; @param (string) layer-name
-  ;
-  ; @example
-  ; (layer-path {:path "my-submodules/my-repository"} "clj")
-  ; =>
-  ; "my-submodules/my-repository/source-code/clj"
-  ;
-  ; @return (string)
-  [{:keys [path]} layer-name]
-  (str path "/source-code/"layer-name))
-
-(defn api-filepath
-  ; @param (map) options
-  ; {:path (string)}
-  ; @param (string) layer-name
-  ;
-  ; @example
-  ; (api-filepath {:path "my-submodules/my-repository"} "clj" "my_directory")
-  ; =>
-  ; "my-submodules/my-repository/source-code/clj/my_directory/api.clj"
-  ;
-  ; @return (string)
-  [{:keys [path]} layer-name directory-name]
-  (let [directory-name (string/replace-part directory-name "-" "_")]
-       (str path "/source-code/"layer-name"/"directory-name"/api."layer-name)))
-
-;; ----------------------------------------------------------------------------
-;; ----------------------------------------------------------------------------
-
 (defn first-refer
   ; @param (string) n
   ;

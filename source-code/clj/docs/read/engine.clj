@@ -254,46 +254,46 @@
 (defn read-def
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ; @param (string) name
   ; @param (string) value
   ;
   ; @example
-  ; (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "my-function" "my-namespace/my-function")
+  ; (read-def {...} "clj" "my-repository/source-code/api.clj" "my-function" "my-namespace/my-function")
   ; =>
   ; {"function" {...}}
   ;
   ; @example
-  ; (read-def {:path "my-submodules/my-repository"} "clj" "my_directory" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
+  ; (read-def {...} "clj" "my-repository/source-code/api.clj" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
   ; =>
   ; {"constant" {...}}
   ;
   ; @return (map)
   ; {"constant" (map)
   ;  "function" (map)}
-  [options layer-name directory-name name value]
+  [options layer-name api-filepath name value]
   (let [alias (or (string/before-first-occurence value "/" {:return? false})
-                  (get-in @import.state/LAYERS [layer-name directory-name "refers" value]))
-        code-filepath (read.helpers/code-filepath options layer-name directory-name alias)]
+                  (get-in @import.state/LAYERS [layer-name api-filepath "refers" value]))
+        code-filepath (read.helpers/code-filepath options layer-name api-filepath alias)]
        (if (io/file-exists? code-filepath)
            (let [file-content (io/read-file code-filepath)]
                 (read-code file-content name))
+
            ; Ha a code-filepath útvonalon nem olvasható be forráskód fájl tartalma,
-           ; akkor megpróbálja a cljc rétegben elérni a fájlt, mert előfordulhat,
-           ; hogy a clj vagy cljs réteg api fájlja közvetlenül a cljc rétegből
+           ; akkor megpróbálja a cljc fájlként elérni a fájlt, mert előfordulhat,
+           ; hogy egy clj vagy cljs api fájl közvetlenül egy cljc fájlból
            ; irányít át függvényeket vagy konstansokat.
-           (let [code-filepath (read.helpers/code-filepath options "cljc" directory-name alias)]
-                (if (io/file-exists? code-filepath)
-                    (let [file-content (io/read-file code-filepath)]
-                         (read-code file-content name)))))))
+           (if-let [alter-filepath (read.helpers/alter-filepath options layer-name api-filepath alias)]
+                   (let [file-content (io/read-file alter-filepath)]
+                        (read-code file-content name))))))
 
 (defn read-defs
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ;
   ; @example
-  ; (read-defs {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; (read-defs {...} "clj" "my-repository/source-code/api.clj")
   ; =>
   ; {"constants" [{...}]
   ;  "functions" [{...}]}
@@ -301,10 +301,10 @@
   ; @return (map)
   ; {"constants" (maps in vector)
   ;  "functions" (maps in vector)}
-  [options layer-name directory-name]
-  (let [defs (get-in @import.state/LAYERS [layer-name directory-name "defs"])]
+  [options layer-name api-filepath]
+  (let [defs (get-in @import.state/LAYERS [layer-name api-filepath "defs"])]
        (letfn [(f [result [name value :as def]]
-                  (let [def (read-def options layer-name directory-name name value)]
+                  (let [def (read-def options layer-name api-filepath name value)]
                        (if-let [function-data (get def "function")]
                                (update result "functions" vector/conj-item function-data)
                                (if-let [constant-data (get def "constant")]
@@ -315,13 +315,13 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn read-directory
+(defn read-api-file
   ; @param (map) options
   ; @param (string) layer-name
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ;
   ; @example
-  ; (read-directory {:path "my-submodules/my-repository"} "clj" "my_directory")
+  ; (read-api-file {...} "clj" "my-repository/source-code/api.clj")
   ; =>
   ; {"constants" [{...}]
   ;  "functions" [{...}]}
@@ -329,8 +329,8 @@
   ; @return (map)
   ; {"constants" (maps in vector)
   ;  "functions" (maps in vector)}
-  [options layer-name directory-name]
-  (read-defs options layer-name directory-name))
+  [options layer-name api-filepath]
+  (read-defs options layer-name api-filepath))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -340,15 +340,15 @@
   ; @param (string) layer-name
   ;
   ; @example
-  ; (read-layer {:path "my-submodules/my-repository"} "clj")
+  ; (read-layer {...} "clj")
   ; =>
-  ; {"my_directory" {}}
+  ; {"my-repository/source-code/api.clj" {}}
   ;
   ; @return (map)
   [options layer-name]
   (let [layer-data (get @import.state/LAYERS layer-name)]
-       (letfn [(f [layer-data directory-name directory-data]
-                  (assoc layer-data directory-name (read-directory options layer-name directory-name)))]
+       (letfn [(f [layer-data api-filepath api-data]
+                  (assoc layer-data api-filepath (read-api-file options layer-name api-filepath)))]
               (reduce-kv f {} layer-data))))
 
 ;; ----------------------------------------------------------------------------

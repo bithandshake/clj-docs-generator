@@ -1,6 +1,7 @@
 
 (ns docs.import.engine
     (:require [candy.api           :refer [return]]
+              [docs.detect.state   :as detect.state]
               [docs.import.helpers :as import.helpers]
               [docs.import.state   :as import.state]
               [io.api              :as io]
@@ -41,6 +42,18 @@
                              (inc   skip)))
                      (return refers)))]
          (f {} 0)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn import-namespace
+  ; @param (string) api-content
+  ;
+  ; @return (string)
+  [api-content]
+  (-> api-content (string/after-first-occurence  "(ns " {:return? false})
+                  (string/before-first-occurence " "    {:return? false})
+                  (string/not-ends-with!         "\n")))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -118,17 +131,17 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn import-directory
+(defn import-api-file
   ; @param (map) options
-  ; {:path (string)}
   ; @param (string) layer-name
   ; "clj", "cljc", "cljs"
-  ; @param (string) directory-name
+  ; @param (string) api-filepath
   ;
   ; @example
-  ; (import-directory "my-submodules/my-repository/source-code/clj/my_directory/api.clj")
+  ; (import-api-file "my-repository/source-code/api.clj")
   ; =>
-  ; {"aliases" {"my-namespace"   "my-alias"
+  ; {"namespace" "my-library.api"
+  ;  "aliases" {"my-namespace"   "my-alias"
   ;             "your-namespace" "your-alias"}
   ;  "defs"    [["my-name"   "my-value"]
   ;             ["your-name" "your-value"]]
@@ -139,57 +152,52 @@
   ; {"aliases" (map)
   ;  "defs" (strings in vectors in vector)
   ;  "refers" (map)}
-  [{:keys [path] :as options} layer-name directory-name]
-  (let [api-filepath (import.helpers/api-filepath options layer-name directory-name)
-        api-content  (io/read-file api-filepath)]
-       {"aliases" (import-aliases api-content)
-        "defs"    (import-defs    api-content)
-        "refers"  (import-refers  api-content)}))
+  [_ layer-name api-filepath]
+  (let [api-content (io/read-file     api-filepath)]
+       {"namespace" (import-namespace api-content)
+        "aliases"   (import-aliases   api-content)
+        "defs"      (import-defs      api-content)
+        "refers"    (import-refers    api-content)}))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
 (defn import-layer
   ; @param (map) options
-  ; {:path (string)}
   ; @param (string) layer
   ; "clj", "cljc", "cljs"
   ;
   ; @example
-  ; (import-layer {:path "my-submodules/my-repository"} "clj")
+  ; (import-layer {...} "clj")
   ; =>
-  ; {"my_directory" {"aliases" {"my-namespace"   "my-alias"
-  ;                             "your-namespace" "your-alias"}
-  ;                  "defs"    [["my-name"   "my-value"]
-  ;                             ["your-name" "your-value"]]
-  ;                  "refers"  {"my-refer"   "my-namespace"
-  ;                             "your-refer" "your-namespace"}}}
+  ; {"my-repository/source-code/api.clj" {"namespace" "my-library.api"
+  ;                                       "aliases" {"my-namespace"   "my-alias"
+  ;                                                  "your-namespace" "your-alias"}
+  ;                                       "defs"    [["my-name"   "my-value"]
+  ;                                                  ["your-name" "your-value"]]
+  ;                                       "refers"  {"my-refer"   "my-namespace"
+  ;                                                  "your-refer" "your-namespace"}}}
   ;
   ; @return (map)
-  [{:keys [path] :as options} layer-name]
-  (let [layer-path     (import.helpers/layer-path options layer-name)
-        directory-list (io/subdirectory-list layer-path)]
-       (letfn [(f [layer-data directory-path]
-                  (let [directory-name (io/directory-path->directory-name directory-path)
-                        api-filepath   (import.helpers/api-filepath options layer-name directory-name)]
-                       (if (io/file-exists? api-filepath)
-                           (assoc  layer-data directory-name (import-directory options layer-name directory-name))
-                           (return layer-data))))]
-              (reduce f {} directory-list))))
+  [options layer-name]
+  (let [api-files (get @detect.state/LAYERS layer-name)]
+       (letfn [(f [result [_ api-filepath]]
+                  (assoc result api-filepath (import-api-file options layer-name api-filepath)))]
+              (reduce f {} api-files))))
 
 (defn import-layers
   ; @param (map) options
-  ; {:path (string)}
   ;
   ; @example
-  ; (import-layers {:path "my-submodules/my-repository"})
+  ; (import-layers {...})
   ; =>
-  ; {"clj" {"my_directory" {"aliases" {"my-namespace"   "my-alias"
-  ;                                    "your-namespace" "your-alias"}
-  ;                         "defs"    [["my-name"   "my-value"]
-  ;                                    ["your-name" "your-value"]]
-  ;                         "refers"  {"my-refer"   "my-namespace"
-  ;                                    "your-refer" "your-namespace"}}}}
+  ; {"clj" {"my-repository/source-code/api.clj" {"namespace" "my-library.api"
+  ;                                              "aliases" {"my-namespace"   "my-alias"}
+  ;                                                         "your-namespace" "your-alias"}
+  ;                                              "defs"    [["my-name"   "my-value"]
+  ;                                                         ["your-name" "your-value"]]
+  ;                                              "refers"  {"my-refer"   "my-namespace"
+  ;                                                         "your-refer" "your-namespace"}}}}
   ;  "cljc" {...}
   ;  "cljs" {...}}
   ;
@@ -197,13 +205,10 @@
   ; {"clj" (map)
   ;  "cljc" (map)
   ;  "cljs" (map)}
-  [{:keys [path] :as options}]
-  (letfn [(f [result layer-name]
-             (let [layer-path (import.helpers/layer-path options layer-name)]
-                  (if (io/directory-exists? layer-path)
-                      (assoc  result layer-name (import-layer options layer-name))
-                      (return result))))]
-         (reduce f {} ["clj" "cljc" "cljs"])))
+  [options]
+  (letfn [(f [result layer-name api-files]
+             (assoc result layer-name (import-layer options layer-name)))]
+         (reduce-kv f {} @detect.state/LAYERS)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

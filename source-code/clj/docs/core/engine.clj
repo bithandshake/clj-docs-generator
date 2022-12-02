@@ -1,6 +1,7 @@
 
 (ns docs.core.engine
     (:require [candy.api            :refer [return]]
+              [docs.core.helpers    :as core.helpers]
               [docs.core.prototypes :as core.prototypes]
               [docs.detect.engine   :as detect.engine]
               [docs.detect.state    :as detect.state]
@@ -22,41 +23,48 @@
 
 (defn initialize!
   ; @param (map) options
-  ; {:path (string)}
-  [{:keys [path] :as options}]
-  (reset! detect.state/API-FILES nil)
-  (reset! import.state/LAYERS    nil)
-  (reset! process.state/COVER    nil)
-  (reset! process.state/LAYERS   nil)
-  (reset! read.state/LAYERS      nil)
-  (let [directory-path (str path "/documentation")]
-       (if (io/directory-exists? directory-path)
-           (io/empty-directory!  directory-path)
-           (io/create-directory! directory-path))))
+  [options]
+  (reset! detect.state/LAYERS  nil)
+  (reset! import.state/LAYERS  nil)
+  (reset! process.state/COVER  nil)
+  (reset! process.state/LAYERS nil)
+  (reset! read.state/LAYERS    nil)
+  (if (-> options core.helpers/output-path io/directory-exists?)
+      (-> options core.helpers/output-path io/empty-directory!)
+      (-> options core.helpers/output-path io/create-directory!)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
 (defn debug
-  []
+  [options]
   (str "<pre style=\"background:#fafafa\">"
-       "\nimported layers:\n"
+       "\noptions:\n" options
+       "\n\ndetected layers:\n"
+       (get-in @detect.state/LAYERS  [])
+       "\n\nimported layers:\n"
        (get-in @import.state/LAYERS  [])
-       "\nread layers:\n"
+       "\n\nread layers:\n"
        (get-in @read.state/LAYERS    [])
-       "\nprocessed layers:\n"
+       "\n\nprocessed layers:\n"
        (get-in @process.state/LAYERS [])
        "</pre>"))
 
 (defn create-documentation!
   ; @param (map) options
-  ; {:path (string)}
+  ; {:abs-path (string)
+  ;  :code-dirs (strings in vector)
+  ;  :lib-name (string)
+  ;  :output-dir (string)}
   ;
   ; @usage
   ; (create-documentation! {...})
   ;
   ; @usage
-  ; (create-documentation! {:path "my-submodules/my-repository"})
+  ; (create-documentation! {:abs-path   "my-repository/source-code"
+  ;                         :code-dirs  ["source-code/clj"]
+  ;                         :output-dir "documentation"
+  ;                         :lib-name   "my-repository"})
   ;
   ; @return (string)
   [options]
@@ -69,4 +77,4 @@
        (process.engine/process-cover!  options)
        (print.engine/print-cover!      options)
        (print.engine/print-layers!     options)
-       (debug)))
+       (debug options)))
