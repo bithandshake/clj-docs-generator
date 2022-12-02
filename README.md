@@ -10,5 +10,5 @@ libraries written in my own directory/file structuring style.
 
 # Warning
 
-The <strong>docs-api</strong> library is in the pre-beta stage.
+The <strong>docs-api</strong> library is in pre-beta stage.
 It is not recommended to use it in product releases!
