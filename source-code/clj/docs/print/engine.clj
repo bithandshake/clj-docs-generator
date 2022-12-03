@@ -260,9 +260,9 @@
         cljs-links (get-in @process.state/COVER ["links" "cljs"])]
        (letfn [(f [links link]
                   (str links"\n"link))]
-              (str (reduce f "\n\n### Clojure namespaces\n"       clj-links)
-                   (reduce f "\n\n### Isomorphic namespaces\n"    cljc-links)
-                   (reduce f "\n\n### ClojureScript namespaces\n" cljs-links)))))
+              (str (if (-> clj-links  empty? not) (reduce f "\n\n### Clojure namespaces\n"       clj-links))
+                   (if (-> cljc-links empty? not) (reduce f "\n\n### Isomorphic namespaces\n"    cljc-links))
+                   (if (-> cljs-links empty? not) (reduce f "\n\n### ClojureScript namespaces\n" cljs-links))))))
 
 (defn print-cover-subtitle
   ; @param (map) options

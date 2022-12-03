@@ -66,6 +66,15 @@
 
 ### debug
 
+```
+@usage
+(debug)
+```
+
+```
+@return (string)
+```
+
 <details>
 <summary>Source code</summary>
 
@@ -73,16 +82,16 @@
 (defn debug
   []
   (str "<pre style=\"background:#fafafa\">"
-       "\n\ndetected layers:\n"
-       (get-in @detect.state/LAYERS  [])
-       "\n\nimported layers:\n"
-       (get-in @import.state/LAYERS  [])
-       "\n\nread layers:\n"
-       (get-in @read.state/LAYERS    [])
-       "\n\nprocessed layers:\n"
-       (get-in @process.state/LAYERS [])
-       "\n\nprocessed cover:\n"
-       (get-in @process.state/COVER  [])
+       "\n\ndetected layers:"
+       "\n"(get-in @detect.state/LAYERS  [])
+       "\n\nimported layers:"
+       "\n"(get-in @import.state/LAYERS  [])
+       "\n\nread layers:"
+       "\n"(get-in @read.state/LAYERS    [])
+       "\n\nprocessed layers:"
+       "\n"(get-in @process.state/LAYERS [])
+       "\n\nprocessed cover:"
+       "\n"(get-in @process.state/COVER  [])
        "</pre>"))
 ```
 

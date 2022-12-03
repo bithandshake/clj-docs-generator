@@ -9,14 +9,14 @@
 (defn clj-library?
   ; @return (boolean)
   []
-  (or (get @import.state/LAYERS "clj")
-      (get @import.state/LAYERS "cljc")))
+  (or (-> (get @import.state/LAYERS "clj")  empty? not)
+      (-> (get @import.state/LAYERS "cljc") empty? not)))
 
 (defn cljs-library?
   ; @return (boolean)
   []
-  (or (get @import.state/LAYERS "cljs")
-      (get @import.state/LAYERS "cljc")))
+  (or (-> (get @import.state/LAYERS "cljc") empty? not)
+      (-> (get @import.state/LAYERS "cljs") empty? not)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

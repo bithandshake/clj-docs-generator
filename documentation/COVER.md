@@ -1,19 +1,13 @@
 
 # <strong>docs-api</strong>
 
-<p>Documentation of the <strong>docs-api</strong> Clojure / ClojureScript library</p>
+<p>Documentation of the <strong>docs-api</strong> Clojure library</p>
 
 <strong>[README](../README.md) > DOCUMENTATION</strong>
 
 ### Clojure namespaces
 
 * [docs.api](clj/docs/API.md) [clj]
-
-### Isomorphic namespaces
-
-
-### ClojureScript namespaces
-
 
 ---
 
