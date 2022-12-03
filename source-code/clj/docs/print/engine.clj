@@ -255,10 +255,14 @@
   ;
   ; @return (string)
   [_]
-  (let [links (get @process.state/COVER "links")]
+  (let [clj-links  (get-in @process.state/COVER ["links" "clj"])
+        cljc-links (get-in @process.state/COVER ["links" "cljc"])
+        cljs-links (get-in @process.state/COVER ["links" "cljs"])]
        (letfn [(f [links link]
                   (str links"\n"link))]
-              (reduce f "\n\n### Public namespaces\n" links))))
+              (str (reduce f "\n\n### Clojure namespaces\n"       clj-links)
+                   (reduce f "\n\n### Isomorphic namespaces\n"    cljc-links)
+                   (reduce f "\n\n### ClojureScript namespaces\n" cljs-links)))))
 
 (defn print-cover-subtitle
   ; @param (map) options

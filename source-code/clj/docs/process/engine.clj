@@ -258,19 +258,22 @@
                                               (string/not-starts-with! output-dir)
                                               (string/not-starts-with! "/"))]
                        (if (f0 api-filepath)
-                           (conj   links (str "* ["api-namespace"]("rel-path"/API.md) ["layer-name"]"))
+                           (update links layer-name vector/conj-item (str "* ["api-namespace"]("rel-path"/API.md) ["layer-name"]"))
                            (return links))))]
               (reduce f links (vector/abc-items api-files)))))
 
 (defn process-cover-links
   ; @param (map) options
   ;
-  ; @return (strings in vector)
+  ; @return (map)
+  ; {"clj" (strings in vector)
+  ;  "cljc" (strings in vector)
+  ;  "cljs" (strings in vector)}
   [options]
   (let [layers @read.state/LAYERS]
        (letfn [(f [links layer-name _]
                   (process-layer-links options layer-name links))]
-              (reduce-kv f [] layers))))
+              (reduce-kv f {} layers))))
 
 (defn process-cover-subtitle
   ; @param (map) options

@@ -37,9 +37,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn debug
-  [options]
+  []
   (str "<pre style=\"background:#fafafa\">"
-       "\noptions:\n" options
        "\n\ndetected layers:\n"
        (get-in @detect.state/LAYERS  [])
        "\n\nimported layers:\n"
@@ -48,9 +47,16 @@
        (get-in @read.state/LAYERS    [])
        "\n\nprocessed layers:\n"
        (get-in @process.state/LAYERS [])
+       "\n\nprocessed cover:\n"
+       (get-in @process.state/COVER  [])
        "</pre>"))
 
 (defn create-documentation!
+  ; WARNING
+  ; The create-documentation! function ereases the output-dir before printing
+  ; the new documentation books!
+  ; Be careful with configuring this function!
+  ;
   ; @param (map) options
   ; {:abs-path (string)
   ;  :code-dirs (strings in vector)
@@ -77,4 +83,4 @@
        (process.engine/process-cover!  options)
        (print.engine/print-cover!      options)
        (print.engine/print-layers!     options)
-       (debug options)))
+       (debug)))

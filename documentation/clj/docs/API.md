@@ -45,7 +45,7 @@
        (process.engine/process-cover!  options)
        (print.engine/print-cover!      options)
        (print.engine/print-layers!     options)
-       (debug options)))
+       (debug)))
 ```
 
 </details>
@@ -58,6 +58,44 @@
 
 (docs.api/create-documentation! ...)
 (create-documentation!          ...)
+```
+
+</details>
+
+---
+
+### debug
+
+<details>
+<summary>Source code</summary>
+
+```
+(defn debug
+  []
+  (str "<pre style=\"background:#fafafa\">"
+       "\n\ndetected layers:\n"
+       (get-in @detect.state/LAYERS  [])
+       "\n\nimported layers:\n"
+       (get-in @import.state/LAYERS  [])
+       "\n\nread layers:\n"
+       (get-in @read.state/LAYERS    [])
+       "\n\nprocessed layers:\n"
+       (get-in @process.state/LAYERS [])
+       "\n\nprocessed cover:\n"
+       (get-in @process.state/COVER  [])
+       "</pre>"))
+```
+
+</details>
+
+<details>
+<summary>Require</summary>
+
+```
+(ns my-namespace (:require [docs.api :refer [debug]]))
+
+(docs.api/debug)
+(debug)
 ```
 
 </details>
