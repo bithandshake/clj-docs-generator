@@ -9,10 +9,12 @@
 (defn options-prototype
   ; @param (map) options
   ;
-  ; @return
+  ; @return (map)
+  ; {:print-options (keywords in vector)}
   [options]
   (letfn [(f [%] (-> % (string/not-starts-with! "/")
                        (string/not-ends-with!   "/")))]
-         (-> options (update :abs-path   f)
-                     (update :output-dir f)
-                     (update :code-dirs  #(vector/->items % f)))))
+         (merge {:print-options [:code :examples :params :require :return :usages]}
+                (-> options (update :abs-path   f)
+                            (update :output-dir f)
+                            (update :code-dirs  #(vector/->items % f))))))

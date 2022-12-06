@@ -27,6 +27,7 @@
   (reset! detect.state/LAYERS  nil)
   (reset! import.state/LAYERS  nil)
   (reset! process.state/COVER  nil)
+  (reset! process.state/COMMON nil)
   (reset! process.state/LAYERS nil)
   (reset! read.state/LAYERS    nil)
   (if (-> options core.helpers/output-path io/directory-exists?)
@@ -53,6 +54,8 @@
        "\n"(get-in @process.state/LAYERS [])
        "\n\nprocessed cover:"
        "\n"(get-in @process.state/COVER  [])
+       "\n\nprocessed common:"
+       "\n"(get-in @process.state/COMMON [])
        "</pre>"))
 
 (defn create-documentation!
@@ -63,18 +66,25 @@
   ;
   ; @param (map) options
   ; {:abs-path (string)
+  ;  :author (string)
   ;  :code-dirs (strings in vector)
   ;  :lib-name (string)
-  ;  :output-dir (string)}
+  ;  :output-dir (string)
+  ;  :print-options (keywords in vector)(opt)
+  ;   [:code, :examples, :params, :require, :return, :usages]
+  ;   Default: [:code :examples :params :require :return :usages]
+  ;  :website (string)}
   ;
   ; @usage
   ; (create-documentation! {...})
   ;
   ; @usage
   ; (create-documentation! {:abs-path   "submodules/my-repository"
+  ;                         :author     "Author"
   ;                         :code-dirs  ["source-code/clj"]
   ;                         :output-dir "documentation"
-  ;                         :lib-name   "my-repository"})
+  ;                         :lib-name   "my-repository"
+  ;                         :website    "https://github.com/author/my-repository"})
   ;
   ; @return (string)
   [options]
@@ -85,6 +95,7 @@
        (read.engine/read-layers!       options)
        (process.engine/process-layers! options)
        (process.engine/process-cover!  options)
+       (process.engine/process-common! options)
        (print.engine/print-cover!      options)
        (print.engine/print-layers!     options)
        (debug)))

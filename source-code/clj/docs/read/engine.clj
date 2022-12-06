@@ -178,16 +178,17 @@
 (defn read-constant
   ; @param (string) file-content
   ; @param (string) name
+  ; @param (string) redirected-to
   ;
   ; @example
-  ; (read-constant "..." "MY-CONSTANT")
+  ; (read-constant "..." "MY-CONSTANT" "MY-CONSTANT")
   ; =>
   ; {"type" ["string"]}
   ;
   ; @return (map)
   ; {"name" (string)
   ;  "type" (strings in vector)}
-  [file-content name]
+  [file-content name redirected-to]
   ; pattern: "(def MY-CONSTANT"
   (let [pattern (str "[(]def[ ]{1,}"name)]
        (if-let [start-pos (regex/first-dex-of file-content (re-pattern pattern))]
@@ -196,9 +197,10 @@
 (defn read-function
   ; @param (string) file-content
   ; @param (string) name
+  ; @param (string) redirected-to
   ;
   ; @example
-  ; (read-function "..." "my-function")
+  ; (read-function "..." "my-function" "my-function")
   ; =>
   ; (?)
   ;
@@ -209,25 +211,26 @@
   ;    "return" (map)
   ;    "usages" (maps in vector)}
   ;  "name" (string)}
-  [file-content name]
-  (if-let [header (read.helpers/function-header file-content name)]
+  [file-content name redirected-to]
+  (if-let [header (read.helpers/function-header file-content redirected-to)]
           {"header" (read-function-header header)
-           "code"   (read.helpers/function-code file-content name)
+           "code"   (read.helpers/function-code file-content redirected-to)
            "name"   name}
-          {"code"   (read.helpers/function-code file-content name)
+          {"code"   (read.helpers/function-code file-content redirected-to)
            "name"   name}))
 
 (defn read-code
   ; @param (string) file-content
   ; @param (string) name
+  ; @param (string) redirected-to
   ;
   ; @example
-  ; (read-code "..." "my-function")
+  ; (read-code "..." "my-function" "my-function")
   ; =>
   ; {"function" {...}}
   ;
   ; @example
-  ; (read-code "..." "MY-CONSTANT")
+  ; (read-code "..." "MY-CONSTANT" "MY-CONSTANT")
   ; =>
   ; {"constant" {...}}
   ;
@@ -240,9 +243,9 @@
   ;      "params" (maps in vector)
   ;      "return" (map)
   ;      "usages" (maps in vector)}}}
-  [file-content name]
-  (let [function-data (read-function file-content name)
-        constant-data (read-constant file-content name)]
+  [file-content name redirected-to]
+  (let [function-data (read-function file-content name redirected-to)
+        constant-data (read-constant file-content name redirected-to)]
        (if-let [function-code (get function-data "code")]
                {"function" function-data}
                (if-let [constant-code (get constant-data "code")]
@@ -272,12 +275,17 @@
   ; {"constant" (map)
   ;  "function" (map)}
   [options layer-name api-filepath name value]
+  ; redirected-to:
+  ; Az egyes függvények és konstansok az api fájlokban nem feltétlenül egy ugyanolyan
+  ; nevű függvényre vagy konstansra vannak átirányítva!
   (let [alias (or (string/before-first-occurence value "/" {:return? false})
                   (get-in @import.state/LAYERS [layer-name api-filepath "refers" value]))
+        redirected-to (string/after-first-occurence value "/" {:return? true})
         code-filepath (read.helpers/code-filepath options layer-name api-filepath alias)]
        (if (io/file-exists? code-filepath)
            (let [file-content (io/read-file code-filepath)]
-                (read-code file-content name))
+
+                (read-code file-content name redirected-to))
 
            ; Ha a code-filepath útvonalon nem olvasható be forráskód fájl tartalma,
            ; akkor megpróbálja a cljc fájlként elérni a fájlt, mert előfordulhat,
@@ -285,7 +293,7 @@
            ; irányít át függvényeket vagy konstansokat.
            (if-let [alter-filepath (read.helpers/alter-filepath options layer-name api-filepath alias)]
                    (let [file-content (io/read-file alter-filepath)]
-                        (read-code file-content name))))))
+                        (read-code file-content name redirected-to))))))
 
 (defn read-defs
   ; @param (map) options

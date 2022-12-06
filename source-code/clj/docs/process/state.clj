@@ -12,3 +12,6 @@
 
 ; @atom (map)
 (def COVER (atom {}))
+
+; @atom (map)
+(def COMMON (atom {}))

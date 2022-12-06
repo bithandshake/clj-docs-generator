@@ -5,7 +5,9 @@
               [docs.process.helpers :as process.helpers]
               [docs.process.state   :as process.state]
               [io.api               :as io]
-              [string.api           :as string]))
+              [normalize.api        :as normalize]
+              [string.api           :as string]
+              [vector.api           :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -112,18 +114,25 @@
 
 (defn print-api-function-header
   ; @param (map) options
+  ; {:print-options (keywords in vector)}
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ; @param (map) function-data
   ;
   ; @return (string)
-  [options layer-name api-filepath function-data]
-  (str (print-api-function-params   options layer-name api-filepath function-data)
-       (print-api-function-usages   options layer-name api-filepath function-data)
-       (print-api-function-examples options layer-name api-filepath function-data)
-       (print-api-function-return   options layer-name api-filepath function-data)
-       (print-api-function-code     options layer-name api-filepath function-data)
-       (print-api-function-require  options layer-name api-filepath function-data)))
+  [{:keys [print-options] :as options} layer-name api-filepath function-data]
+  (str (if (vector/contains-item? print-options :params)
+           (print-api-function-params   options layer-name api-filepath function-data))
+       (if (vector/contains-item? print-options :usages)
+           (print-api-function-usages   options layer-name api-filepath function-data))
+       (if (vector/contains-item? print-options :examples)
+           (print-api-function-examples options layer-name api-filepath function-data))
+       (if (vector/contains-item? print-options :return)
+           (print-api-function-return   options layer-name api-filepath function-data))
+       (if (vector/contains-item? print-options :code)
+           (print-api-function-code options layer-name api-filepath function-data))
+       (if (vector/contains-item? print-options :require)
+           (print-api-function-require  options layer-name api-filepath function-data))))
 
 (defn print-api-function
   ; @param (map) options
@@ -166,6 +175,22 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn print-api-links
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) api-filepath
+  ;
+  ; @return (string)
+  [_ layer-name api-filepath]
+  (let [functions (get-in @process.state/LAYERS [layer-name api-filepath "functions"])
+        functions (print.helpers/sort-functions functions)
+        constants (get-in @process.state/LAYERS [layer-name api-filepath "constants"])
+        constants (print.helpers/sort-constants functions)]
+       (letfn [(f [links function-data] (let [function-name (get function-data "name")
+                                              function-link (normalize/clean-text function-name)]
+                                             (str links "\n\n- ["function-name"](#"function-link")")))]
+              (str "\n\n### Index" (reduce f "" functions)))))
+
 (defn print-api-breadcrumbs
   ; @param (map) options
   ; @param (string) layer-name
@@ -174,13 +199,11 @@
   ; @return (string)
   [{:keys [abs-path]} layer-name api-filepath]
   (letfn [(f [r _] (str r "../"))]
-         (let [namespace    (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
-               api-rel-path (-> api-filepath (string/not-starts-with! abs-path)
-                                             (string/not-starts-with! "/"))
-               depth        (-> namespace (string/split #"\.")
-                                          (count))
-               steps        (reduce f nil (range 0 depth))]
-              (str "\n\n<strong>[README](../"steps"README.md) > [DOCUMENTATION]("steps"COVER.md) > </strong>"api-rel-path))))
+         (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
+               depth         (-> api-namespace (string/split #"\.")
+                                               (count))
+               steps         (reduce f nil (range 0 depth))]
+              (str "\n\n##### [README](../"steps"README.md) > [DOCUMENTATION]("steps"COVER.md) > "api-namespace""))))
 
 (defn print-api-title
   ; @param (map) options
@@ -190,7 +213,18 @@
   ; @return (string)
   [_ layer-name api-filepath]
   (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])]
-       (str "\n# <strong>"api-namespace"</strong> namespace")))
+       (str "\n# "api-namespace (case layer-name "clj" " Clojure" "cljc" " isomorphic" "cljs" " ClojureScript")
+            " namespace")))
+
+(defn print-api-footer
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) api-filepath
+  ;
+  ; @return (string)
+  [_ _ _]
+  (let [footer (get @process.state/COMMON "footer")]
+       (str "\n\n"footer)))
 
 (defn print-api-file
   ; @param (map) options
@@ -201,8 +235,11 @@
   [options layer-name api-filepath]
   (str (print-api-title       options layer-name api-filepath)
        (print-api-breadcrumbs options layer-name api-filepath)
+       (print-api-links       options layer-name api-filepath)
        (print-api-constants   options layer-name api-filepath)
        (print-api-functions   options layer-name api-filepath)
+       "\n\n---"
+       (print-api-footer      options layer-name api-filepath)
        "\n"))
 
 ;; ----------------------------------------------------------------------------
@@ -240,15 +277,15 @@
   ;
   ; @return (string)
   [_]
-  (str "\n\n<strong>[README](../README.md) > DOCUMENTATION</strong>"))
+  (str "\n\n##### [README](../README.md) > DOCUMENTATION"))
 
-(defn print-cover-description
+(defn print-cover-footer
   ; @param (map) options
   ;
   ; @return (string)
   [_]
-  (let [description (get @process.state/COVER "description")]
-       (str "\n\n---\n\n"description)))
+  (let [footer (get @process.state/COMMON "footer")]
+       (str "\n\n"footer)))
 
 (defn print-cover-links
   ; @param (map) options
@@ -269,7 +306,7 @@
   ;
   ; @return (string)
   [_]
-  (let [subtitle (get @process.state/COVER "subtitle")]
+  (let [subtitle (get @process.state/COMMON "subtitle")]
        (str "\n\n"subtitle)))
 
 (defn print-cover-title
@@ -278,7 +315,7 @@
   ; @return (string)
   [_]
   (let [title (get @process.state/COVER "title")]
-       (str "\n"title)))
+       (str "\n\n"title)))
 
 (defn print-cover
   ; @param (map) options
@@ -289,7 +326,8 @@
        (print-cover-subtitle    options)
        (print-cover-breadcrumbs options)
        (print-cover-links       options)
-       (print-cover-description options)
+       "\n\n---"
+       (print-cover-footer      options)
        "\n"))
 
 ;; ----------------------------------------------------------------------------
