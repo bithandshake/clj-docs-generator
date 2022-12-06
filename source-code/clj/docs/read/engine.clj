@@ -13,6 +13,38 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn read-function-warning
+  ; @param (string) header
+  ;
+  ; @example
+  ; (read-function-warning "@warning ...")
+  ; =>
+  ; "..."
+  ;
+  ; @return (string)
+  [header]
+  (if (string/contains-part? header "@warning")
+      (read.helpers/function-warning header)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn read-function-description
+  ; @param (string) header
+  ;
+  ; @example
+  ; (read-function-description "@description ...")
+  ; =>
+  ; "..."
+  ;
+  ; @return (string)
+  [header]
+  (if (string/contains-part? header "@description")
+      (read.helpers/function-description header)))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
 (defn read-function-return
   ; @param (string) header
   ;
@@ -26,7 +58,8 @@
   ; {"sample" (string)
   ;  "types" (string)}
   [header]
-  (read.helpers/function-return header))
+  (if (string/contains-part? header "@return")
+      (read.helpers/function-return header)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -162,15 +195,19 @@
   ; (?)
   ;
   ; @return (map)
-  ; {"examples" (maps in vector)
+  ; {"description" (string)
+  ;  "examples" (maps in vector)
   ;  "params" (maps in vector)
   ;  "return" (map)
-  ;  "usages" (maps in vector)}
+  ;  "usages" (maps in vector)
+  ;  "warning" (string)}
   [header]
-  {"params"   (read-function-params   header)
-   "examples" (read-function-examples header)
-   "usages"   (read-function-usages   header)
-   "return"   (read-function-return   header)})
+  {"description" (read-function-description header)
+   "warning"     (read-function-warning     header)
+   "params"      (read-function-params      header)
+   "examples"    (read-function-examples    header)
+   "usages"      (read-function-usages      header)
+   "return"      (read-function-return      header)})
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

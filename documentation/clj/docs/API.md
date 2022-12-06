@@ -12,16 +12,24 @@
 ### create-documentation!
 
 ```
+@warning
+The create-documentation! function ereases the output-dir before printing
+the new documentation books!
+Be careful with configuring this function!
+```
+
+```
 @param (map) options
-{:abs-path (string)
- :author (string)
+{:abs-path (string)(opt)
+ :author (string)(opt)
  :code-dirs (strings in vector)
+ :public-namespaces (regex patterns or strings in vector)(opt)
  :lib-name (string)
  :output-dir (string)
  :print-options (keywords in vector)(opt)
-  [:code, :examples, :params, :require, :return, :usages]
-  Default: [:code :examples :params :require :return :usages]
- :website (string)}
+  [:code, :description, :examples, :params, :require, :return, :usages, :warning]
+  Default: [:code :description :examples :params :require :return :usages :warning]
+ :website (string)(opt)}
 ```
 
 ```
@@ -31,12 +39,13 @@
 
 ```
 @usage
-(create-documentation! {:abs-path   "submodules/my-repository"
-                        :author     "Author"
-                        :code-dirs  ["source-code/clj"]
-                        :output-dir "documentation"
-                        :lib-name   "my-repository"
-                        :website    "https://github.com/author/my-repository"})
+(create-documentation! {:abs-path    "submodules/my-repository"
+                        :author      "Author"
+                        :code-dirs   ["source-code/clj"]
+                        :entry-files []
+                        :output-dir  "documentation"
+                        :lib-name    "my-repository"
+                        :website     "https://github.com/author/my-repository"})
 ```
 
 ```
@@ -49,17 +58,18 @@
 ```
 (defn create-documentation!
   [options]
-  (let [options (core.prototypes/options-prototype options)]
-       (initialize!                    options)
-       (detect.engine/detect-layers!   options)
-       (import.engine/import-layers!   options)
-       (read.engine/read-layers!       options)
-       (process.engine/process-layers! options)
-       (process.engine/process-cover!  options)
-       (process.engine/process-common! options)
-       (print.engine/print-cover!      options)
-       (print.engine/print-layers!     options)
-       (debug)))
+  (if (p/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
+      (let [options (core.prototypes/options-prototype options)]
+           (initialize!                    options)
+           (detect.engine/detect-layers!   options)
+           (import.engine/import-layers!   options)
+           (read.engine/read-layers!       options)
+           (process.engine/process-layers! options)
+           (process.engine/process-cover!  options)
+           (process.engine/process-common! options)
+           (print.engine/print-cover!      options)
+           (print.engine/print-layers!     options)
+           (debug))))
 ```
 
 </details>

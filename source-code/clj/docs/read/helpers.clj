@@ -214,6 +214,44 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn function-warning
+  ; @param (string) n
+  ;
+  ; @example
+  ; (function-warning "; @warning ...")
+  ; =>
+  ; "..."
+  ;
+  ; @return (string)
+  [n]
+  (-> n (string/after-first-occurence  "  ; @warning" {:return? false})
+        (string/before-first-occurence "  ; @"        {:return? true})
+        (string/remove-part            "  ; ")
+        (string/remove-part            "  ;\n")
+        (string/ends-with!             "\n")))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+(defn function-description
+  ; @param (string) n
+  ;
+  ; @example
+  ; (function-description "; @description ...")
+  ; =>
+  ; "..."
+  ;
+  ; @return (string)
+  [n]
+  (-> n (string/after-first-occurence  "  ; @description" {:return? false})
+        (string/before-first-occurence "  ; @"            {:return? true})
+        (string/remove-part            "  ; ")
+        (string/remove-part            "  ;\n")
+        (string/ends-with!             "\n")))
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
 (defn function-return
   ; @param (string) n
   ;

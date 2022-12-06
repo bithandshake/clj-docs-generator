@@ -12,6 +12,34 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn process-function-description
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) api-filepath
+  ; @param (map) function-data
+  ;
+  ; @usage
+  ; (process-function-description {...} "clj" "my-repository/source-code/amy_directory/pi.clj" {...})
+  ;
+  ; @return (string)
+  [_ _ _ function-data]
+  (if-let [description (get-in function-data ["header" "description"])]
+          (str "@description" description)))
+
+(defn process-function-warning
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) api-filepath
+  ; @param (map) function-data
+  ;
+  ; @usage
+  ; (process-function-warning {...} "clj" "my-repository/source-code/amy_directory/pi.clj" {...})
+  ;
+  ; @return (string)
+  [_ _ _ function-data]
+  (if-let [warning (get-in function-data ["header" "warning"])]
+          (str "@warning" warning)))
+
 (defn process-function-params
   ; @param (map) options
   ; @param (string) layer-name
@@ -109,7 +137,6 @@
                   (str "@return ("types")"sample)
                   (str "@return ("types")"))))
 
-
 (defn process-function-header
   ; @param (map) options
   ; @param (string) layer-name
@@ -122,15 +149,19 @@
   ; (?)
   ;
   ; @return (map)
-  ; {"examples" (strings in vector)
+  ; {"description" (string)
+  ;  "examples" (strings in vector)
   ;  "params" (strings in vector)
   ;  "return" (string)
-  ;  "usages" (strings in vector)}
+  ;  "usages" (strings in vector)
+  ;  "warning" (string)}
   [options layer-name api-filepath function-data]
-  {"examples" (process-function-examples options layer-name api-filepath function-data)
-   "params"   (process-function-params   options layer-name api-filepath function-data)
-   "return"   (process-function-return   options layer-name api-filepath function-data)
-   "usages"   (process-function-usages   options layer-name api-filepath function-data)})
+  {"description" (process-function-description options layer-name api-filepath function-data)
+   "examples"    (process-function-examples    options layer-name api-filepath function-data)
+   "params"      (process-function-params      options layer-name api-filepath function-data)
+   "return"      (process-function-return      options layer-name api-filepath function-data)
+   "usages"      (process-function-usages      options layer-name api-filepath function-data)
+   "warning"     (process-function-warning     options layer-name api-filepath function-data)})
 
 (defn process-function
   ; @param (map) options
@@ -311,7 +342,7 @@
 (defn process-common-subtitle
   ; @param (map) options
   ; {:lib-name (string)
-  ;  :website (string)}
+  ;  :website (string)(opt)}
   ;
   ; @example
   ; (process-common-subtitle {...})
@@ -322,7 +353,9 @@
   [{:keys [lib-name website]}]
   (let [clj-library?  (process.helpers/clj-library?)
         cljs-library? (process.helpers/cljs-library?)]
-       (str "Documentation of the ["lib-name"]("website")"
+       (str "Documentation of the "
+            (if website (str "["lib-name"]("website")")
+                        (str "<strong>"lib-name"</strong>"))
             (if clj-library?  " Clojure ")
             (if (and clj-library? cljs-library?) "/")
             (if cljs-library? " ClojureScript ")

@@ -12,6 +12,28 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn print-api-function-description
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) api-filepath
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [_ _ _ function-data]
+  (if-let [description (get-in function-data ["header" "description"])]
+          (str "\n\n```\n" description"```")))
+
+(defn print-api-function-warning
+  ; @param (map) options
+  ; @param (string) layer-name
+  ; @param (string) api-filepath
+  ; @param (map) function-data
+  ;
+  ; @return (string)
+  [_ _ _ function-data]
+  (if-let [warning (get-in function-data ["header" "warning"])]
+          (str "\n\n```\n" warning"```")))
+
 (defn print-api-function-code
   ; @param (map) options
   ; @param (string) layer-name
@@ -40,8 +62,8 @@
   [_ layer-name api-filepath function-data]
   (let [function-name  (get    function-data "name")
         params         (get-in function-data ["header" "params"])
-        namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
-        api-filepath (string/replace-part api-filepath "_" "-")]
+        namespace      (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
+        api-filepath   (string/replace-part api-filepath "_" "-")]
        (str "\n\n<details>"
             "\n<summary>Require</summary>"
             "\n\n```"
@@ -121,18 +143,22 @@
   ;
   ; @return (string)
   [{:keys [print-options] :as options} layer-name api-filepath function-data]
-  (str (if (vector/contains-item? print-options :params)
-           (print-api-function-params   options layer-name api-filepath function-data))
+  (str (if (vector/contains-item? print-options :warning)
+           (print-api-function-warning     options layer-name api-filepath function-data))
+       (if (vector/contains-item? print-options :description)
+           (print-api-function-description options layer-name api-filepath function-data))
+       (if (vector/contains-item? print-options :params)
+           (print-api-function-params      options layer-name api-filepath function-data))
        (if (vector/contains-item? print-options :usages)
-           (print-api-function-usages   options layer-name api-filepath function-data))
+           (print-api-function-usages      options layer-name api-filepath function-data))
        (if (vector/contains-item? print-options :examples)
-           (print-api-function-examples options layer-name api-filepath function-data))
+           (print-api-function-examples    options layer-name api-filepath function-data))
        (if (vector/contains-item? print-options :return)
-           (print-api-function-return   options layer-name api-filepath function-data))
+           (print-api-function-return      options layer-name api-filepath function-data))
        (if (vector/contains-item? print-options :code)
-           (print-api-function-code options layer-name api-filepath function-data))
+           (print-api-function-code        options layer-name api-filepath function-data))
        (if (vector/contains-item? print-options :require)
-           (print-api-function-require  options layer-name api-filepath function-data))))
+           (print-api-function-require     options layer-name api-filepath function-data))))
 
 (defn print-api-function
   ; @param (map) options
