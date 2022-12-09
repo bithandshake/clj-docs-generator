@@ -1,8 +1,8 @@
 
 {:paths ["source-code/clj"]
  :deps  {bithandshake/cljc-fruits {:git/url "https://github.com/bithandshake/cljc-fruits"
-                                   :sha     "f4b0a8b5d0672df16e4c21bc883e3a4f1412a238"}
+                                   :sha     "27425acf4f011e482646e941b7e7db2b08874270"}
          bithandshake/io-api      {:git/url "https://github.com/bithandshake/io-api"
-                                   :sha     "a6ad1e2fbe01f63388406eb70122bf8c7a16650e"}
+                                   :sha     "bc6872d7dbbba44572b75a86008250c2a9c3623f"}
          bithandshake/pattern-api {:git/url "https://github.com/bithandshake/pattern-api"
                                    :sha     "ac1e00a67b64a35240348fb7c4599995854fcbad"}}}
