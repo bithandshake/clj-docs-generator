@@ -1,8 +1,6 @@
 
 # docs-api
 
-...
-
 ### Overview
 
 The <strong>docs-api</strong> is a documentation book generator for Clojure/ClojureScript
