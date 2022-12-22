@@ -60,20 +60,20 @@
 
 (defn create-documentation!
   ; @warning
-  ; The create-documentation! function ereases the output-dir before printing
-  ; the new documentation books!
+  ; The create-documentation! function erases the output-dir before printing
+  ; the documentation books!
   ; Be careful with configuring this function!
   ;
   ; @param (map) options
   ; {:abs-path (string)(opt)
   ;  :author (string)(opt)
   ;  :code-dirs (strings in vector)
-  ;  :public-namespaces (regex patterns or strings in vector)(opt)
   ;  :lib-name (string)
   ;  :output-dir (string)
   ;  :print-options (keywords in vector)(opt)
   ;   [:code, :description, :examples, :params, :require, :return, :usages, :warning]
   ;   Default: [:code :description :examples :params :require :return :usages :warning]
+  ;  :public-namespaces (regex patterns or strings in vector)(opt)
   ;  :website (string)(opt)}
   ;
   ; @usage
@@ -85,7 +85,7 @@
   ;                         :code-dirs   ["source-code/clj"]
   ;                         :entry-files []
   ;                         :output-dir  "documentation"
-  ;                         :lib-name    "my-repository"
+  ;                         :lib-name    "My library"
   ;                         :website     "https://github.com/author/my-repository"})
   ;
   ; @return (string)
