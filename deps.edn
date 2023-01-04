@@ -5,4 +5,4 @@
          bithandshake/io-api      {:git/url "https://github.com/bithandshake/io-api"
                                    :sha     "1dd1ad5d84c83fcf2d44de166f82d8e9631563b8"}
          bithandshake/pattern-api {:git/url "https://github.com/bithandshake/pattern-api"
-                                   :sha     "a6f398917efadb37789412a8e72fbda525a0eab8"}}}
+                                   :sha     "334db7e1f55811876ad3c9204d04428039adccc3"}}}
