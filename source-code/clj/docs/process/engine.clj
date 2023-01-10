@@ -361,11 +361,11 @@
             (if cljs-library? " ClojureScript ")
             "library")))
 
-(defn process-common-footer
+(defn process-common-credits
   ; @param (map) options
   ;
   ; @example
-  ; (process-footer {...})
+  ; (process-common-credits {...})
   ; =>
   ; "..."
   ;
@@ -378,7 +378,7 @@
   ;
   ; @return (map)
   [options]
-  {"footer"   (process-common-footer   options)
+  {"credits"  (process-common-credits  options)
    "subtitle" (process-common-subtitle options)})
 
 (defn process-common!

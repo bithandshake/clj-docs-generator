@@ -1,4 +1,6 @@
 
+- docs-generator/print-docs! legyen a primary fgv. neve
+
 - Megvizsgálni a függvény beolvasásakor, hogy #?(:clj ) ...
   (minek?)
 

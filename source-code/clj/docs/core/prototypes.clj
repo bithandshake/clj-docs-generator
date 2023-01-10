@@ -14,7 +14,7 @@
   [options]
   (letfn [(f [%] (-> % (string/not-starts-with! "/")
                        (string/not-ends-with!   "/")))]
-         (merge {:print-options [:code :description :examples :params :require :return :usages :warning]}
+         (merge {:print-options [:code :credits :description :examples :params :require :return :usages :warning]}
                 (-> options (update :abs-path   f)
                             (update :output-dir f)
                             (update :code-dirs  #(vector/->items % f))))))

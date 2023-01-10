@@ -71,8 +71,8 @@
   ;  :lib-name (string)
   ;  :output-dir (string)
   ;  :print-options (keywords in vector)(opt)
-  ;   [:code, :description, :examples, :params, :require, :return, :usages, :warning]
-  ;   Default: [:code :description :examples :params :require :return :usages :warning]
+  ;   [:code, :credits, :description, :examples, :params, :require, :return, :usages, :warning]
+  ;   Default: [:code :credits :description :examples :params :require :return :usages :warning]
   ;  :public-namespaces (regex patterns or strings in vector)(opt)
   ;  :website (string)(opt)}
   ;

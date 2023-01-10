@@ -1,8 +1,7 @@
 
-
 # docs-api documentation
 
-Documentation of the [docs-api](https://github.com/bithandshake-hq/docs-api) Clojure library
+Documentation of the [docs-api](https://github.com/bithandshake/docs-api) Clojure library
 
 ##### [README](../README.md) > DOCUMENTATION
 

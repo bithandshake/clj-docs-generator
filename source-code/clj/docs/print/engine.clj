@@ -184,7 +184,7 @@
         functions (print.helpers/sort-functions functions)]
        (letfn [(f [functions function-data]
                   (if functions (str functions "\n\n---" (print-api-function options layer-name api-filepath function-data))
-                                (str functions  (print-api-function options layer-name api-filepath function-data))))]
+                                (str functions           (print-api-function options layer-name api-filepath function-data))))]
               (reduce f nil functions))))
 
 ;; ----------------------------------------------------------------------------
@@ -244,13 +244,15 @@
 
 (defn print-api-footer
   ; @param (map) options
+  ; {:print-options (keywords in vector)}
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ;
   ; @return (string)
-  [_ _ _]
-  (let [footer (get @process.state/COMMON "footer")]
-       (str "\n\n"footer)))
+  [{:keys [print-options]} _ _]
+  (if (vector/contains-item? print-options :credits)
+      (let [credits (get @process.state/COMMON "credits")]
+           (str "\n\n---\n\n"credits"\n"))))
 
 (defn print-api-file
   ; @param (map) options
@@ -264,9 +266,7 @@
        (print-api-links       options layer-name api-filepath)
        (print-api-constants   options layer-name api-filepath)
        (print-api-functions   options layer-name api-filepath)
-       "\n\n---"
-       (print-api-footer      options layer-name api-filepath)
-       "\n"))
+       (print-api-footer      options layer-name api-filepath)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -307,11 +307,13 @@
 
 (defn print-cover-footer
   ; @param (map) options
+  ; {:print-options (keywords in vector)}
   ;
   ; @return (string)
-  [_]
-  (let [footer (get @process.state/COMMON "footer")]
-       (str "\n\n"footer)))
+  [{:keys [print-options]}]
+  (if (vector/contains-item? print-options :credits)
+      (let [credits (get @process.state/COMMON "credits")]
+           (str "\n\n---\n\n"credits"\n"))))
 
 (defn print-cover-links
   ; @param (map) options
@@ -321,8 +323,7 @@
   (let [clj-links  (get-in @process.state/COVER ["links" "clj"])
         cljc-links (get-in @process.state/COVER ["links" "cljc"])
         cljs-links (get-in @process.state/COVER ["links" "cljs"])]
-       (letfn [(f [links link]
-                  (str links"\n"link))]
+       (letfn [(f [links link] (str links"\n"link))]
               (str (if (-> clj-links  empty? not) (reduce f "\n\n### Clojure namespaces\n"       clj-links))
                    (if (-> cljc-links empty? not) (reduce f "\n\n### Isomorphic namespaces\n"    cljc-links))
                    (if (-> cljs-links empty? not) (reduce f "\n\n### ClojureScript namespaces\n" cljs-links))))))
@@ -341,7 +342,7 @@
   ; @return (string)
   [_]
   (let [title (get @process.state/COVER "title")]
-       (str "\n\n"title)))
+       (str "\n"title)))
 
 (defn print-cover
   ; @param (map) options
@@ -352,9 +353,7 @@
        (print-cover-subtitle    options)
        (print-cover-breadcrumbs options)
        (print-cover-links       options)
-       "\n\n---"
-       (print-cover-footer      options)
-       "\n"))
+       (print-cover-footer      options)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
