@@ -1,10 +1,10 @@
 
 (ns docs.read.engine
-    (:require [candy.api         :refer [return]]
-              [docs.import.state :as import.state]
+    (:require [docs.import.state :as import.state]
               [docs.read.helpers :as read.helpers]
               [docs.read.state   :as read.state]
               [io.api            :as io]
+              [noop.api          :refer [return]]
               [regex.api         :as regex]
               [string.api        :as string]
               [syntax.api        :as syntax]

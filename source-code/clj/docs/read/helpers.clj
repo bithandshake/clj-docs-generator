@@ -1,9 +1,9 @@
 
 (ns docs.read.helpers
-    (:require [candy.api           :refer [return]]
-              [docs.detect.helpers :as detect.helpers]
+    (:require [docs.detect.helpers :as detect.helpers]
               [docs.import.state   :as import.state]
               [io.api              :as io]
+              [noop.api            :refer [return]]
               [regex.api           :as regex]
               [string.api          :as string]
               [syntax.api          :as syntax]))

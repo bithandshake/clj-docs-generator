@@ -1,11 +1,11 @@
 
 (ns docs.process.engine
-    (:require [candy.api            :refer [return]]
-              [docs.import.state    :as import.state]
+    (:require [docs.import.state    :as import.state]
               [docs.process.helpers :as process.helpers]
               [docs.process.state   :as process.state]
               [docs.read.state      :as read.state]
               [map.api              :as map]
+              [noop.api             :refer [return]]
               [string.api           :as string]
               [vector.api           :as vector]))
 

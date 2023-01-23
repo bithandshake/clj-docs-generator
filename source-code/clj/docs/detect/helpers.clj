@@ -1,7 +1,7 @@
 
 (ns docs.detect.helpers
-    (:require [candy.api         :refer [return]]
-              [docs.detect.state :as detect.state]
+    (:require [docs.detect.state :as detect.state]
+              [noop.api          :refer [return]]
               [string.api        :as string]))
 
 ;; ----------------------------------------------------------------------------

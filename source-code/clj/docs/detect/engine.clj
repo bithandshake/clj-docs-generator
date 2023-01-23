@@ -1,8 +1,8 @@
 
 (ns docs.detect.engine
-    (:require [candy.api         :refer [return]]
-              [docs.detect.state :as detect.state]
+    (:require [docs.detect.state :as detect.state]
               [io.api            :as io]
+              [noop.api          :refer [return]]
               [string.api        :as string]
               [vector.api        :as vector]))
 

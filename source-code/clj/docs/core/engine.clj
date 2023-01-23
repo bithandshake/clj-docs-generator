@@ -1,7 +1,6 @@
 
 (ns docs.core.engine
-    (:require [candy.api            :refer [return]]
-              [docs.core.helpers    :as core.helpers]
+    (:require [docs.core.helpers    :as core.helpers]
               [docs.core.patterns   :as core.patterns]
               [docs.core.prototypes :as core.prototypes]
               [docs.detect.engine   :as detect.engine]
@@ -14,6 +13,7 @@
               [docs.read.engine     :as read.engine]
               [docs.read.state      :as read.state]
               [io.api               :as io]
+              [noop.api             :refer [return]]
               [pattern.api          :as p]
               [regex.api            :refer [re-match?]]
               [string.api           :as string]))

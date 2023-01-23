@@ -1,10 +1,10 @@
 
 (ns docs.import.engine
-    (:require [candy.api           :refer [return]]
-              [docs.detect.state   :as detect.state]
+    (:require [docs.detect.state   :as detect.state]
               [docs.import.helpers :as import.helpers]
               [docs.import.state   :as import.state]
               [io.api              :as io]
+              [noop.api            :refer [return]]
               [string.api          :as string]))
 
 ;; ----------------------------------------------------------------------------
