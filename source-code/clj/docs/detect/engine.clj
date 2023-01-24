@@ -12,8 +12,8 @@
 (defn detect-code-dir!
   ; @param (map) options
   ; @param (string) code-dir
-  [{:keys [abs-path]} code-dir]
-  (let [file-list (io/all-file-list (str abs-path "/" code-dir))]
+  [_ code-dir]
+  (let [file-list (io/all-file-list code-dir)]
        (letfn [(f [result filepath]
                   (cond (string/ends-with? filepath "api.clj")
                         (update result "clj"  vector/conj-item [code-dir filepath])
@@ -31,8 +31,7 @@
   ; (detect-layers! {...})
   ;
   ; @example
-  ; (detect-layers! {:abs-path "submodules/my-repository"
-  ;                  :code-dirs ["source-code/clj"]})
+  ; (detect-layers! {:code-dirs ["submodules/my-repository/source-code"]})
   ; =>
   ; {"clj" [["source-code/clj" "submodules/my-repository/source-code/my_directory/api.clj"]]}
   ;

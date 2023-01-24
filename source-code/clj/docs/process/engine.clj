@@ -19,7 +19,7 @@
   ; @param (map) function-data
   ;
   ; @usage
-  ; (process-function-description {...} "clj" "my-repository/source-code/amy_directory/pi.clj" {...})
+  ; (process-function-description {...} "clj" "my-repository/source-code/my_directory/pi.clj" {...})
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -33,7 +33,7 @@
   ; @param (map) function-data
   ;
   ; @usage
-  ; (process-function-warning {...} "clj" "my-repository/source-code/amy_directory/pi.clj" {...})
+  ; (process-function-warning {...} "clj" "my-repository/source-code/my_directory/pi.clj" {...})
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -126,7 +126,7 @@
   ;      "types" (string)(opt)}}}
   ;
   ; @example
-  ; (process-function-return {...} "clj" "my-repository/source-code/amy_directory/pi.clj" {...})
+  ; (process-function-return {...} "clj" "my-repository/source-code/my_directory/pi.clj" {...})
   ; =>
   ; "@return(string)"
   ;
@@ -271,13 +271,12 @@
 
 (defn process-layer-links
   ; @param (map) options
-  ;  {:abs-path (string)
-  ;   :output-dir (string)}
+  ;  {:output-dir (string)}
   ; @param (string) layer-name
   ; @param (strings in vector) links
   ;
   ; @return (strings in vector)
-  [{:keys [abs-path output-dir] :as options} layer-name links]
+  [{:keys [output-dir] :as options} layer-name links]
   (let [layer-data (get @read.state/LAYERS layer-name)
         api-files  (map/get-keys layer-data)]
        ; Az f0 függvény vizsgálja, hogy az api fájlban van-e bármilyen átirányitás
@@ -287,9 +286,7 @@
                (f [links api-filepath]
                   (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
                         md-path   (process.helpers/md-path options layer-name api-filepath)
-                        rel-path  (-> md-path (string/not-starts-with! abs-path)
-                                              (string/not-starts-with! "/")
-                                              (string/not-starts-with! output-dir)
+                        rel-path  (-> md-path (string/not-starts-with! output-dir)
                                               (string/not-starts-with! "/"))]
                        (if (f0 api-filepath)
                            (update links layer-name vector/conj-item (str "* ["api-namespace"]("rel-path"/API.md)"))

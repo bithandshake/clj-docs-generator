@@ -1,12 +1,10 @@
 
-(ns docs.core.helpers)
+(ns docs2.detect.state)
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-(defn output-path
-  ; @param (map) options
-  ;
-  ; @return (string)
-  [{:keys [abs-path output-dir]}]
-  (str abs-path "/" output-dir))
+; @ignore
+;
+; @atom (map)
+(def DETECTED-FILES (atom {}))

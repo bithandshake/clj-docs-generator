@@ -8,6 +8,7 @@ Documentation of the [docs-api](https://github.com/bithandshake/docs-api) Clojur
 ### Clojure namespaces
 
 * [docs.api](clj/docs/API.md)
+* [docs2.api](clj/docs2/API.md)
 
 ---
 

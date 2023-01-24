@@ -1,7 +1,6 @@
 
 (ns docs.core.engine
-    (:require [docs.core.helpers    :as core.helpers]
-              [docs.core.patterns   :as core.patterns]
+    (:require [docs.core.patterns   :as core.patterns]
               [docs.core.prototypes :as core.prototypes]
               [docs.detect.engine   :as detect.engine]
               [docs.detect.state    :as detect.state]
@@ -22,6 +21,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn initialize!
+  ; @ignore
+  ;
   ; @param (map) options
   [options]
   (reset! detect.state/LAYERS  nil)
@@ -30,32 +31,28 @@
   (reset! process.state/COMMON nil)
   (reset! process.state/LAYERS nil)
   (reset! read.state/LAYERS    nil)
-  (if (-> options core.helpers/output-path io/directory-exists?)
-      (-> options core.helpers/output-path io/empty-directory!)
-      (-> options core.helpers/output-path io/create-directory!)))
+  (if (-> options :output-dir io/directory-exists?)
+      (-> options :output-dir io/empty-directory!)
+      (-> options :output-dir io/create-directory!)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
 (defn debug
+  ; @ignore
+  ;
   ; @usage
   ; (debug)
   ;
   ; @return (string)
   []
   (str "<pre style=\"background:#fafafa\">"
-       "\n\ndetected layers:"
-       "\n"(get-in @detect.state/LAYERS  [])
-       "\n\nimported layers:"
-       "\n"(get-in @import.state/LAYERS  [])
-       "\n\nread layers:"
-       "\n"(get-in @read.state/LAYERS    [])
-       "\n\nprocessed layers:"
-       "\n"(get-in @process.state/LAYERS [])
-       "\n\nprocessed cover:"
-       "\n"(get-in @process.state/COVER  [])
-       "\n\nprocessed common:"
-       "\n"(get-in @process.state/COMMON [])
+       "\n\ndetected layers:\n"  (get-in @detect.state/LAYERS  [])
+       "\n\nimported layers:\n"  (get-in @import.state/LAYERS  [])
+       "\n\nread layers:\n"      (get-in @read.state/LAYERS    [])
+       "\n\nprocessed layers:\n" (get-in @process.state/LAYERS [])
+       "\n\nprocessed cover:\n"  (get-in @process.state/COVER  [])
+       "\n\nprocessed common:\n" (get-in @process.state/COMMON [])
        "</pre>"))
 
 (defn create-documentation!
@@ -65,28 +62,26 @@
   ; Be careful with configuring this function!
   ;
   ; @param (map) options
-  ; {:abs-path (string)(opt)
-  ;  :author (string)(opt)
+  ; {:author (string)(opt)
   ;  :code-dirs (strings in vector)
+  ;  :filename-pattern (regex pattern)(opt)
   ;  :lib-name (string)
   ;  :output-dir (string)
   ;  :print-options (keywords in vector)(opt)
   ;   [:code, :credits, :description, :examples, :params, :require, :return, :usages, :warning]
   ;   Default: [:code :credits :description :examples :params :require :return :usages :warning]
-  ;  :public-namespaces (regex patterns or strings in vector)(opt)
   ;  :website (string)(opt)}
   ;
   ; @usage
   ; (create-documentation! {...})
   ;
   ; @usage
-  ; (create-documentation! {:abs-path    "submodules/my-repository"
-  ;                         :author      "Author"
-  ;                         :code-dirs   ["source-code/clj"]
-  ;                         :entry-files []
-  ;                         :output-dir  "documentation"
-  ;                         :lib-name    "My library"
-  ;                         :website     "https://github.com/author/my-repository"})
+  ; (create-documentation! {:author           "Author"
+  ;                         :code-dirs        ["submodules/my-repository/source-code"]
+  ;                         :filename-pattern "[a-z\-]\.clj"
+  ;                         :output-dir       "submodules/my-repository/documentation"
+  ;                         :lib-name         "My library"
+  ;                         :website          "https://github.com/author/my-repository"})
   ;
   ; @return (string)
   [options]

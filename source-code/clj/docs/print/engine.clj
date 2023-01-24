@@ -223,7 +223,7 @@
   ; @param (string) api-filepath
   ;
   ; @return (string)
-  [{:keys [abs-path]} layer-name api-filepath]
+  [_ layer-name api-filepath]
   (letfn [(f [r _] (str r "../"))]
          (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
                depth         (-> api-namespace (string/split #"\.")
@@ -360,9 +360,8 @@
 
 (defn print-cover!
   ; @param (map) options
-  ; {:abs-path (string)
-  ;  :output-dir (strs)}
-  [{:keys [abs-path output-dir] :as options}]
-  (let [cover-filepath (str abs-path"/"output-dir"/COVER.md")
+  ; {:output-dir (strs)}
+  [{:keys [output-dir] :as options}]
+  (let [cover-filepath (str output-dir"/COVER.md")
         cover          (print-cover options)]
        (io/write-file! cover-filepath cover {:create? true})))

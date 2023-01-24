@@ -1,13 +1,11 @@
 
-# docs.api Clojure namespace
+# docs2.api Clojure namespace
 
-##### [README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > docs.api
+##### [README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > docs2.api
 
 ### Index
 
 - [create-documentation!](#create-documentation)
-
-- [debug](#debug)
 
 ### create-documentation!
 
@@ -23,6 +21,7 @@ Be careful with configuring this function!
 {:author (string)(opt)
  :code-dirs (strings in vector)
  :filename-pattern (regex pattern)(opt)
+  Default: #"[a-z\_\d]{1,}\.clj[cs]{0,}"
  :lib-name (string)
  :output-dir (string)
  :print-options (keywords in vector)(opt)
@@ -58,16 +57,9 @@ Be careful with configuring this function!
   [options]
   (if (p/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
       (let [options (core.prototypes/options-prototype options)]
-           (initialize!                    options)
-           (detect.engine/detect-layers!   options)
-           (import.engine/import-layers!   options)
-           (read.engine/read-layers!       options)
-           (process.engine/process-layers! options)
-           (process.engine/process-cover!  options)
-           (process.engine/process-common! options)
-           (print.engine/print-cover!      options)
-           (print.engine/print-layers!     options)
-           (debug))))
+           (try                (do (detect.engine/detect-files! options)
+                    (import.engine/import-files! options))
+                (catch Exception e (println e))))
 ```
 
 </details>
@@ -76,53 +68,10 @@ Be careful with configuring this function!
 <summary>Require</summary>
 
 ```
-(ns my-namespace (:require [docs.api :refer [create-documentation!]]))
+(ns my-namespace (:require [docs2.api :refer [create-documentation!]]))
 
-(docs.api/create-documentation! ...)
-(create-documentation!          ...)
-```
-
-</details>
-
----
-
-### debug
-
-```
-@usage
-(debug)
-```
-
-```
-@return (string)
-```
-
-<details>
-<summary>Source code</summary>
-
-```
-(defn debug
-  []
-  (str "<pre style=\"background:#fafafa\">"
-       "\n\ndetected layers:\n"  (get-in @detect.state/LAYERS  [])
-       "\n\nimported layers:\n"  (get-in @import.state/LAYERS  [])
-       "\n\nread layers:\n"      (get-in @read.state/LAYERS    [])
-       "\n\nprocessed layers:\n" (get-in @process.state/LAYERS [])
-       "\n\nprocessed cover:\n"  (get-in @process.state/COVER  [])
-       "\n\nprocessed common:\n" (get-in @process.state/COMMON [])
-       "</pre>"))
-```
-
-</details>
-
-<details>
-<summary>Require</summary>
-
-```
-(ns my-namespace (:require [docs.api :refer [debug]]))
-
-(docs.api/debug)
-(debug)
+(docs2.api/create-documentation! ...)
+(create-documentation!           ...)
 ```
 
 </details>
