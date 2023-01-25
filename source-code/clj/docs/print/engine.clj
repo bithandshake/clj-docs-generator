@@ -1,13 +1,13 @@
 
 (ns docs.print.engine
-    (:require [docs.import.state    :as import.state]
-              [docs.print.helpers   :as print.helpers]
-              [docs.process.helpers :as process.helpers]
-              [docs.process.state   :as process.state]
-              [io.api               :as io]
-              [normalize.api        :as normalize]
-              [string.api           :as string]
-              [vector.api           :as vector]))
+    (:require [docs.import.state  :as import.state]
+              [docs.print.utils   :as print.utils]
+              [docs.process.state :as process.state]
+              [docs.process.utils :as process.utils]
+              [io.api             :as io]
+              [normalize.api      :as normalize]
+              [string.api         :as string]
+              [vector.api         :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -181,7 +181,7 @@
   ; @return (string)
   [options layer-name api-filepath]
   (let [functions (get-in @process.state/LAYERS [layer-name api-filepath "functions"])
-        functions (print.helpers/sort-functions functions)]
+        functions (print.utils/sort-functions functions)]
        (letfn [(f [functions function-data]
                   (if functions (str functions "\n\n---" (print-api-function options layer-name api-filepath function-data))
                                 (str functions           (print-api-function options layer-name api-filepath function-data))))]
@@ -209,9 +209,9 @@
   ; @return (string)
   [_ layer-name api-filepath]
   (let [functions (get-in @process.state/LAYERS [layer-name api-filepath "functions"])
-        functions (print.helpers/sort-functions functions)
+        functions (print.utils/sort-functions functions)
         constants (get-in @process.state/LAYERS [layer-name api-filepath "constants"])
-        constants (print.helpers/sort-constants functions)]
+        constants (print.utils/sort-constants functions)]
        (letfn [(f [links function-data] (let [function-name (get function-data "name")
                                               function-link (normalize/clean-text function-name)]
                                              (str links "\n\n- ["function-name"](#"function-link")")))]
@@ -276,7 +276,7 @@
   ; @param (string) layer-name
   ; @param (string) api-filepath
   [options layer-name api-filepath]
-  (let [md-path          (process.helpers/md-path options layer-name api-filepath)
+  (let [md-path          (process.utils/md-path options layer-name api-filepath)
         api-doc-filepath (str md-path "/API.md")
         api-doc          (print-api-file options layer-name api-filepath)]
        (io/write-file! api-doc-filepath api-doc {:create? true})))

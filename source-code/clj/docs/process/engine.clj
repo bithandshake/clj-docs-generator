@@ -1,13 +1,14 @@
 
 (ns docs.process.engine
-    (:require [docs.import.state    :as import.state]
-              [docs.process.helpers :as process.helpers]
-              [docs.process.state   :as process.state]
-              [docs.read.state      :as read.state]
-              [map.api              :as map]
-              [noop.api             :refer [return]]
-              [string.api           :as string]
-              [vector.api           :as vector]))
+    (:require [docs.import.state  :as import.state]
+              [docs.process.env   :as process.env]
+              [docs.process.utils :as process.utils]
+              [docs.process.state :as process.state]
+              [docs.read.state    :as read.state]
+              [map.api            :as map]
+              [noop.api           :refer [return]]
+              [string.api         :as string]
+              [vector.api         :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -19,7 +20,7 @@
   ; @param (map) function-data
   ;
   ; @usage
-  ; (process-function-description {...} "clj" "my-repository/source-code/my_directory/pi.clj" {...})
+  ; (process-function-description {...} "clj" "my-repository/source-code/my_directory/api.clj" {...})
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -33,7 +34,7 @@
   ; @param (map) function-data
   ;
   ; @usage
-  ; (process-function-warning {...} "clj" "my-repository/source-code/my_directory/pi.clj" {...})
+  ; (process-function-warning {...} "clj" "my-repository/source-code/my_directory/api.clj" {...})
   ;
   ; @return (string)
   [_ _ _ function-data]
@@ -285,7 +286,7 @@
                                       (vector/nonempty? (get-in @read.state/LAYERS [layer-name api-filepath "constants"]))))
                (f [links api-filepath]
                   (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
-                        md-path   (process.helpers/md-path options layer-name api-filepath)
+                        md-path   (process.utils/md-path options layer-name api-filepath)
                         rel-path  (-> md-path (string/not-starts-with! output-dir)
                                               (string/not-starts-with! "/"))]
                        (if (f0 api-filepath)
@@ -348,8 +349,8 @@
   ;
   ; @return (string)
   [{:keys [lib-name website]}]
-  (let [clj-library?  (process.helpers/clj-library?)
-        cljs-library? (process.helpers/cljs-library?)]
+  (let [clj-library?  (process.env/clj-library?)
+        cljs-library? (process.env/cljs-library?)]
        (str "Documentation of the "
             (if website (str "["lib-name"]("website")")
                         (str "<strong>"lib-name"</strong>"))

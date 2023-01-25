@@ -1,5 +1,5 @@
 
-(ns docs2.import.helpers
+(ns docs2.import.utils
     (:require [docs2.import.config :as import.config]
               [regex.api          :as regex :refer [re-mismatch?]]
               [string.api         :as string]))

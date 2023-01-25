@@ -1,5 +1,5 @@
 
-(ns docs.import.helpers
+(ns docs.import.utils
     (:require [string.api :as string]
               [syntax.api :as syntax]))
 

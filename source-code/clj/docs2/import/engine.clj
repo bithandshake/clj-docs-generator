@@ -2,7 +2,7 @@
 (ns docs2.import.engine
     (:require [docs2.detect.state :as detect.state]
               [docs2.import.config :as import.config]
-              [docs2.import.helpers :as import.helpers]
+              [docs2.import.utils :as import.utils]
               [docs2.import.state :as import.state]
               [io.api            :as io]
               [regex.api         :as regex :refer [re-match?]]
@@ -24,8 +24,8 @@
   ; 3. Derives the constant names from each match
   ; 4. Stores the constant names and their occurence positions in file into the imported files atom
   (doseq [match (re-seq import.config/CONSTANT-PATTERN file-content)]
-         (if-not (import.helpers/constant-ignored? file-content match)
-                 (if-let [constant-name (import.helpers/match->constant-name match)]
+         (if-not (import.utils/constant-ignored? file-content match)
+                 (if-let [constant-name (import.utils/match->constant-name match)]
                          (swap! import.state/IMPORTED-FILES assoc-in [filepath :constants constant-name]
                                                                      (string/first-dex-of file-content match))))))
 
@@ -49,8 +49,8 @@
   ; (import-redirects! {...} "..." "...")
   [options filepath file-content]
   (doseq [match (re-seq import.config/REDIRECT-PATTERN file-content)]
-         (if-not (import.helpers/constant-ignored? file-content match)
-                 (if-let [constant-name (import.helpers/match->constant-name match)]
+         (if-not (import.utils/constant-ignored? file-content match)
+                 (if-let [constant-name (import.utils/match->constant-name match)]
                          (swap! import.state/IMPORTED-FILES assoc-in [filepath :redirects constant-name]
                                                                      (string/first-dex-of file-content match))))))
 

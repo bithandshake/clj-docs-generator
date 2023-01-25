@@ -1,5 +1,5 @@
 
-(ns docs.print.helpers
+(ns docs.print.utils
     (:require [vector.api :as vector]))
 
 ;; ----------------------------------------------------------------------------

@@ -1,8 +1,9 @@
 
 (ns docs.read.engine
     (:require [docs.import.state :as import.state]
-              [docs.read.helpers :as read.helpers]
+              [docs.read.env     :as read.env]
               [docs.read.state   :as read.state]
+              [docs.read.utils   :as read.utils]
               [io.api            :as io]
               [noop.api          :refer [return]]
               [regex.api         :as regex]
@@ -24,7 +25,7 @@
   ; @return (string)
   [header]
   (if (string/contains-part? header "@warning")
-      (read.helpers/function-warning header)))
+      (read.utils/function-warning header)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -40,7 +41,7 @@
   ; @return (string)
   [header]
   (if (string/contains-part? header "@description")
-      (read.helpers/function-description header)))
+      (read.utils/function-description header)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -59,7 +60,7 @@
   ;  "types" (string)}
   [header]
   (if (string/contains-part? header "@return")
-      (read.helpers/function-return header)))
+      (read.utils/function-return header)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -77,7 +78,7 @@
   ; {"call" (string)}
   [header cursor]
   (-> header (string/part cursor)
-             (read.helpers/function-first-usage)))
+             (read.utils/function-first-usage)))
 
 (defn read-function-usages
   ; @param (string) header
@@ -116,7 +117,7 @@
   ;  "result" (string)}
   [header cursor]
   (-> header (string/part cursor)
-             (read.helpers/function-first-example)))
+             (read.utils/function-first-example)))
 
 (defn read-function-examples
   ; @param (string) header
@@ -158,7 +159,7 @@
   ;  "types" (string)}}
   [header cursor]
   (-> header (string/part cursor)
-             (read.helpers/function-first-param)))
+             (read.utils/function-first-param)))
 
 (defn read-function-params
   ; @param (string) header
@@ -249,11 +250,11 @@
   ;    "usages" (maps in vector)}
   ;  "name" (string)}
   [file-content name redirected-to]
-  (if-let [header (read.helpers/function-header file-content redirected-to)]
+  (if-let [header (read.utils/function-header file-content redirected-to)]
           {"header" (read-function-header header)
-           "code"   (read.helpers/function-code file-content redirected-to)
+           "code"   (read.utils/function-code file-content redirected-to)
            "name"   name}
-          {"code"   (read.helpers/function-code file-content redirected-to)
+          {"code"   (read.utils/function-code file-content redirected-to)
            "name"   name}))
 
 (defn read-code
@@ -318,7 +319,7 @@
   (let [alias (or (string/before-first-occurence value "/" {:return? false})
                   (get-in @import.state/LAYERS [layer-name api-filepath "refers" value]))
         redirected-to (string/after-first-occurence value "/" {:return? true})
-        code-filepath (read.helpers/code-filepath options layer-name api-filepath alias)]
+        code-filepath (read.env/code-filepath options layer-name api-filepath alias)]
        (if (io/file-exists? code-filepath)
            (let [file-content (io/read-file code-filepath)]
 
@@ -328,7 +329,7 @@
            ; akkor megpróbálja a cljc fájlként elérni a fájlt, mert előfordulhat,
            ; hogy egy clj vagy cljs api fájl közvetlenül egy cljc fájlból
            ; irányít át függvényeket vagy konstansokat.
-           (if-let [alter-filepath (read.helpers/alter-filepath options layer-name api-filepath alias)]
+           (if-let [alter-filepath (read.env/alter-filepath options layer-name api-filepath alias)]
                    (let [file-content (io/read-file alter-filepath)]
                         (read-code file-content name redirected-to))))))
 

@@ -1,5 +1,5 @@
 
-(ns docs.detect.helpers
+(ns docs.detect.env
     (:require [docs.detect.state :as detect.state]
               [noop.api          :refer [return]]
               [string.api        :as string]))

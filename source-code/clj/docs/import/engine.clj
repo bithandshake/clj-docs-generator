@@ -1,11 +1,11 @@
 
 (ns docs.import.engine
-    (:require [docs.detect.state   :as detect.state]
-              [docs.import.helpers :as import.helpers]
-              [docs.import.state   :as import.state]
-              [io.api              :as io]
-              [noop.api            :refer [return]]
-              [string.api          :as string]))
+    (:require [docs.detect.state :as detect.state]
+              [docs.import.utils :as import.utils]
+              [docs.import.state :as import.state]
+              [io.api            :as io]
+              [noop.api          :refer [return]]
+              [string.api        :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -22,7 +22,7 @@
   ; @return (map)
   [api-content cursor]
   (-> api-content (string/part cursor)
-                  (import.helpers/first-refer)))
+                  (import.utils/first-refer)))
 
 (defn import-refers
   ; @param (string) api-content
@@ -70,7 +70,7 @@
   ; @return (map)
   [api-content cursor]
   (let [[namespace alias] (-> api-content (string/part cursor)
-                                          (import.helpers/first-alias))]
+                                          (import.utils/first-alias))]
        {namespace alias}))
 
 (defn import-aliases
@@ -107,7 +107,7 @@
   ; @return (strings in vector)
   [api-content cursor]
   (-> api-content (string/part cursor)
-                  (import.helpers/first-def)))
+                  (import.utils/first-def)))
 
 (defn import-defs
   ; @param (string) api-content
