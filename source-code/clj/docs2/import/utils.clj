@@ -7,12 +7,55 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
+(defn constant-header
+  ; @param (string) file-content
+  ; @param (string) constant-name
+  ;
+  ; @usage
+  ; (constant-header "..." "...")
+  ;
+  ; @return (string)
+  [file-content constant-name])
+
+(defn function-header
+  ; @param (string) file-content
+  ; @param (string) function-name
+  ;
+  ; @usage
+  ; (function-header "..." "...")
+  ;
+  ; @return (string)
+  [file-content function-name])
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
 (defn constant-ignored?
   ; @param (string) file-content
   ; @param (string) match
   ;
   ; @usage
   ; (constant-ignored? "..." "...")
+  ;
+  ; @return (boolean)
+  [file-content match]
+  ; 1. Takes the part of the content before the match.
+  ; 2. Takes the part between the match and the last occurence of the ignore mark.
+  ; 3. Determines whether the found ignore mark belongs to the match or not.
+  ;    If at least one line follows the ignore mark that isn't a comment line means
+  ;    the mark doesn't belongs to the constant.
+  (letfn [(f [observed-part] (and observed-part (or (re-mismatch? observed-part #"\n[ ]{0,}(?!;)")
+                                                    (re-mismatch? observed-part #"\n"))))]
+         (-> file-content (string/before-first-occurence match   {:return? false})
+                          (string/after-last-occurence "@ignore" {:return? false})
+                          (f))))
+
+(defn function-ignored?
+  ; @param (string) file-content
+  ; @param (string) match
+  ;
+  ; @usage
+  ; (function-ignored? "..." "...")
   ;
   ; @return (boolean)
   [file-content match]
