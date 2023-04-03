@@ -13,7 +13,7 @@
               ;[docs.process.state   :as process.state]
               ;[docs.read.engine     :as read.engine]
               ;[docs.read.state      :as read.state]
-              [pattern.api          :as p]))
+              [validator.api        :as v]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -66,7 +66,7 @@
   ;
   ; @return (string)
   [options]
-  (if (p/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
+  (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
       (let [options (core.prototypes/options-prototype options)]
            (try ;(initialize!                    options))
                 (do (detect.engine/detect-files! options)

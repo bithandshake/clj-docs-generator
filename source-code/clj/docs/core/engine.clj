@@ -13,9 +13,9 @@
               [docs.read.state      :as read.state]
               [io.api               :as io]
               [noop.api             :refer [return]]
-              [pattern.api          :as p]
               [regex.api            :refer [re-match?]]
-              [string.api           :as string]))
+              [string.api           :as string]
+              [validator.api        :as v]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -85,7 +85,7 @@
   ;
   ; @return (string)
   [options]
-  (if (p/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
+  (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
       (let [options (core.prototypes/options-prototype options)]
            (initialize!                    options)
            (detect.engine/detect-layers!   options)
