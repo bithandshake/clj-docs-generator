@@ -1,8 +1,8 @@
 
-(ns docs.detect.env
-    (:require [docs.detect.state :as detect.state]
-              [noop.api          :refer [return]]
-              [string.api        :as string]))
+(ns docs-generator.detect.env
+    (:require [docs-generator.detect.state :as detect.state]
+              [noop.api                    :refer [return]]
+              [string.api                  :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

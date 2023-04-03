@@ -1,7 +1,7 @@
 
-(ns docs.process.utils
-    (:require [docs.import.state :as import.state]
-              [string.api        :as string]))
+(ns docs-generator.process.utils
+    (:require [docs-generator.import.state :as import.state]
+              [string.api                  :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

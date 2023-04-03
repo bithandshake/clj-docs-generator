@@ -1,5 +1,5 @@
 
-(ns docs.core.prototypes
+(ns docs-generator.core.prototypes
     (:require [string.api :as string]
               [vector.api :as vector]))
 

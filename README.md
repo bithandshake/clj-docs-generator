@@ -1,14 +1,14 @@
 
-# docs-api
+# clj-docs-generator
 
 ### Overview
 
-The <strong>docs-api</strong> is a documentation book generator for Clojure/ClojureScript
+The <strong>clj-docs-generator</strong> is a documentation book generator for Clojure/ClojureScript
 projects.
 
 ### Warning
 
-The <strong>docs-api</strong> library is in pre-beta stage.
+The <strong>clj-docs-generator</strong> library is in pre-beta stage.
 Not recommended to use in product releases!
 
 # Usage
@@ -19,7 +19,7 @@ Not recommended to use in product releases!
 
 ### Expected syntax
 
-The <strong>docs-api</strong> documentation book generator can read Clojure
+The <strong>clj-docs-generator</strong> documentation book generator can read Clojure
 functions written with the following header syntax:
 
 ```
@@ -64,7 +64,7 @@ functions written with the following header syntax:
 
 ### How to generate documentation books?
 
-The [`docs.api/create-documentation!`](documentation/clj/docs/API.md#create-documentation)
+The [`docs-generator.api/create-documentation!`](documentation/clj/docs/API.md#create-documentation)
 function reads the files from the `code-dirs` folders, creates the documentation
 and prints the markdown files to the `output-dir` folder.
 

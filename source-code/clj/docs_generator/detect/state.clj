@@ -1,5 +1,5 @@
 
-(ns docs.process.state)
+(ns docs-generator.detect.state)
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -10,8 +10,7 @@
 ;   "cljs" (map)}
 (def LAYERS (atom {}))
 
+; @ignore
+;
 ; @atom (map)
-(def COVER (atom {}))
-
-; @atom (map)
-(def COMMON (atom {}))
+(def CODE-FILES (atom {}))

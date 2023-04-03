@@ -1,21 +1,21 @@
 
-(ns docs.core.engine
-    (:require [docs.core.patterns   :as core.patterns]
-              [docs.core.prototypes :as core.prototypes]
-              [docs.detect.engine   :as detect.engine]
-              [docs.detect.state    :as detect.state]
-              [docs.import.engine   :as import.engine]
-              [docs.import.state    :as import.state]
-              [docs.print.engine    :as print.engine]
-              [docs.process.engine  :as process.engine]
-              [docs.process.state   :as process.state]
-              [docs.read.engine     :as read.engine]
-              [docs.read.state      :as read.state]
-              [io.api               :as io]
-              [noop.api             :refer [return]]
-              [regex.api            :refer [re-match?]]
-              [string.api           :as string]
-              [validator.api        :as v]))
+(ns docs-generator.core.engine
+    (:require [docs-generator.core.patterns   :as core.patterns]
+              [docs-generator.core.prototypes :as core.prototypes]
+              [docs-generator.detect.engine   :as detect.engine]
+              [docs-generator.detect.state    :as detect.state]
+              [docs-generator.import.engine   :as import.engine]
+              [docs-generator.import.state    :as import.state]
+              [docs-generator.print.engine    :as print.engine]
+              [docs-generator.process.engine  :as process.engine]
+              [docs-generator.process.state   :as process.state]
+              [docs-generator.read.engine     :as read.engine]
+              [docs-generator.read.state      :as read.state]
+              [io.api                         :as io]
+              [noop.api                       :refer [return]]
+              [regex.api                      :refer [re-match?]]
+              [string.api                     :as string]
+              [validator.api                  :as v]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

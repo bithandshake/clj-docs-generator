@@ -1,15 +1,15 @@
 
-(ns docs.read.engine
-    (:require [docs.import.state :as import.state]
-              [docs.read.env     :as read.env]
-              [docs.read.state   :as read.state]
-              [docs.read.utils   :as read.utils]
-              [io.api            :as io]
-              [noop.api          :refer [return]]
-              [regex.api         :as regex]
-              [string.api        :as string]
-              [syntax.api        :as syntax]
-              [vector.api        :as vector]))
+(ns docs-generator.read.engine
+    (:require [docs-generator.import.state :as import.state]
+              [docs-generator.read.env     :as read.env]
+              [docs-generator.read.state   :as read.state]
+              [docs-generator.read.utils   :as read.utils]
+              [io.api                      :as io]
+              [noop.api                    :refer [return]]
+              [regex.api                   :as regex]
+              [string.api                  :as string]
+              [syntax.api                  :as syntax]
+              [vector.api                  :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

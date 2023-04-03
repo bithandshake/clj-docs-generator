@@ -1,5 +1,5 @@
 
-(ns docs.read.utils
+(ns docs-generator.read.utils
     (:require [noop.api   :refer [return]]
               [regex.api  :as regex]
               [string.api :as string]

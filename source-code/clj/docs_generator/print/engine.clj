@@ -1,13 +1,13 @@
 
-(ns docs.print.engine
-    (:require [docs.import.state  :as import.state]
-              [docs.print.utils   :as print.utils]
-              [docs.process.state :as process.state]
-              [docs.process.utils :as process.utils]
-              [io.api             :as io]
-              [normalize.api      :as normalize]
-              [string.api         :as string]
-              [vector.api         :as vector]))
+(ns docs-generator.print.engine
+    (:require [docs-generator.import.state  :as import.state]
+              [docs-generator.print.utils   :as print.utils]
+              [docs-generator.process.state :as process.state]
+              [docs-generator.process.utils :as process.utils]
+              [io.api                       :as io]
+              [normalize.api                :as normalize]
+              [string.api                   :as string]
+              [vector.api                   :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

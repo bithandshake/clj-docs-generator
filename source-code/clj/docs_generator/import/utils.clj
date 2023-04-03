@@ -1,5 +1,5 @@
 
-(ns docs.import.utils
+(ns docs-generator.import.utils
     (:require [string.api :as string]
               [syntax.api :as syntax]))
 

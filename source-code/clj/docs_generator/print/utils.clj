@@ -1,5 +1,5 @@
 
-(ns docs.print.utils
+(ns docs-generator.print.utils
     (:require [vector.api :as vector]))
 
 ;; ----------------------------------------------------------------------------

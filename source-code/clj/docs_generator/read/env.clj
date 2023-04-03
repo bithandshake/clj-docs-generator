@@ -1,12 +1,12 @@
 
-(ns docs.read.env
-    (:require [docs.detect.env   :as detect.env]
-              [docs.import.state :as import.state]
-              [io.api            :as io]
-              [noop.api          :refer [return]]
-              [regex.api         :as regex]
-              [string.api        :as string]
-              [syntax.api        :as syntax]))
+(ns docs-generator.read.env
+    (:require [docs-generator.detect.env   :as detect.env]
+              [docs-generator.import.state :as import.state]
+              [io.api                      :as io]
+              [noop.api                    :refer [return]]
+              [regex.api                   :as regex]
+              [string.api                  :as string]
+              [syntax.api                  :as syntax]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

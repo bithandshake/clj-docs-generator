@@ -1,7 +1,7 @@
 
-(ns docs.process.env
-    (:require [docs.import.state :as import.state]
-              [string.api        :as string]))
+(ns docs-generator.process.env
+    (:require [docs-generator.import.state :as import.state]
+              [string.api                  :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

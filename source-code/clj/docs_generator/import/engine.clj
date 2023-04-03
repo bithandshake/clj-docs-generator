@@ -1,11 +1,11 @@
 
-(ns docs.import.engine
-    (:require [docs.detect.state :as detect.state]
-              [docs.import.utils :as import.utils]
-              [docs.import.state :as import.state]
-              [io.api            :as io]
-              [noop.api          :refer [return]]
-              [string.api        :as string]))
+(ns docs-generator.import.engine
+    (:require [docs-generator.detect.state :as detect.state]
+              [docs-generator.import.utils :as import.utils]
+              [docs-generator.import.state :as import.state]
+              [io.api                      :as io]
+              [noop.api                    :refer [return]]
+              [string.api                  :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
