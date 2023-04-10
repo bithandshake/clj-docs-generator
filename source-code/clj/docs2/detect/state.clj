@@ -7,4 +7,4 @@
 ; @ignore
 ;
 ; @atom (map)
-(def DETECTED-FILES (atom {}))
+(def DETECTED-CODE-FILES (atom {}))

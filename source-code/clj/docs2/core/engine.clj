@@ -69,8 +69,8 @@
   (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
       (let [options (core.prototypes/options-prototype options)]
            (try ;(initialize!                    options))
-                (do (detect.engine/detect-files! options)
-                    (import.engine/import-files! options))
+                (do (detect.engine/detect-code-files! options)
+                    (import.engine/import-code-files! options))
                 ;(detect.engine/detect-layers!   options)
                 ;(import.engine/import-layers!   options)
                 ;(read.engine/read-layers!       options)

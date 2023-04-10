@@ -7,4 +7,4 @@
 ; @ignore
 ;
 ; @atom (map)
-(def IMPORTED-FILES (atom {}))
+(def IMPORTED-CODE-FILES (atom {}))
