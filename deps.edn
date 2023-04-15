@@ -5,4 +5,4 @@
          bithandshake/cljc-io        {:git/url "https://github.com/bithandshake/cljc-io"
                                       :sha     "4379848c34a2a037289f35cfb1263fc9bdbe296b"}
          bithandshake/cljc-validator {:git/url "https://github.com/bithandshake/cljc-validator"
-                                      :sha     "e161eca2fa492522b1fc98391bdad3027596f8fe"}}}
+                                      :sha     "d8cf88cb524b9d5b7e1f0902465dc9f8455f99ce"}}}
