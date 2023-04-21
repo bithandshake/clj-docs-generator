@@ -13,9 +13,15 @@ Not recommended to use in product releases!
 
 # Usage
 
-> Some functions and some parameters of the following functions won't be discussed.
+> Some parameters of the following functions and some other functions won't be discussed.
   To learn more about the available functionality, check out the
   [functional documentation](documentation/COVER.md)!
+
+### Index
+
+- [Expected syntax](#expected-syntax)
+
+- [How to generate documentation books?](#how-to-generate-documentation-books)
 
 ### Expected syntax
 
