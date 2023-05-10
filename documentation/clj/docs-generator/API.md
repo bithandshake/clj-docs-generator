@@ -56,7 +56,7 @@ Be careful with configuring this function!
 ```
 (defn create-documentation!
   [options]
-  (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
+  (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN :prefix* "options"})
       (let [options (core.prototypes/options-prototype options)]
            (initialize!                    options)
            (detect.engine/detect-layers!   options)
