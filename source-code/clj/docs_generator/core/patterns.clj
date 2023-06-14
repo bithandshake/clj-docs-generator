@@ -6,6 +6,9 @@
 
 ; @ignore
 ;
+; @description
+; https://github.com/bithandshake/cljc-validator
+;
 ; @constant (map)
 (def OPTIONS-PATTERN
      {:author            {:opt* true

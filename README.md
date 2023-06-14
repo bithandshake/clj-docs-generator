@@ -34,7 +34,7 @@ functions written with the following header syntax:
   ; This is a very useful sample function! Use carefully!
   ;
   ; @description
-  ; Returns with the given parameters in a map.
+  ; Returns the given parameters in a map.
   ;
   ; @param (string)(opt) a
   ; @param (map) b
