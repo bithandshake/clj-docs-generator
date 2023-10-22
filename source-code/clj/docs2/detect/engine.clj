@@ -20,13 +20,12 @@
   ; {"submodules/my-repository/source-code/my_file.clj" {}}
   [{:keys [code-dirs filename-pattern] :as options}]
   (letfn [
-          ; Returns whether the filename in the given filepath matches with the
-          ; filename pattern
+          ; Returns whether the filename in the given filepath matches the filename pattern.
           (f0 [filepath] (let [filename (io/filepath->filename filepath)]
                               (re-match? filename filename-pattern)))
 
           ; Puts the given filepath into the detected files list in case of
-          ; no filename pattern specified or the filename matches with the pattern
+          ; no filename pattern specified or the filename matches the pattern.
           (f1 [filepath] (if (or (not filename-pattern) (f0 filepath))
                              (swap! detect.state/DETECTED-CODE-FILES assoc filepath {})))
 
