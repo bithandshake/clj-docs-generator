@@ -1,7 +1,6 @@
 
 (ns docs-generator.read.utils
-    (:require [noop.api   :refer [return]]
-              [regex.api  :as regex]
+    (:require [regex.api  :as regex]
               [string.api :as string]
               [syntax.api :as syntax]))
 
@@ -59,14 +58,14 @@
                                   ; vannak elhelyezve a zárójelek vagy esetleg egy string
                                   ; tartalmaz ";", amit a függvény kommentnek érzékel!
                                   (println "Ooops! It looks like there is a syntax error in the function \"" name "\"")
-                                  (return function-content))
+                                  (-> function-content))
 
                               (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
                                       (let [comment (-> function-content (string/part start-pos)
                                                                          (string/before-first-occurence "\n" {:return? true}))]
                                            (f (string/remove-first-occurence function-content (str comment "\n"))
                                               (inc lap)))
-                                      (return function-content))))]
+                                      (-> function-content))))]
                       (f function-content 0)))))
 
 ;; ----------------------------------------------------------------------------

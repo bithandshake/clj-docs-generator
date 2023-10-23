@@ -6,7 +6,6 @@
               [docs-generator.process.state :as process.state]
               [docs-generator.read.state    :as read.state]
               [map.api                      :as map]
-              [noop.api                     :refer [return]]
               [string.api                   :as string]
               [vector.api                   :as vector]))
 
@@ -291,7 +290,7 @@
                                               (string/not-starts-with! "/"))]
                        (if (f0 api-filepath)
                            (update links layer-name vector/conj-item (str "* ["api-namespace"]("rel-path"/API.md)"))
-                           (return links))))]
+                           (->     links))))]
               (reduce f links (vector/abc-items api-files)))))
 
 (defn process-cover-links

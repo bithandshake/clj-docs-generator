@@ -12,7 +12,6 @@
               [docs-generator.read.engine     :as read.engine]
               [docs-generator.read.state      :as read.state]
               [io.api                         :as io]
-              [noop.api                       :refer [return]]
               [regex.api                      :refer [re-match?]]
               [string.api                     :as string]
               [validator.api                  :as v]))

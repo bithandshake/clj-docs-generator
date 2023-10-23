@@ -2,7 +2,6 @@
 (ns docs-generator.detect.engine
     (:require [docs-generator.detect.state :as detect.state]
               [io.api                      :as io]
-              [noop.api                    :refer [return]]
               [string.api                  :as string]
               [vector.api                  :as vector]))
 

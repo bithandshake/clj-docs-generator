@@ -3,7 +3,6 @@
     (:require [docs-generator.detect.env   :as detect.env]
               [docs-generator.import.state :as import.state]
               [io.api                      :as io]
-              [noop.api                    :refer [return]]
               [regex.api                   :as regex]
               [string.api                  :as string]
               [syntax.api                  :as syntax]))
@@ -28,8 +27,8 @@
                                                      ".cljc"))]
          (let [namespace (some f0 (get-in @import.state/LAYERS [layer-name api-filepath "aliases"]))]
               (letfn [(f3 [code-dir] (let [alter-filepath (f1 code-dir namespace)]
-                                          (if (io/file-exists? alter-filepath)
-                                              (return          alter-filepath))))]
+                                          (if (-> alter-filepath io/file-exists?)
+                                              (-> alter-filepath))))]
                      (some f3 code-dirs)))))
 
 (defn code-filepath

@@ -4,7 +4,6 @@
               [docs-generator.import.utils :as import.utils]
               [docs-generator.import.state :as import.state]
               [io.api                      :as io]
-              [noop.api                    :refer [return]]
               [string.api                  :as string]))
 
 ;; ----------------------------------------------------------------------------
@@ -40,7 +39,7 @@
                      (let [refer (import-first-refer api-content cursor)]
                           (f (merge refers refer)
                              (inc   skip)))
-                     (return refers)))]
+                     (-> refers)))]
          (f {} 0)))
 
 ;; ----------------------------------------------------------------------------
@@ -89,7 +88,7 @@
                      (let [alias (import-first-alias api-content cursor)]
                           (f (merge aliases alias)
                              (inc  skip)))
-                     (return aliases)))]
+                     (-> aliases)))]
          (f {} 0)))
 
 ;; ----------------------------------------------------------------------------
@@ -125,7 +124,7 @@
                      (let [def (import-first-def api-content cursor)]
                           (f (conj defs def)
                              (inc  skip)))
-                     (return defs)))]
+                     (-> defs)))]
          (f [] 0)))
 
 ;; ----------------------------------------------------------------------------

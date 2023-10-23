@@ -5,7 +5,6 @@
               [docs-generator.read.state   :as read.state]
               [docs-generator.read.utils   :as read.utils]
               [io.api                      :as io]
-              [noop.api                    :refer [return]]
               [regex.api                   :as regex]
               [string.api                  :as string]
               [syntax.api                  :as syntax]
@@ -97,7 +96,7 @@
                      (let [usage (read-function-first-usage header cursor)]
                           (f (conj usages usage)
                              (inc  skip)))
-                     (return usages)))]
+                     (-> usages)))]
          (f [] 0)))
 
 ;; ----------------------------------------------------------------------------
@@ -137,7 +136,7 @@
                      (let [example (read-function-first-example header cursor)]
                           (f (conj examples example)
                              (inc  skip)))
-                     (return examples)))]
+                     (-> examples)))]
          (f [] 0)))
 
 ;; ----------------------------------------------------------------------------
@@ -181,7 +180,7 @@
                      (let [param (read-function-first-param header cursor)]
                           (f (conj params param)
                              (inc  skip)))
-                     (return params)))]
+                     (-> params)))]
          (f [] 0)))
 
 ;; ----------------------------------------------------------------------------
@@ -355,7 +354,7 @@
                                (update result "functions" vector/conj-item function-data)
                                (if-let [constant-data (get def "constant")]
                                        (update result "constants" vector/conj-item constant-data)
-                                       (return result)))))]
+                                       (->     result)))))]
               (reduce f {} defs))))
 
 ;; ----------------------------------------------------------------------------

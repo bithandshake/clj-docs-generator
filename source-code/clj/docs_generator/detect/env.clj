@@ -1,7 +1,6 @@
 
 (ns docs-generator.detect.env
     (:require [docs-generator.detect.state :as detect.state]
-              [noop.api                    :refer [return]]
               [string.api                  :as string]))
 
 ;; ----------------------------------------------------------------------------
@@ -25,6 +24,6 @@
   [{:keys [code-dirs]} layer-name api-filepath _]
   ; Finds out which code-dir belongs to the taken api-filepath file.
   (letfn [(f [[code-dir %]] (if (= % api-filepath)
-                                (return code-dir)))]
+                                (-> code-dir)))]
          (let [api-files (get-in @detect.state/LAYERS [layer-name])]
               (some f api-files))))
