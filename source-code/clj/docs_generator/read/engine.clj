@@ -7,7 +7,6 @@
               [io.api                      :as io]
               [regex.api                   :as regex]
               [string.api                  :as string]
-              [syntax.api                  :as syntax]
               [vector.api                  :as vector]))
 
 ;; ----------------------------------------------------------------------------
