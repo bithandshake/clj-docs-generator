@@ -1,7 +1,11 @@
 
-# clj-docs-generator documentation
+### clj-docs-generator
 
-Documentation of the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) Clojure library
+Functional documentation of the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) Clojure library
+
+---
+
+
 
 ##### [README](../README.md) > DOCUMENTATION
 
@@ -12,5 +16,5 @@ Documentation of the [clj-docs-generator](https://github.com/bithandshake/clj-do
 
 ---
 
-This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.
+<sub>This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.</sub>
 

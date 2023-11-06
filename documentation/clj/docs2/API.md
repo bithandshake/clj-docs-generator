@@ -1,11 +1,17 @@
 
-# docs2.api Clojure namespace
+### docs2.api
+
+Functional documentation of the docs2.api Clojure namespace
+
+---
 
 ##### [README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > docs2.api
 
 ### Index
 
 - [create-documentation!](#create-documentation)
+
+---
 
 ### create-documentation!
 
@@ -78,5 +84,5 @@ Be careful with configuring this function!
 
 ---
 
-This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.
+<sub>This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.</sub>
 

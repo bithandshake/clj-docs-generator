@@ -2,8 +2,8 @@
 (ns docs-generator.process.engine
     (:require [docs-generator.import.state  :as import.state]
               [docs-generator.process.env   :as process.env]
-              [docs-generator.process.utils :as process.utils]
               [docs-generator.process.state :as process.state]
+              [docs-generator.process.utils :as process.utils]
               [docs-generator.read.state    :as read.state]
               [map.api                      :as map]
               [string.api                   :as string]
@@ -315,7 +315,7 @@
   ;
   ; @return (string)
   [{:keys [lib-name]}]
-  (str "# "lib-name" documentation"))
+  (str "### "lib-name))
 
 (defn process-cover
   ; @param (map) options
@@ -344,13 +344,13 @@
   ; @example
   ; (process-common-subtitle {...})
   ; =>
-  ; "Documentation of the [my-repository](...) Clojure / ClojureScript library"
+  ; "Functional documentation of the [my-repository](...) Clojure / ClojureScript library"
   ;
   ; @return (string)
   [{:keys [lib-name website]}]
   (let [clj-library?  (process.env/clj-library?)
         cljs-library? (process.env/cljs-library?)]
-       (str "Documentation of the "
+       (str "Functional documentation of the "
             (if website (str "["lib-name"]("website")")
                         (str "<strong>"lib-name"</strong>"))
             (if clj-library?  " Clojure ")
@@ -368,7 +368,7 @@
   ;
   ; @return (string)
   [_]
-  (str "This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.\n"))
+  (str "<sub>This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.</sub>\n"))
 
 (defn process-common
   ; @param (map) options

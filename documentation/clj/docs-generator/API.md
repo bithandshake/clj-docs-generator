@@ -1,5 +1,9 @@
 
-# docs-generator.api Clojure namespace
+### docs-generator.api
+
+Functional documentation of the docs-generator.api Clojure namespace
+
+---
 
 ##### [README](../../../README.md) > [DOCUMENTATION](../../COVER.md) > docs-generator.api
 
@@ -8,6 +12,8 @@
 - [create-documentation!](#create-documentation)
 
 - [debug](#debug)
+
+---
 
 ### create-documentation!
 
@@ -129,5 +135,5 @@ Be careful with configuring this function!
 
 ---
 
-This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.
+<sub>This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.</sub>
 

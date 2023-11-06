@@ -12,7 +12,7 @@
   ; @param (map) options
   ; @param (string) code-dir
   [_ code-dir]
-  (let [file-list (io/all-file-list code-dir)]
+  (let [file-list (io/all-file-list code-dir {:warn? false})]
        (letfn [(f [result filepath]
                   (cond (string/ends-with? filepath "api.clj")
                         (update result "clj"  vector/conj-item [code-dir filepath])

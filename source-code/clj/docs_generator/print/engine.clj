@@ -215,7 +215,8 @@
        (letfn [(f [links function-data] (let [function-name (get function-data "name")
                                               function-link (normalize/clean-text function-name)]
                                              (str links "\n\n- ["function-name"](#"function-link")")))]
-              (str "\n\n### Index" (reduce f "" functions)))))
+              (str "\n\n### Index" (reduce f "" functions)
+                   "\n\n---"))))
 
 (defn print-api-breadcrumbs
   ; @param (map) options
@@ -239,8 +240,10 @@
   ; @return (string)
   [_ layer-name api-filepath]
   (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])]
-       (str "\n# "api-namespace (case layer-name "clj" " Clojure" "cljc" " isomorphic" "cljs" " ClojureScript")
-            " namespace")))
+       (str "\n### "api-namespace
+            "\n\nFunctional documentation of the "api-namespace" " ; <- Make this clickable + provide the available of source-code files by clicking on their names from anywhere where they are in the documentation.
+            (case layer-name "clj" "Clojure" "cljc" "isomorphic" "cljs" "ClojureScript") " namespace"
+            "\n\n---")))
 
 (defn print-api-footer
   ; @param (map) options
@@ -334,7 +337,7 @@
   ; @return (string)
   [_]
   (let [subtitle (get @process.state/COMMON "subtitle")]
-       (str "\n\n"subtitle)))
+       (str "\n\n"subtitle"\n\n---\n\n")))
 
 (defn print-cover-title
   ; @param (map) options
