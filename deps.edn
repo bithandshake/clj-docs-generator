@@ -3,6 +3,8 @@
  :deps  {bithandshake/cljc-fruits    {:git/url "https://github.com/bithandshake/cljc-fruits"
                                       :sha     "debf8b6ee95bd0b6eb55287e4de86bc8c4f58f2c"}
          bithandshake/cljc-io        {:git/url "https://github.com/bithandshake/cljc-io"
-                                      :sha     "ced3d733a002e96b1a20ecc7b2a126fad4a1c8ae"}
+                                      :sha     "feeaa8a03c85b9e3af9c5c79d035b8a84479553e"}
          bithandshake/cljc-validator {:git/url "https://github.com/bithandshake/cljc-validator"
-                                      :sha     "f88b799b5d7a91609c78d42aa4ea858dd130534e"}}}
+                                      :sha     "d8b96a68db55c43eb746f3c6fd170209cdb72292"}
+         org.clojure/clojure         {:mvn/version "1.10.1"}}}
+                                      
