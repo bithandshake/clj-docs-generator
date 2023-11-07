@@ -13,9 +13,8 @@ Not recommended to use in product releases!
 
 # Usage
 
-> Some parameters of the following functions and some other functions won't be discussed.
-  To learn more about the available functionality, check out the
-  [functional documentation](documentation/COVER.md)!
+> Some parameters of the following functions and some further functions are not discussed in this file.
+  To learn more about the available functionality, check out the [functional documentation](documentation/COVER.md)!
 
 ### Index
 
