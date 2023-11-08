@@ -11,6 +11,11 @@
   ; (def B A)
   ; (def C B)
   ;
+  ; legyen benne az atomban az is hogy honnan hova min keresztül van átirányitva
+  ; és ezt fel kék tüntetni a doksiban is a teljes redirection trace-t:
+  ;
+  ; This function is redirected [ajax.api/send-request! > ajax.side-effects/send-request!]
+  ; This constant is redirected [my-library.api/MY-CONSTANT > my-library.config/MY-CONSTANT > iso.my-library.config/MY-CONSTANT]
   [])
 
 (defn def-symbol-endpoint-fn?
