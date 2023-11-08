@@ -3,13 +3,26 @@
 
 ### Overview
 
-The <strong>clj-docs-generator</strong> is a documentation book generator for Clojure/ClojureScript
-projects.
+The <strong>clj-docs-generator</strong> is a documentation book generator for Clojure projects.
 
-### Warning
+### deps.edn
 
-The <strong>clj-docs-generator</strong> library is in pre-beta stage.
-Not recommended to use in product releases!
+```
+{:deps {monotech-tools/clj-docs-generator {:git/url "https://github.com/monotech-tools/clj-docs-generator"
+                                           :sha     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}}
+```
+
+### Current version
+
+Check out the latest commit on the [release branch](https://github.com/monotech-tools/clj-docs-generator/tree/release).
+
+### Documentation
+
+The <strong>clj-docs-generator</strong> functional documentation is [available here](documentation/COVER.md).
+
+### Changelog
+
+You can track the changes of the <strong>monotech-tools/clj-docs-generator</strong> library [here](CHANGES.md).
 
 # Usage
 

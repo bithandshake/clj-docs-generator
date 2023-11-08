@@ -368,7 +368,7 @@
   ;
   ; @return (string)
   [_]
-  (str "<sub>This documentation is generated with the [clj-docs-generator](https://github.com/bithandshake/clj-docs-generator) engine.</sub>\n"))
+  (str "<sub>This documentation is generated with the [clj-docs-generator](https://github.com/monotech-tools/clj-docs-generator) engine.</sub>\n"))
 
 (defn process-common
   ; @param (map) options
