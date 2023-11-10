@@ -5,7 +5,9 @@
               ;[docs3.detect.engine   :as detect.engine]
               ;[docs3.detect.state    :as detect.state]
               ;[docs3.import.engine   :as import.engine]
-              [validator.api         :as v]))
+              [validator.api         :as v]
+
+              [source-code-reader.api :as source-code-reader]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -61,7 +63,10 @@
   [options]
   (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
       (let [options (core.prototypes/options-prototype options)]
-           (try (do (detect.engine/detect-code-files! options))
+           (println (source-code-reader/read-source-code {:code-dirs ["dependencies/ajax-api/source-code"]
+                                                          ;:filename-pattern #"[a-z\-\_\d]\.clj[cs]{1,1}"})))))
+                                                          :filename-pattern #"test.clj"})))))
+           ;(try (do (detect.engine/detect-code-files! options))
                     ;(import.engine/import-code-files! options))
                 ;(detect.engine/detect-layers!   options)
                 ;(import.engine/import-layers!   options)
@@ -72,4 +77,4 @@
                 ;(print.engine/print-cover!      options)
                 ;(print.engine/print-layers!     options)
                 ;(debug))
-                (catch Exception e (println e))))))
+;                (catch Exception e (println e))])))

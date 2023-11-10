@@ -18,7 +18,7 @@
   ;  :print-options (keywords in vector)
   ;  :output-dir (string)}
   [options]
-  (merge {:filename-pattern #"[a-z\_\d]{1,}\.clj[cs]{0,1}"
+  (merge {:filename-pattern #"[a-z\-\_\d]{1,}\.clj[cs]{0,1}"
           :print-format     :md
           :print-options    [:code :credit :description :example :param :preview :require :return :usage :warning]}
          (-> options (update :output-dir #(core.utils/valid-directory-path %))
