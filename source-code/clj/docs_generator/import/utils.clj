@@ -1,7 +1,7 @@
 
 (ns docs-generator.import.utils
-    (:require [string.api :as string]
-              [syntax.api :as syntax]))
+    (:require [string.api        :as string]
+              [syntax-reader.api :as syntax-reader]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -16,9 +16,9 @@
   ;
   ; @return (map)
   [n]
-  (let [open-bracket-position  (syntax/open-bracket-position  n)
-        close-bracket-position (syntax/close-bracket-position n)
-        bracket-content        (string/part n (inc open-bracket-position) close-bracket-position)]
+  (let [bracket-opening-position (syntax-reader/bracket-opening-position n)
+        bracket-closing-position (syntax-reader/bracket-closing-position n)
+        bracket-content          (string/part n (inc bracket-opening-position) bracket-closing-position)]
        (if (string/contains-part? bracket-content " :refer ")
            (let [namespace (-> bracket-content (string/before-first-occurence " "        {:return? false}))
                  refer     (-> bracket-content (string/after-first-occurence  " :refer " {:return? false})
@@ -40,9 +40,9 @@
   ; [(string) namespace
   ;  (string) alias]
   [n]
-  (let [open-bracket-position  (syntax/open-bracket-position  n)
-        close-bracket-position (syntax/close-bracket-position n)
-        bracket-content        (string/part n (inc open-bracket-position) close-bracket-position)]
+  (let [bracket-opening-position (syntax-reader/bracket-opening-position n)
+        bracket-closing-position (syntax-reader/bracket-closing-position n)
+        bracket-content          (string/part n (inc bracket-opening-position) bracket-closing-position)]
        (if (string/contains-part? bracket-content " :as ")
            (let [namespace (-> bracket-content (string/before-first-occurence " "     {:return? false}))
                  alias     (-> bracket-content (string/after-first-occurence  " :as " {:return? false})

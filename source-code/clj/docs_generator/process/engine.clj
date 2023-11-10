@@ -278,7 +278,7 @@
   ; @return (strings in vector)
   [{:keys [output-dir] :as options} layer-name links]
   (let [layer-data (get @read.state/LAYERS layer-name)
-        api-files  (map/get-keys layer-data)]
+        api-files  (map/keys layer-data)]
        ; Az f0 függvény vizsgálja, hogy az api fájlban van-e bármilyen átirányitás
        ; ha nincs akkor nem készül hozzá API.md fájl ezért a linket sem szükséges betenni a COVER.md fájlba
        (letfn [(f0 [api-filepath] (or (vector/nonempty? (get-in @read.state/LAYERS [layer-name api-filepath "functions"]))

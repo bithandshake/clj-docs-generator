@@ -3,7 +3,7 @@
     (:require [docs2.import.config :as import.config]
               [regex.api          :as regex :refer [re-mismatch?]]
               [string.api         :as string]
-              [syntax.api         :as syntax]))
+              [syntax-reader.api  :as syntax-reader]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -91,7 +91,7 @@
   [file-content function-name]
   (as-> function-name % (function-name->function-declaration-pattern %)
                         (regex/from-first-occurence file-content %)
-                        (let [close-position (syntax/close-paren-position %)]
+                        (let [close-position (syntax-reader/paren-closing-position %)]
                              (string/part % 0 close-position))
                         (regex/from-first-occurence % #"\n[ \t]{1,}[\[\(]{1,}")))
 
@@ -133,7 +133,7 @@
   ;                      (...)))
   (as-> constant-name % (constant-name->constant-declaration-pattern %)
                         (regex/from-first-occurence file-content %)
-                        (let [close-position (syntax/close-paren-position %)]
+                        (let [close-position (syntax-reader/paren-closing-position %)]
                              (string/part % 0 close-position))
                         (string/trim %)
                         (regex/after-last-occurence % #"[ \t]{1,}")))

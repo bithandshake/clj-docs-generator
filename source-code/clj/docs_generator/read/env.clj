@@ -4,8 +4,7 @@
               [docs-generator.import.state :as import.state]
               [io.api                      :as io]
               [regex.api                   :as regex]
-              [string.api                  :as string]
-              [syntax.api                  :as syntax]))
+              [string.api                  :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

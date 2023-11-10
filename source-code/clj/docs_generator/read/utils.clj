@@ -1,8 +1,8 @@
 
 (ns docs-generator.read.utils
-    (:require [regex.api  :as regex]
-              [string.api :as string]
-              [syntax.api :as syntax]))
+    (:require [regex.api         :as regex]
+              [string.api        :as string]
+              [syntax-reader.api :as syntax-reader]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -26,7 +26,7 @@
                          (string/replace-part "?" "[?]"))]
        (if-let [start-pos (regex/first-dex-of file-content (re-pattern open-pattern))]
                (if-let [end-pos (-> file-content (string/part start-pos)
-                                                 (syntax/close-paren-position))]
+                                                 (syntax-reader/paren-closing-position))]
                        (let [end-pos (+ end-pos start-pos 1)]
                             (string/part file-content start-pos end-pos))
                        ; Már megtalálta a függvény elejét, tehát létezik de nem találja a végét
