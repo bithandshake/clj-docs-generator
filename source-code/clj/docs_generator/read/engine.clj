@@ -75,7 +75,7 @@
   ; @return (map)
   ; {"call" (string)}
   [header cursor]
-  (-> header (string/part cursor)
+  (-> header (string/keep-range cursor)
              (read.utils/function-first-usage)))
 
 (defn read-function-usages
@@ -114,7 +114,7 @@
   ; {"call" (string)
   ;  "result" (string)}
   [header cursor]
-  (-> header (string/part cursor)
+  (-> header (string/keep-range cursor)
              (read.utils/function-first-example)))
 
 (defn read-function-examples
@@ -156,7 +156,7 @@
   ;  "sample" (string)
   ;  "types" (string)}}
   [header cursor]
-  (-> header (string/part cursor)
+  (-> header (string/keep-range cursor)
              (read.utils/function-first-param)))
 
 (defn read-function-params

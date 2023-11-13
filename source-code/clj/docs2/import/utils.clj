@@ -78,7 +78,7 @@
                         (regex/after-first-occurence file-content %)
                         (regex/before-first-occurence % #"\n[ \t]{1,}[\[\(]{1,}")
                         (string/trim %)
-                        (regex/replace-part % #"\n[ \t]{1,};" "\n;")))
+                        (regex/replace-match % #"\n[ \t]{1,};" "\n;")))
 
 (defn function-body
   ; @param (string) file-content
@@ -92,7 +92,7 @@
   (as-> function-name % (function-name->function-declaration-pattern %)
                         (regex/from-first-occurence file-content %)
                         (let [close-position (syntax-reader/paren-closing-position %)]
-                             (string/part % 0 close-position))
+                             (string/keep-range % 0 close-position))
                         (regex/from-first-occurence % #"\n[ \t]{1,}[\[\(]{1,}")))
 
 (defn constant-header
@@ -134,7 +134,7 @@
   (as-> constant-name % (constant-name->constant-declaration-pattern %)
                         (regex/from-first-occurence file-content %)
                         (let [close-position (syntax-reader/paren-closing-position %)]
-                             (string/part % 0 close-position))
+                             (string/keep-range % 0 close-position))
                         (string/trim %)
                         (regex/after-last-occurence % #"[ \t]{1,}")))
 

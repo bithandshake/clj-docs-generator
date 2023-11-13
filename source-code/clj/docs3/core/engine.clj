@@ -35,11 +35,12 @@
   ;
   ; @param (map) options
   ; {:author (string)(opt)
-  ;  :code-dirs (strings in vector)
+  ;  :source-paths (strings in vector)
   ;  :filename-pattern (regex pattern)(opt)
   ;   Default: #"[a-z\_\d]{1,}\.clj[cs]{0,1}"
   ;  :lib-name (string)
-  ;  :output-dir (string)
+  ;  :output-path (string)
+  ;  :previews-path (string)(opt)
   ;  :print-format (keyword)(opt)
   ;   :html, :md
   ;   Default: :md
@@ -63,7 +64,7 @@
   [options]
   (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
       (let [options (core.prototypes/options-prototype options)]
-           (println (source-code-reader/read-source-code {:code-dirs ["dependencies/ajax-api/source-code"]
+           (println (source-code-reader/read-source-code {:source-paths ["dependencies/ajax-api/source-code"]
                                                           ;:filename-pattern #"[a-z\-\_\d]\.clj[cs]{1,1}"})))))
                                                           :filename-pattern #"test.clj"})))))
            ;(try (do (detect.engine/detect-code-files! options))

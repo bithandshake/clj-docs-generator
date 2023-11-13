@@ -25,10 +25,10 @@
   (let [open-pattern (-> (str "[(]defn[-]{0,}[ ]{1,}"name"\n")
                          (string/replace-part "?" "[?]"))]
        (if-let [start-pos (regex/first-dex-of file-content (re-pattern open-pattern))]
-               (if-let [end-pos (-> file-content (string/part start-pos)
+               (if-let [end-pos (-> file-content (string/keep-range start-pos)
                                                  (syntax-reader/paren-closing-position))]
                        (let [end-pos (+ end-pos start-pos 1)]
-                            (string/part file-content start-pos end-pos))
+                            (string/keep-range file-content start-pos end-pos))
                        ; Már megtalálta a függvény elejét, tehát létezik de nem találja a végét
                        ; szóval valsz. van valami syntax hiba a kommentben.
                        (throw (Exception. (str "Unable to find end of function content: " name)))))))
@@ -64,7 +64,7 @@
                                   (-> function-content))
 
                               (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
-                                      (let [comment (-> function-content (string/part start-pos)
+                                      (let [comment (-> function-content (string/keep-range start-pos)
                                                                          (string/before-first-occurence "\n" {:return? true}))]
                                            (f (string/remove-first-occurence function-content (str comment "\n"))
                                               (inc lap)))

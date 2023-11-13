@@ -20,7 +20,7 @@
   ;
   ; @return (map)
   [api-content cursor]
-  (-> api-content (string/part cursor)
+  (-> api-content (string/keep-range cursor)
                   (import.utils/first-refer)))
 
 (defn import-refers
@@ -68,7 +68,7 @@
   ;
   ; @return (map)
   [api-content cursor]
-  (let [[namespace alias] (-> api-content (string/part cursor)
+  (let [[namespace alias] (-> api-content (string/keep-range cursor)
                                           (import.utils/first-alias))]
        {namespace alias}))
 
@@ -105,7 +105,7 @@
   ;
   ; @return (strings in vector)
   [api-content cursor]
-  (-> api-content (string/part cursor)
+  (-> api-content (string/keep-range cursor)
                   (import.utils/first-def)))
 
 (defn import-defs

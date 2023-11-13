@@ -73,7 +73,7 @@
             (if-not (empty? params) " ...") ")"
             "\n("function-name
             (if-not (empty? params)
-                    (let [tab (string/multiply " " (-> namespace count inc))]
+                    (let [tab (string/repeat " " (-> namespace count inc))]
                          (str tab " ...")))
             ")"
             "\n```"
