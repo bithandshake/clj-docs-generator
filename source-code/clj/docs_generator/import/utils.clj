@@ -16,9 +16,9 @@
   ;
   ; @return (map)
   [n]
-  (let [bracket-opening-position (syntax-reader/bracket-opening-position n)
-        bracket-closing-position (syntax-reader/bracket-closing-position n)
-        bracket-content          (string/keep-range n (inc bracket-opening-position) bracket-closing-position)]
+  (let [opening-bracket-position (syntax-reader/opening-bracket-position n)
+        closing-bracket-position (syntax-reader/closing-bracket-position n)
+        bracket-content          (string/keep-range n (inc opening-bracket-position) closing-bracket-position)]
        (if (string/contains-part? bracket-content " :refer ")
            (let [namespace (-> bracket-content (string/before-first-occurence " "        {:return? false}))
                  refer     (-> bracket-content (string/after-first-occurence  " :refer " {:return? false})
@@ -40,9 +40,9 @@
   ; [(string) namespace
   ;  (string) alias]
   [n]
-  (let [bracket-opening-position (syntax-reader/bracket-opening-position n)
-        bracket-closing-position (syntax-reader/bracket-closing-position n)
-        bracket-content          (string/keep-range n (inc bracket-opening-position) bracket-closing-position)]
+  (let [opening-bracket-position (syntax-reader/opening-bracket-position n)
+        closing-bracket-position (syntax-reader/closing-bracket-position n)
+        bracket-content          (string/keep-range n (inc opening-bracket-position) closing-bracket-position)]
        (if (string/contains-part? bracket-content " :as ")
            (let [namespace (-> bracket-content (string/before-first-occurence " "     {:return? false}))
                  alias     (-> bracket-content (string/after-first-occurence  " :as " {:return? false})

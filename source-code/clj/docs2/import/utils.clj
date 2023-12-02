@@ -75,8 +75,8 @@
   ; @return (string)
   [file-content function-name]
   (as-> function-name % (function-name->function-declaration-pattern %)
-                        (regex/after-first-occurence file-content %)
-                        (regex/before-first-occurence % #"\n[ \t]{1,}[\[\(]{1,}")
+                        (regex/after-first-match file-content %)
+                        (regex/before-first-match % #"\n[ \t]{1,}[\[\(]{1,}")
                         (string/trim %)
                         (regex/replace-match % #"\n[ \t]{1,};" "\n;")))
 
@@ -90,10 +90,10 @@
   ; @return (string)
   [file-content function-name]
   (as-> function-name % (function-name->function-declaration-pattern %)
-                        (regex/from-first-occurence file-content %)
-                        (let [close-position (syntax-reader/paren-closing-position %)]
+                        (regex/from-first-match file-content %)
+                        (let [close-position (syntax-reader/closing-paren-position %)]
                              (string/keep-range % 0 close-position))
-                        (regex/from-first-occurence % #"\n[ \t]{1,}[\[\(]{1,}")))
+                        (regex/from-first-match % #"\n[ \t]{1,}[\[\(]{1,}")))
 
 (defn constant-header
   ; @param (string) file-content
@@ -108,15 +108,15 @@
   ; declaration of the constant.
   (as-> constant-name % (constant-name->constant-declaration-pattern %)
                         ; File content before the declaration of the constant
-                        (regex/before-first-occurence file-content %)
+                        (regex/before-first-match file-content %)
                         ; Result after the first empty row
-                        (regex/after-last-occurence % #"\n\n"           {:return? false})
+                        (regex/after-last-match % #"\n\n"           {:return? false})
                         ; Result from the first comment line
-                        (regex/from-first-occurence % #"(?m)^[ ]*;"     {:return? false})
+                        (regex/from-first-match % #"(?m)^[ ]*;"     {:return? false})
                         ; Result after the last non-comment line if any, because the result
                         ; is a comment block but not necessarily belongs to the constant.
                         ; Maybe there are non-comment rows between the found block and the constant.
-                        (regex/after-last-occurence % #"(?m)^[ ]*(?!;)" {:return? true})))
+                        (regex/after-last-match % #"(?m)^[ ]*(?!;)" {:return? true})))
 
 (defn constant-value
   ; @param (string) file-content
@@ -132,11 +132,11 @@
   ; (def my-constant (fn [%]
   ;                      (...)))
   (as-> constant-name % (constant-name->constant-declaration-pattern %)
-                        (regex/from-first-occurence file-content %)
-                        (let [close-position (syntax-reader/paren-closing-position %)]
+                        (regex/from-first-match file-content %)
+                        (let [close-position (syntax-reader/closing-paren-position %)]
                              (string/keep-range % 0 close-position))
                         (string/trim %)
-                        (regex/after-last-occurence % #"[ \t]{1,}")))
+                        (regex/after-last-match % #"[ \t]{1,}")))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -178,7 +178,7 @@
   ;
   ; @return (string)
   [match]
-  (-> match (regex/after-first-occurence #"\(def" {:return? false})
+  (-> match (regex/after-first-match #"\(def" {:return? false})
             (string/trim)))
 
 (defn match->function-name
@@ -191,5 +191,5 @@
   ;
   ; @return (string)
   [match]
-  (-> match (regex/after-first-occurence #"\(defn[\-]{0,}" {:return? false})
+  (-> match (regex/after-first-match #"\(defn[\-]{0,}" {:return? false})
             (string/trim)))

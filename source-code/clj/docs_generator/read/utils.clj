@@ -26,7 +26,7 @@
                          (string/replace-part "?" "[?]"))]
        (if-let [start-pos (regex/first-dex-of file-content (re-pattern open-pattern))]
                (if-let [end-pos (-> file-content (string/keep-range start-pos)
-                                                 (syntax-reader/paren-closing-position))]
+                                                 (syntax-reader/closing-paren-position))]
                        (let [end-pos (+ end-pos start-pos 1)]
                             (string/keep-range file-content start-pos end-pos))
                        ; Már megtalálta a függvény elejét, tehát létezik de nem találja a végét

@@ -7,10 +7,40 @@
               ;[docs3.import.engine   :as import.engine]
               [validator.api         :as v]
 
-              [source-code-reader.api :as source-code-reader]))
+              [source-code-map.api :as source-code-map]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
+
+; (defn my-function [] ...)
+; (def A my-function)
+; (def B A)
+; (def C B)
+;
+; legyen benne a state-ben az is hogy honnan hova min keresztül van átirányitva
+; és ezt fel kék tüntetni a doksiban is a teljes redirection trace-t:
+;
+; This function is redirected [ajax.api/send-request! > ajax.side-effects/send-request!]
+; This constant is redirected [my-library.api/MY-CONSTANT > my-library.config/MY-CONSTANT > iso.my-library.config/MY-CONSTANT]
+
+; függvényre mutat-e az endpoint?
+; (defn def-symbol-fn? [])
+
+; (def MY-CONSTANT my-symbol)
+; (defn def-symbol? [])
+
+; (def MY-FUNCTION (fn [] ...))
+; Ezt is függvénynek olvassa be mint a defn-t
+; (defn def-fn? [])
+
+;; ----------------------------------------------------------------------------
+;; ----------------------------------------------------------------------------
+
+
+
+
+
+
 
 (defn debug
   ; @ignore
@@ -64,7 +94,7 @@
   [options]
   (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
       (let [options (core.prototypes/options-prototype options)]
-           (println (source-code-reader/read-source-code {:source-paths ["dependencies/ajax-api/source-code"]
+           (println (source-code-map/read-source-files {:source-paths ["dependencies/ajax-api/source-code"]
                                                           ;:filename-pattern #"[a-z\-\_\d]\.clj[cs]{1,1}"})))))
                                                           :filename-pattern #"test.clj"})))))
            ;(try (do (detect.engine/detect-code-files! options))

@@ -1,4 +1,9 @@
 
+
+
+; https://github.com/bbatsov/clojure-style-guide
+
+
 # clj-docs-generator
 
 ### Overview
