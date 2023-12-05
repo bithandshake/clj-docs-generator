@@ -1,10 +1,10 @@
 
 (ns docs2.import.engine
-    (:require [docs2.detect.state :as detect.state]
+    (:require [docs2.detect.state  :as detect.state]
               [docs2.import.config :as import.config]
-              [docs2.import.utils :as import.utils]
-              [docs2.import.state :as import.state]
-              [io.api            :as io]))
+              [docs2.import.state  :as import.state]
+              [docs2.import.utils  :as import.utils]
+              [io.api              :as io]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

@@ -1,13 +1,12 @@
 
 (ns docs3.core.engine
-    (:require [docs3.core.patterns   :as core.patterns]
-              [docs3.core.prototypes :as core.prototypes]
-              ;[docs3.detect.engine   :as detect.engine]
+    (:require ;[docs3.detect.engine   :as detect.engine]
               ;[docs3.detect.state    :as detect.state]
               ;[docs3.import.engine   :as import.engine]
-              [validator.api         :as v]
-
-              [source-code-map.api :as source-code-map]))
+              [docs3.core.patterns   :as core.patterns]
+              [docs3.core.prototypes :as core.prototypes]
+              [source-code-map.api   :as source-code-map]
+              [validator.api         :as v]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

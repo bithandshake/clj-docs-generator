@@ -1,19 +1,18 @@
 
 (ns docs2.core.engine
-    (:require [docs2.core.patterns   :as core.patterns]
-              [docs2.core.prototypes :as core.prototypes]
-              [docs2.detect.engine   :as detect.engine]
-              [docs2.detect.state    :as detect.state]
-              [docs2.import.engine   :as import.engine]
-
-              ;[docs.import.engine   :as import.engine]
+    (:require ;[docs.import.engine   :as import.engine]
               ;[docs.import.state    :as import.state]
               ;[docs.print.engine    :as print.engine]
               ;[docs.process.engine  :as process.engine]
               ;[docs.process.state   :as process.state]
               ;[docs.read.engine     :as read.engine]
               ;[docs.read.state      :as read.state]
-              [validator.api        :as v]))
+              [docs2.core.patterns   :as core.patterns]
+              [docs2.core.prototypes :as core.prototypes]
+              [docs2.detect.engine   :as detect.engine]
+              [docs2.detect.state    :as detect.state]
+              [docs2.import.engine   :as import.engine]
+              [validator.api         :as v]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
