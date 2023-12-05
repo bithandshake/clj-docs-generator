@@ -59,16 +59,16 @@
   ; @return (strings in vector)
   [_ _ _ function-data]
   (if-let [params (get-in function-data ["header" "params"])]
-          (letfn [(f [params param]
-                     (let [name      (get param "name")
-                           optional? (get param "optional?")
-                           types     (get param "types")
-                           sample    (get param "sample")]
-                          (conj params (str "@param ("types")"
-                                            (if optional? "(opt)")
-                                            " "name
-                                            (if sample (str "\n"sample))))))]
-                 (reduce f [] params))))
+          (letfn [(f0 [params param]
+                      (let [name      (get param "name")
+                            optional? (get param "optional?")
+                            types     (get param "types")
+                            sample    (get param "sample")]
+                           (conj params (str "@param ("types")"
+                                             (if optional? "(opt)")
+                                             " "name
+                                             (if sample (str "\n"sample))))))]
+                 (reduce f0 [] params))))
 
 (defn process-function-usages
   ; @param (map) options
@@ -87,10 +87,10 @@
   ; @return (strings in vector)
   [_ _ _ function-data]
   (if-let [usages (get-in function-data ["header" "usages"])]
-          (letfn [(f [usages usage]
-                     (let [call (get usage "call")]
-                          (conj usages (str "\n@usage"call))))]
-                 (reduce f [] usages))))
+          (letfn [(f0 [usages usage]
+                      (let [call (get usage "call")]
+                           (conj usages (str "\n@usage"call))))]
+                 (reduce f0 [] usages))))
 
 (defn process-function-examples
   ; @param (map) options
@@ -109,11 +109,11 @@
   ; @return (?)
   [_ _ _ function-data]
   (if-let [examples (get-in function-data ["header" "examples"])]
-          (letfn [(f [examples example]
-                     (let [call   (get example "call")
-                           result (get example "result")]
-                          (conj examples (str "\n@example"call"=>"result))))]
-                 (reduce f [] examples))))
+          (letfn [(f0 [examples example]
+                      (let [call   (get example "call")
+                            result (get example "result")]
+                           (conj examples (str "\n@example"call"=>"result))))]
+                 (reduce f0 [] examples))))
 
 (defn process-function-return
   ; @param (map) options
@@ -195,9 +195,9 @@
   ; @return (map)
   [options layer-name api-filepath]
   (let [functions (get-in @read.state/LAYERS [layer-name api-filepath "functions"])]
-       (letfn [(f [result function-data]
-                  (conj result (process-function options layer-name api-filepath function-data)))]
-              (reduce f [] functions))))
+       (letfn [(f0 [result function-data]
+                   (conj result (process-function options layer-name api-filepath function-data)))]
+              (reduce f0 [] functions))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -211,8 +211,8 @@
   [options layer-name api-filepath]
   (let [functions (get-in @read.state/LAYERS [layer-name api-filepath "functions"])
         constants (get-in @read.state/LAYERS [layer-name api-filepath "constants"])]
-       (letfn [(f [])])))
-              ;(reduce-kv f {} layers))))
+       (letfn [(f0 [])])))
+              ;(reduce-kv f0 {} layers))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -250,9 +250,9 @@
   ; @return (map)
   [options layer-name]
   (let [layer-data (get @read.state/LAYERS layer-name)]
-       (letfn [(f [layer-data api-filepath api-data]
-                  (assoc layer-data api-filepath (process-api-file options layer-name api-filepath)))]
-              (reduce-kv f {} layer-data))))
+       (letfn [(f0 [layer-data api-filepath api-data]
+                   (assoc layer-data api-filepath (process-api-file options layer-name api-filepath)))]
+              (reduce-kv f0 {} layer-data))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -261,10 +261,10 @@
   ; @param (map) options
   [options]
   (let [layers @read.state/LAYERS]
-       (letfn [(f [_ layer-name _]
-                  (let [layer-data (process-layer options layer-name)]
-                       (swap! process.state/LAYERS assoc layer-name layer-data)))]
-              (reduce-kv f nil layers))))
+       (letfn [(f0 [_ layer-name _]
+                   (let [layer-data (process-layer options layer-name)]
+                        (swap! process.state/LAYERS assoc layer-name layer-data)))]
+              (reduce-kv f0 nil layers))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -283,15 +283,15 @@
        ; ha nincs akkor nem készül hozzá API.md fájl ezért a linket sem szükséges betenni a COVER.md fájlba
        (letfn [(f0 [api-filepath] (or (vector/nonempty? (get-in @read.state/LAYERS [layer-name api-filepath "functions"]))
                                       (vector/nonempty? (get-in @read.state/LAYERS [layer-name api-filepath "constants"]))))
-               (f [links api-filepath]
-                  (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
-                        md-path   (process.utils/md-path options layer-name api-filepath)
-                        rel-path  (-> md-path (string/not-starts-with! output-dir)
-                                              (string/not-starts-with! "/"))]
-                       (if (f0 api-filepath)
-                           (update links layer-name vector/conj-item (str "* ["api-namespace"]("rel-path"/API.md)"))
-                           (->     links))))]
-              (reduce f links (vector/abc-items api-files)))))
+               (f1 [links api-filepath]
+                   (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
+                         md-path   (process.utils/md-path options layer-name api-filepath)
+                         rel-path  (-> md-path (string/not-starts-with! output-dir)
+                                               (string/not-starts-with! "/"))]
+                        (if (f0 api-filepath)
+                            (update links layer-name vector/conj-item (str "* ["api-namespace"]("rel-path"/API.md)"))
+                            (->     links))))]
+              (reduce f1 links (vector/abc-items api-files)))))
 
 (defn process-cover-links
   ; @param (map) options
@@ -302,9 +302,9 @@
   ;  "cljs" (strings in vector)}
   [options]
   (let [layers @read.state/LAYERS]
-       (letfn [(f [links layer-name _]
-                  (process-layer-links options layer-name links))]
-              (reduce-kv f {} layers))))
+       (letfn [(f0 [links layer-name _]
+                   (process-layer-links options layer-name links))]
+              (reduce-kv f0 {} layers))))
 
 (defn process-cover-title
   ; @param (map) options

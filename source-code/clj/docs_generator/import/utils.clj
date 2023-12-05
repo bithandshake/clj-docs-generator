@@ -25,8 +25,8 @@
                                                (string/after-first-occurence  "["        {:return? false})
                                                (string/before-first-occurence "]"        {:return? false})
                                                (string/split                  #" "))]
-                (letfn [(f [refer name] (assoc refer name namespace))]
-                       (reduce f {} refer))))))
+                (letfn [(f0 [refer name] (assoc refer name namespace))]
+                       (reduce f0 {} refer))))))
 
 (defn first-alias
   ; @param (string) n

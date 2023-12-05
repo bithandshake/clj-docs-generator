@@ -43,9 +43,9 @@
   ;
   ; @return (string)
   [options layer-name api-filepath alias]
-  (letfn [(f [[namespace %]] (if (= % alias) namespace))]
+  (letfn [(f0 [[namespace %]] (if (= % alias) namespace))]
          (let [code-dir  (detect.env/code-dir options layer-name api-filepath alias)
-               namespace (some f (get-in @import.state/LAYERS [layer-name api-filepath "aliases"]))]
+               namespace (some f0 (get-in @import.state/LAYERS [layer-name api-filepath "aliases"]))]
               (str code-dir "/" (-> namespace (string/replace-part "." "/")
                                               (string/replace-part "-" "_"))
                             "." (name layer-name)))))

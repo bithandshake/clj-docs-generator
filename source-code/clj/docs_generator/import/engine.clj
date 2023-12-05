@@ -83,13 +83,13 @@
   ;
   ; @return (map)
   [api-content]
-  (letfn [(f [aliases skip]
-             (if-let [cursor (string/nth-dex-of api-content "[" skip)]
-                     (let [alias (import-first-alias api-content cursor)]
-                          (f (merge aliases alias)
-                             (inc  skip)))
+  (letfn [(f0 [aliases skip]
+              (if-let [cursor (string/nth-dex-of api-content "[" skip)]
+                      (let [alias (import-first-alias api-content cursor)]
+                           (f0 (merge aliases alias)
+                              (inc  skip)))
                      (-> aliases)))]
-         (f {} 0)))
+         (f0 {} 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -119,13 +119,13 @@
   ;
   ; @return (strings in vectors in vector)
   [api-content]
-  (letfn [(f [defs skip]
-             (if-let [cursor (string/nth-dex-of api-content "(def " skip)]
-                     (let [def (import-first-def api-content cursor)]
-                          (f (conj defs def)
-                             (inc  skip)))
-                     (-> defs)))]
-         (f [] 0)))
+  (letfn [(f0 [defs skip]
+              (if-let [cursor (string/nth-dex-of api-content "(def " skip)]
+                      (let [def (import-first-def api-content cursor)]
+                           (f0 (conj defs def)
+                              (inc  skip)))
+                      (-> defs)))]
+         (f0 [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -180,9 +180,9 @@
   ; @return (map)
   [options layer-name]
   (let [api-files (get @detect.state/LAYERS layer-name)]
-       (letfn [(f [result [_ api-filepath]]
-                  (assoc result api-filepath (import-api-file options layer-name api-filepath)))]
-              (reduce f {} api-files))))
+       (letfn [(f0 [result [_ api-filepath]]
+                   (assoc result api-filepath (import-api-file options layer-name api-filepath)))]
+              (reduce f0 {} api-files))))
 
 (defn import-layers
   ; @param (map) options
@@ -205,9 +205,9 @@
   ;  "cljc" (map)
   ;  "cljs" (map)}
   [options]
-  (letfn [(f [result layer-name api-files]
-             (assoc result layer-name (import-layer options layer-name)))]
-         (reduce-kv f {} @detect.state/LAYERS)))
+  (letfn [(f0 [result layer-name api-files]
+              (assoc result layer-name (import-layer options layer-name)))]
+         (reduce-kv f0 {} @detect.state/LAYERS)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

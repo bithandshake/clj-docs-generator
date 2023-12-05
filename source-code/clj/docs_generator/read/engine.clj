@@ -90,13 +90,13 @@
   ; [{"call" (string)}
   ;  {...}]
   [header]
-  (letfn [(f [usages skip]
-             (if-let [cursor (string/nth-dex-of header "  ; @usage" skip)]
-                     (let [usage (read-function-first-usage header cursor)]
-                          (f (conj usages usage)
-                             (inc  skip)))
-                     (-> usages)))]
-         (f [] 0)))
+  (letfn [(f0 [usages skip]
+              (if-let [cursor (string/nth-dex-of header "  ; @usage" skip)]
+                      (let [usage (read-function-first-usage header cursor)]
+                           (f0 (conj usages usage)
+                               (inc  skip)))
+                      (-> usages)))]
+         (f0 [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -130,13 +130,13 @@
   ;   "result" (string)}
   ;  {...}]
   [header]
-  (letfn [(f [examples skip]
-             (if-let [cursor (string/nth-dex-of header "  ; @example" skip)]
-                     (let [example (read-function-first-example header cursor)]
-                          (f (conj examples example)
-                             (inc  skip)))
-                     (-> examples)))]
-         (f [] 0)))
+  (letfn [(f0 [examples skip]
+              (if-let [cursor (string/nth-dex-of header "  ; @example" skip)]
+                      (let [example (read-function-first-example header cursor)]
+                           (f0 (conj examples example)
+                               (inc  skip)))
+                      (-> examples)))]
+         (f0 [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -174,13 +174,13 @@
   ;   "types" (string)}
   ;  {...}]
   [header]
-  (letfn [(f [params skip]
-             (if-let [cursor (string/nth-dex-of header "  ; @param" skip)]
-                     (let [param (read-function-first-param header cursor)]
-                          (f (conj params param)
-                             (inc  skip)))
-                     (-> params)))]
-         (f [] 0)))
+  (letfn [(f0 [params skip]
+              (if-let [cursor (string/nth-dex-of header "  ; @param" skip)]
+                      (let [param (read-function-first-param header cursor)]
+                           (f0 (conj params param)
+                               (inc  skip)))
+                      (-> params)))]
+         (f0 [] 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -347,14 +347,14 @@
   ;  "functions" (maps in vector)}
   [options layer-name api-filepath]
   (let [defs (get-in @import.state/LAYERS [layer-name api-filepath "defs"])]
-       (letfn [(f [result [name value :as def]]
-                  (let [def (read-def options layer-name api-filepath name value)]
-                       (if-let [function-data (get def "function")]
-                               (update result "functions" vector/conj-item function-data)
-                               (if-let [constant-data (get def "constant")]
-                                       (update result "constants" vector/conj-item constant-data)
-                                       (->     result)))))]
-              (reduce f {} defs))))
+       (letfn [(f0 [result [name value :as def]]
+                   (let [def (read-def options layer-name api-filepath name value)]
+                        (if-let [function-data (get def "function")]
+                                (update result "functions" vector/conj-item function-data)
+                                (if-let [constant-data (get def "constant")]
+                                        (update result "constants" vector/conj-item constant-data)
+                                        (->     result)))))]
+              (reduce f0 {} defs))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -392,9 +392,9 @@
   ; @return (map)
   [options layer-name]
   (let [layer-data (get @import.state/LAYERS layer-name)]
-       (letfn [(f [layer-data api-filepath api-data]
-                  (assoc layer-data api-filepath (read-api-file options layer-name api-filepath)))]
-              (reduce-kv f {} layer-data))))
+       (letfn [(f0 [layer-data api-filepath api-data]
+                   (assoc layer-data api-filepath (read-api-file options layer-name api-filepath)))]
+              (reduce-kv f0 {} layer-data))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -403,7 +403,7 @@
   ; @param (map) options
   [options]
   (let [layers @import.state/LAYERS]
-       (letfn [(f [_ layer-name _]
-                  (let [layer-data (read-layer options layer-name)]
-                       (swap! read.state/LAYERS assoc layer-name layer-data)))]
-              (reduce-kv f nil layers))))
+       (letfn [(f0 [_ layer-name _]
+                   (let [layer-data (read-layer options layer-name)]
+                        (swap! read.state/LAYERS assoc layer-name layer-data)))]
+              (reduce-kv f0 nil layers))))

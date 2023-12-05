@@ -54,22 +54,22 @@
   [file-content name]
   (let [comment-pattern "[ ]{0,};"]
        (if-let [function-content (function-content file-content name)]
-               (letfn [(f [function-content lap]
-                          (if (= lap 512)
-                              (do ; Ha az f függvény végtelen ciklusba kerül, akkor
-                                  ; valószínüleg valamelyik kommentben egyenlőtlenül
-                                  ; vannak elhelyezve a zárójelek vagy esetleg egy string
-                                  ; tartalmaz ";", amit a függvény kommentnek érzékel!
-                                  (println "Ooops! It looks like there is a syntax error in the function \"" name "\"")
-                                  (-> function-content))
+               (letfn [(f0 [function-content lap]
+                           (if (= lap 512)
+                               (do ; Ha az f függvény végtelen ciklusba kerül, akkor
+                                   ; valószínüleg valamelyik kommentben egyenlőtlenül
+                                   ; vannak elhelyezve a zárójelek vagy esetleg egy string
+                                   ; tartalmaz ";", amit a függvény kommentnek érzékel!
+                                   (println "Ooops! It looks like there is a syntax error in the function \"" name "\"")
+                                   (-> function-content))
 
-                              (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
-                                      (let [comment (-> function-content (string/keep-range start-pos)
-                                                                         (string/before-first-occurence "\n" {:return? true}))]
-                                           (f (string/remove-first-occurence function-content (str comment "\n"))
-                                              (inc lap)))
-                                      (-> function-content))))]
-                      (f function-content 0)))))
+                               (if-let [start-pos (regex/first-dex-of function-content (re-pattern comment-pattern))]
+                                       (let [comment (-> function-content (string/keep-range start-pos)
+                                                                          (string/before-first-occurence "\n" {:return? true}))]
+                                            (f0 (string/remove-first-occurence function-content (str comment "\n"))
+                                                (inc lap)))
+                                       (-> function-content))))]
+                      (f0 function-content 0)))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

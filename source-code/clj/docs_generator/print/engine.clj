@@ -103,9 +103,9 @@
   [_ _ _ function-data]
   (let [usages (get-in function-data ["header" "usages"])]
        (if (-> usages empty? not)
-           (letfn [(f [usages usage]
-                      (str usages "\n\n```"usage"```"))]
-                  (reduce f "" usages)))))
+           (letfn [(f0 [usages usage]
+                       (str usages "\n\n```"usage"```"))]
+                  (reduce f0 "" usages)))))
 
 (defn print-api-function-examples
   ; @param (map) options
@@ -118,9 +118,9 @@
   [_ _ _ function-data]
   (let [examples (get-in function-data ["header" "examples"])]
        (if (-> examples empty? not)
-           (letfn [(f [examples example]
-                      (str examples "\n\n```"example"```"))]
-                  (reduce f "" examples)))))
+           (letfn [(f0 [examples example]
+                       (str examples "\n\n```"example"```"))]
+                  (reduce f0 "" examples)))))
 
 (defn print-api-function-return
   ; @param (map) options
@@ -182,10 +182,10 @@
   [options layer-name api-filepath]
   (let [functions (get-in @process.state/LAYERS [layer-name api-filepath "functions"])
         functions (print.utils/sort-functions functions)]
-       (letfn [(f [functions function-data]
-                  (if functions (str functions "\n\n---" (print-api-function options layer-name api-filepath function-data))
-                                (str functions           (print-api-function options layer-name api-filepath function-data))))]
-              (reduce f nil functions))))
+       (letfn [(f0 [functions function-data]
+                   (if functions (str functions "\n\n---" (print-api-function options layer-name api-filepath function-data))
+                                 (str functions           (print-api-function options layer-name api-filepath function-data))))]
+              (reduce f0 nil functions))))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -212,10 +212,10 @@
         functions (print.utils/sort-functions functions)
         constants (get-in @process.state/LAYERS [layer-name api-filepath "constants"])
         constants (print.utils/sort-constants functions)]
-       (letfn [(f [links function-data] (let [function-name (get function-data "name")
-                                              function-link (normalize/clean-text function-name)]
-                                             (str links "\n\n- ["function-name"](#"function-link")")))]
-              (str "\n\n### Index" (reduce f "" functions)
+       (letfn [(f0 [links function-data] (let [function-name (get function-data "name")
+                                               function-link (normalize/clean-text function-name)]
+                                              (str links "\n\n- ["function-name"](#"function-link")")))]
+              (str "\n\n### Index" (reduce f0 "" functions)
                    "\n\n---"))))
 
 (defn print-api-breadcrumbs
@@ -225,11 +225,11 @@
   ;
   ; @return (string)
   [_ layer-name api-filepath]
-  (letfn [(f [r _] (str r "../"))]
+  (letfn [(f0 [r _] (str r "../"))]
          (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
                depth         (-> api-namespace (string/split #"\.")
                                                (count))
-               steps         (reduce f nil (range 0 depth))]
+               steps         (reduce f0 nil (range 0 depth))]
               (str "\n\n##### [README](../"steps"README.md) > [DOCUMENTATION]("steps"COVER.md) > "api-namespace""))))
 
 (defn print-api-title
@@ -289,14 +289,14 @@
   ; @param (string) layer-name
   [options layer-name]
   (let [layer-data (get @process.state/LAYERS layer-name)]
-       (letfn [(f [_ api-filepath _] (print-api-file! options layer-name api-filepath))]
-              (reduce-kv f nil layer-data))))
+       (letfn [(f0 [_ api-filepath _] (print-api-file! options layer-name api-filepath))]
+              (reduce-kv f0 nil layer-data))))
 
 (defn print-layers!
   ; @param (map) options
   [options]
-  (letfn [(f [_ layer-name _] (print-layer! options layer-name))]
-         (reduce-kv f nil @process.state/LAYERS)))
+  (letfn [(f0 [_ layer-name _] (print-layer! options layer-name))]
+         (reduce-kv f0 nil @process.state/LAYERS)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -326,10 +326,10 @@
   (let [clj-links  (get-in @process.state/COVER ["links" "clj"])
         cljc-links (get-in @process.state/COVER ["links" "cljc"])
         cljs-links (get-in @process.state/COVER ["links" "cljs"])]
-       (letfn [(f [links link] (str links"\n"link))]
-              (str (if (-> clj-links  empty? not) (reduce f "\n\n### Clojure namespaces\n"       clj-links))
-                   (if (-> cljc-links empty? not) (reduce f "\n\n### Isomorphic namespaces\n"    cljc-links))
-                   (if (-> cljs-links empty? not) (reduce f "\n\n### ClojureScript namespaces\n" cljs-links))))))
+       (letfn [(f0 [links link] (str links"\n"link))]
+              (str (if (-> clj-links  empty? not) (reduce f0 "\n\n### Clojure namespaces\n"       clj-links))
+                   (if (-> cljc-links empty? not) (reduce f0 "\n\n### Isomorphic namespaces\n"    cljc-links))
+                   (if (-> cljs-links empty? not) (reduce f0 "\n\n### ClojureScript namespaces\n" cljs-links))))))
 
 (defn print-cover-subtitle
   ; @param (map) options
