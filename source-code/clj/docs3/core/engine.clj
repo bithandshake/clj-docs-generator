@@ -93,10 +93,10 @@
   ; @return (string)
   [options]
   (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
-      (let [options (core.prototypes/options-prototype options)]
-           (println (source-code-map/read-source-files {:source-paths ["dependencies/ajax-api/source-code"]
+      (let [options (core.prototypes/options-prototype options)])))
+           ;(println (source-code-map/read-source-files {:source-paths ["dependencies/ajax-api/source-code"]
                                                           ;:filename-pattern #"[a-z\-\_\d]\.clj[cs]{1,1}"})))))
-                                                          :filename-pattern #"test.clj"})))))
+            ;                                              :filename-pattern #"test.clj")])))
            ;(try (do (detect.engine/detect-code-files! options))
                     ;(import.engine/import-code-files! options))
                 ;(detect.engine/detect-layers!   options)

@@ -23,7 +23,7 @@
   ; @return (string)
   [{:keys [code-dirs]} layer-name api-filepath _]
   ; Finds out which code-dir belongs to the taken api-filepath file.
-  (letfn [(f [[code-dir %]] (if (= % api-filepath)
-                                (-> code-dir)))]
+  (letfn [(f0 [[code-dir %]] (if (= % api-filepath)
+                                 (-> code-dir)))]
          (let [api-files (get-in @detect.state/LAYERS [layer-name])]
-              (some f api-files))))
+              (some f0 api-files))))

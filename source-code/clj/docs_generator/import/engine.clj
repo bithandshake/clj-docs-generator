@@ -34,13 +34,13 @@
   ;
   ; @return (map)
   [api-content]
-  (letfn [(f [refers skip]
-             (if-let [cursor (string/nth-dex-of api-content "[" skip)]
-                     (let [refer (import-first-refer api-content cursor)]
-                          (f (merge refers refer)
-                             (inc   skip)))
-                     (-> refers)))]
-         (f {} 0)))
+  (letfn [(f0 [refers skip]
+              (if-let [cursor (string/nth-dex-of api-content "[" skip)]
+                      (let [refer (import-first-refer api-content cursor)]
+                           (f0 (merge refers refer)
+                              (inc   skip)))
+                      (-> refers)))]
+         (f0 {} 0)))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

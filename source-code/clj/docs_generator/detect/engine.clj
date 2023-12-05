@@ -13,15 +13,15 @@
   ; @param (string) code-dir
   [_ code-dir]
   (let [file-list (io/all-file-list code-dir {:warn? false})]
-       (letfn [(f [result filepath]
-                  (cond (string/ends-with? filepath "api.clj")
-                        (update result "clj"  vector/conj-item [code-dir filepath])
-                        (string/ends-with? filepath "api.cljc")
-                        (update result "cljc" vector/conj-item [code-dir filepath])
-                        (string/ends-with? filepath "api.cljs")
-                        (update result "cljs" vector/conj-item [code-dir filepath])
-                        :return result))]
-              (reduce f {} file-list))))
+       (letfn [(f0 [result filepath]
+                   (cond (string/ends-with? filepath "api.clj")
+                         (update result "clj"  vector/conj-item [code-dir filepath])
+                         (string/ends-with? filepath "api.cljc")
+                         (update result "cljc" vector/conj-item [code-dir filepath])
+                         (string/ends-with? filepath "api.cljs")
+                         (update result "cljs" vector/conj-item [code-dir filepath])
+                         :return result))]
+              (reduce f0 {} file-list))))
 
 (defn detect-layers!
   ; @param (map) options
@@ -39,9 +39,9 @@
   ;  "cljc" (vectors in vector)
   ;  "cljs" (vectors in vector)}
   [{:keys [code-dirs] :as options}]
-  (letfn [(f [layers code-dir]
-             (let [{:strs [clj cljc cljs]} (detect-code-dir! options code-dir)]
-                  (-> layers (update "clj"  vector/concat-items clj)
-                             (update "cljc" vector/concat-items cljc)
-                             (update "cljs" vector/concat-items cljs))))]
-         (reset! detect.state/LAYERS (reduce f {} code-dirs))))
+  (letfn [(f0 [layers code-dir]
+              (let [{:strs [clj cljc cljs]} (detect-code-dir! options code-dir)]
+                   (-> layers (update "clj"  vector/concat-items clj)
+                              (update "cljc" vector/concat-items cljc)
+                              (update "cljs" vector/concat-items cljs))))]
+         (reset! detect.state/LAYERS (reduce f0 {} code-dirs))))
