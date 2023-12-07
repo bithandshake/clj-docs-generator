@@ -1,7 +1,7 @@
 
 (ns docs-generator.read.utils
-    (:require [regex.api         :as regex]
-              [string.api        :as string]
+    (:require [fruits.regex.api  :as regex]
+              [fruits.string.api :as string]
               [syntax-reader.api :as syntax-reader]))
 
 ;; ----------------------------------------------------------------------------

@@ -11,9 +11,9 @@
               [docs-generator.process.state   :as process.state]
               [docs-generator.read.engine     :as read.engine]
               [docs-generator.read.state      :as read.state]
+              [fruits.regex.api               :refer [re-match?]]
+              [fruits.string.api              :as string]
               [io.api                         :as io]
-              [regex.api                      :refer [re-match?]]
-              [string.api                     :as string]
               [validator.api                  :as v]))
 
 ;; ----------------------------------------------------------------------------

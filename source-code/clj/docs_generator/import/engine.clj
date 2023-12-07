@@ -3,8 +3,8 @@
     (:require [docs-generator.detect.state :as detect.state]
               [docs-generator.import.state :as import.state]
               [docs-generator.import.utils :as import.utils]
-              [io.api                      :as io]
-              [string.api                  :as string]))
+              [fruits.string.api           :as string]
+              [io.api                      :as io]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

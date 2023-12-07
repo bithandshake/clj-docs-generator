@@ -1,7 +1,7 @@
 
 (ns docs-generator.core.prototypes
-    (:require [string.api :as string]
-              [vector.api :as vector]))
+    (:require [fruits.string.api :as string]
+              [fruits.vector.api :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

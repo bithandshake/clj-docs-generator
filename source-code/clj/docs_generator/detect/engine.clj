@@ -1,9 +1,9 @@
 
 (ns docs-generator.detect.engine
     (:require [docs-generator.detect.state :as detect.state]
-              [io.api                      :as io]
-              [string.api                  :as string]
-              [vector.api                  :as vector]))
+              [fruits.string.api           :as string]
+              [fruits.vector.api           :as vector]
+              [io.api                      :as io]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

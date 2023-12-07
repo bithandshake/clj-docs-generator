@@ -4,10 +4,10 @@
               [docs-generator.print.utils   :as print.utils]
               [docs-generator.process.state :as process.state]
               [docs-generator.process.utils :as process.utils]
-              [io.api                       :as io]
-              [normalize.api                :as normalize]
-              [string.api                   :as string]
-              [vector.api                   :as vector]))
+              [fruits.normalize.api         :as normalize]
+              [fruits.string.api            :as string]
+              [fruits.vector.api            :as vector]
+              [io.api                       :as io]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

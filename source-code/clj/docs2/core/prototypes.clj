@@ -1,7 +1,7 @@
 
 (ns docs2.core.prototypes
-    (:require [docs2.core.utils :as core.utils]
-              [vector.api       :as vector]))
+    (:require [docs2.core.utils  :as core.utils]
+              [fruits.vector.api :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

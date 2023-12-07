@@ -5,9 +5,9 @@
               [docs-generator.process.state :as process.state]
               [docs-generator.process.utils :as process.utils]
               [docs-generator.read.state    :as read.state]
-              [map.api                      :as map]
-              [string.api                   :as string]
-              [vector.api                   :as vector]))
+              [fruits.map.api               :as map]
+              [fruits.string.api            :as string]
+              [fruits.vector.api            :as vector]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

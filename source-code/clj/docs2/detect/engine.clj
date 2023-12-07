@@ -1,8 +1,8 @@
 
 (ns docs2.detect.engine
     (:require [docs2.detect.state :as detect.state]
-              [io.api             :as io]
-              [regex.api          :refer [re-match?]]))
+              [fruits.regex.api   :refer [re-match?]]
+              [io.api             :as io]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

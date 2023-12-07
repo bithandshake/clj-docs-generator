@@ -2,9 +2,9 @@
 (ns docs-generator.read.env
     (:require [docs-generator.detect.env   :as detect.env]
               [docs-generator.import.state :as import.state]
-              [io.api                      :as io]
-              [regex.api                   :as regex]
-              [string.api                  :as string]))
+              [fruits.regex.api            :as regex]
+              [fruits.string.api           :as string]
+              [io.api                      :as io]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

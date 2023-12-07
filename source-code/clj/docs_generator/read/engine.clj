@@ -4,10 +4,10 @@
               [docs-generator.read.env     :as read.env]
               [docs-generator.read.state   :as read.state]
               [docs-generator.read.utils   :as read.utils]
-              [io.api                      :as io]
-              [regex.api                   :as regex]
-              [string.api                  :as string]
-              [vector.api                  :as vector]))
+              [fruits.regex.api            :as regex]
+              [fruits.string.api           :as string]
+              [fruits.vector.api           :as vector]
+              [io.api                      :as io]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

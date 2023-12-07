@@ -1,8 +1,8 @@
 
 (ns docs2.import.utils
     (:require [docs2.import.config :as import.config]
-              [regex.api           :as regex :refer [re-mismatch?]]
-              [string.api          :as string]
+              [fruits.regex.api    :as regex :refer [re-mismatch?]]
+              [fruits.string.api   :as string]
               [syntax-reader.api   :as syntax-reader]))
 
 ;; ----------------------------------------------------------------------------

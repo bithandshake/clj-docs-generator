@@ -1,6 +1,6 @@
 
 (ns docs-generator.import.utils
-    (:require [string.api        :as string]
+    (:require [fruits.string.api :as string]
               [syntax-reader.api :as syntax-reader]))
 
 ;; ----------------------------------------------------------------------------

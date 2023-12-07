@@ -1,7 +1,7 @@
 
 (ns docs-generator.detect.env
     (:require [docs-generator.detect.state :as detect.state]
-              [string.api                  :as string]))
+              [fruits.string.api           :as string]))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
