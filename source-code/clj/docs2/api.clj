@@ -5,5 +5,5 @@
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
 
-; docs.core.engine
+; @redirect (docs.core.engine)
 (def create-documentation! core.engine/create-documentation!)
