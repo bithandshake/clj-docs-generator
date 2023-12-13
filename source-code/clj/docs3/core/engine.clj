@@ -1,6 +1,6 @@
 
 (ns docs3.core.engine
-    (:require [docs3.core.patterns   :as core.patterns]
+    (:require [docs3.core.tests :as core.tests]
               [docs3.core.prototypes :as core.prototypes]
               [source-code-map.api   :as source-code-map]
               [validator.api         :as v]))
@@ -88,7 +88,7 @@
   ;
   ; @return (string)
   [options]
-  (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
+  (if (v/valid? options core.tests/OPTIONS-TEST)
       (let [options (core.prototypes/options-prototype options)])))
            ;(println (source-code-map/read-source-files {:source-paths ["dependencies/ajax-api/source-code"]
                                                           ;:filename-pattern #"[a-z\-\_\d]\.clj[cs]{1,1}"})))))

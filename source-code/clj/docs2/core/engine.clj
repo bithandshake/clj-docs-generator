@@ -1,6 +1,6 @@
 
 (ns docs2.core.engine
-    (:require [docs2.core.patterns   :as core.patterns]
+    (:require [docs2.core.tests :as core.tests]
               [docs2.core.prototypes :as core.prototypes]
               [docs2.detect.engine   :as detect.engine]
               [docs2.detect.state    :as detect.state]
@@ -58,7 +58,7 @@
   ;
   ; @return (string)
   [options]
-  (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN})
+  (if (v/valid? options core.tests/OPTIONS-TEST)
       (let [options (core.prototypes/options-prototype options)]
            (try ;(initialize!                    options))
                 (do (detect.engine/detect-code-files! options)

@@ -1,5 +1,5 @@
 
-(ns docs-generator.core.patterns)
+(ns docs-generator.core.tests)
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -10,7 +10,7 @@
 ; https://github.com/bithandshake/cljc-validator
 ;
 ; @constant (map)
-(def OPTIONS-PATTERN
+(def OPTIONS-TEST
      {:author            {:opt* true
                           :f*   string?
                           :not* empty?

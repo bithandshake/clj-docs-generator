@@ -112,7 +112,7 @@
                          (string/remove-part            "  ; ")
                          (string/remove-part            "  ;\n")
                          (string/not-ends-with!         "\n")
-                         (string/use-nil))]
+                         (string/to-nil {:if-empty? true}))]
       {"name" param-name "optional?" optional? "sample" sample "types" types}))
 
 ;; ----------------------------------------------------------------------------

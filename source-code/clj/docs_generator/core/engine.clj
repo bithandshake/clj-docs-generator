@@ -1,6 +1,6 @@
 
 (ns docs-generator.core.engine
-    (:require [docs-generator.core.patterns   :as core.patterns]
+    (:require [docs-generator.core.tests :as core.tests]
               [docs-generator.core.prototypes :as core.prototypes]
               [docs-generator.detect.engine   :as detect.engine]
               [docs-generator.detect.state    :as detect.state]
@@ -84,7 +84,7 @@
   ;
   ; @return (string)
   [options]
-  (if (v/valid? options {:pattern* core.patterns/OPTIONS-PATTERN :prefix* "options"})
+  (if (v/valid? options core.tests/OPTIONS-TEST {:prefix "options"})
       (let [options (core.prototypes/options-prototype options)]
            (initialize!                    options)
            (detect.engine/detect-layers!   options)
