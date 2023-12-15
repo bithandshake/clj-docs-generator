@@ -1,7 +1,7 @@
 
 (ns docs2.core.engine
-    (:require [docs2.core.tests :as core.tests]
-              [docs2.core.prototypes :as core.prototypes]
+    (:require [docs2.core.prototypes :as core.prototypes]
+              [docs2.core.tests      :as core.tests]
               [docs2.detect.engine   :as detect.engine]
               [docs2.detect.state    :as detect.state]
               [docs2.import.engine   :as import.engine]

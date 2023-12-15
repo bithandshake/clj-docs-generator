@@ -1,7 +1,7 @@
 
 (ns docs-generator.core.engine
-    (:require [docs-generator.core.tests :as core.tests]
-              [docs-generator.core.prototypes :as core.prototypes]
+    (:require [docs-generator.core.prototypes :as core.prototypes]
+              [docs-generator.core.tests      :as core.tests]
               [docs-generator.detect.engine   :as detect.engine]
               [docs-generator.detect.state    :as detect.state]
               [docs-generator.import.engine   :as import.engine]

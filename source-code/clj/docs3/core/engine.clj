@@ -1,7 +1,7 @@
 
 (ns docs3.core.engine
-    (:require [docs3.core.tests :as core.tests]
-              [docs3.core.prototypes :as core.prototypes]
+    (:require [docs3.core.prototypes :as core.prototypes]
+              [docs3.core.tests      :as core.tests]
               [source-code-map.api   :as source-code-map]
               [validator.api         :as v]))
 
