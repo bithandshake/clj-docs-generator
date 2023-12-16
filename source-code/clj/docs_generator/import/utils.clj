@@ -7,9 +7,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn first-refer
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (first-refer "... [my-namespace :refer [my-refer your-refer]] ...")
   ; =>
   ; {"my-refer" "my-namespace"}
@@ -29,9 +31,11 @@
                        (reduce f0 {} refer))))))
 
 (defn first-alias
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (first-alias "... [my-namespace :as my-alias] ...")
   ; =>
   ; ["my-namespace" "my-alias"]
@@ -53,9 +57,11 @@
                 [namespace alias]))))
 
 (defn first-def
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (first-def "... (def my-name my-value) (def ...")
   ; =>
   ; ["my-name" "my-value"]

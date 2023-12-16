@@ -13,9 +13,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-warning
+  ; @ignore
+  ;
   ; @param (string) header
   ;
-  ; @example
+  ; @usage
   ; (read-function-warning "@warning ...")
   ; =>
   ; "..."
@@ -29,9 +31,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-description
+  ; @ignore
+  ;
   ; @param (string) header
   ;
-  ; @example
+  ; @usage
   ; (read-function-description "@description ...")
   ; =>
   ; "..."
@@ -45,9 +49,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-return
+  ; @ignore
+  ;
   ; @param (string) header
   ;
-  ; @example
+  ; @usage
   ; (read-function-return "... @return (map) {:my-key (string)}")
   ; =>
   ; {"sample" {:my-key (string)}
@@ -64,10 +70,12 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-first-usage
+  ; @ignore
+  ;
   ; @param (string) header
   ; @param (integer) cursor
   ;
-  ; @example
+  ; @usage
   ; (read-function-first-usage "... ; @usage (my-function ...) ..." 42)
   ; =>
   ; {"call" "(my-function ...)"}
@@ -79,9 +87,11 @@
              (read.utils/function-first-usage)))
 
 (defn read-function-usages
+  ; @ignore
+  ;
   ; @param (string) header
   ;
-  ; @example
+  ; @usage
   ; (read-function-usages "... ; @usage (my-function ...) ..." 42)
   ; =>
   ; [{"call" "(my-function ...)"}]
@@ -102,10 +112,12 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-first-example
+  ; @ignore
+  ;
   ; @param (string) header
   ; @param (integer) cursor
   ;
-  ; @example
+  ; @usage
   ; (read-function-first-example "... ; @example (my-function ...) => 123 ..." 42)
   ; =>
   ; {"call" "(my-function ...)" "result" 123}
@@ -118,9 +130,11 @@
              (read.utils/function-first-example)))
 
 (defn read-function-examples
+  ; @ignore
+  ;
   ; @param (string) header
   ;
-  ; @example
+  ; @usage
   ; (read-function-examples "... ; @example (my-function ...) => 123 ..." 42)
   ; =>
   ; [{"call" "(my-function ...)" "result" 123}]
@@ -142,10 +156,12 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-first-param
+  ; @ignore
+  ;
   ; @param (string) header
   ; @param (integer) cursor
   ;
-  ; @example
+  ; @usage
   ; (read-function-first-param "... ; @param (*)(opt) my-param ..." 42)
   ; =>
   ; {"name" "my-param" "optional?" true "types" "*"}
@@ -160,9 +176,11 @@
              (read.utils/function-first-param)))
 
 (defn read-function-params
+  ; @ignore
+  ;
   ; @param (string) header
   ;
-  ; @example
+  ; @usage
   ; (read-function-params "...")
   ; =>
   ; (?)
@@ -186,9 +204,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-function-header
+  ; @ignore
+  ;
   ; @param (string) header
   ;
-  ; @example
+  ; @usage
   ; (read-function-header "...")
   ; =>
   ; (?)
@@ -212,11 +232,13 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-constant
+  ; @ignore
+  ;
   ; @param (string) file-content
   ; @param (string) name
   ; @param (string) redirected-to
   ;
-  ; @example
+  ; @usage
   ; (read-constant "..." "MY-CONSTANT" "MY-CONSTANT")
   ; =>
   ; {"type" ["string"]}
@@ -231,11 +253,13 @@
                {"name" name})))
 
 (defn read-function
+  ; @ignore
+  ;
   ; @param (string) file-content
   ; @param (string) name
   ; @param (string) redirected-to
   ;
-  ; @example
+  ; @usage
   ; (read-function "..." "my-function" "my-function")
   ; =>
   ; (?)
@@ -256,16 +280,18 @@
            "name"   name}))
 
 (defn read-code
+  ; @ignore
+  ;
   ; @param (string) file-content
   ; @param (string) name
   ; @param (string) redirected-to
   ;
-  ; @example
+  ; @usage
   ; (read-code "..." "my-function" "my-function")
   ; =>
   ; {"function" {...}}
   ;
-  ; @example
+  ; @usage
   ; (read-code "..." "MY-CONSTANT" "MY-CONSTANT")
   ; =>
   ; {"constant" {...}}
@@ -291,18 +317,20 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-def
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ; @param (string) name
   ; @param (string) value
   ;
-  ; @example
+  ; @usage
   ; (read-def {...} "clj" "my-repository/source-code/my_directory/api.clj" "my-function" "my-namespace/my-function")
   ; =>
   ; {"function" {...}}
   ;
-  ; @example
+  ; @usage
   ; (read-def {...} "clj" "my-repository/source-code/my_directory/api.clj" "MY-CONSTANT" "my-namespace/MY-CONSTANT")
   ; =>
   ; {"constant" {...}}
@@ -332,11 +360,13 @@
                         (read-code file-content name redirected-to))))))
 
 (defn read-defs
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ;
-  ; @example
+  ; @usage
   ; (read-defs {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {"constants" [{...}]
@@ -360,11 +390,13 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-api-file
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ;
-  ; @example
+  ; @usage
   ; (read-api-file {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {"constants" [{...}]
@@ -380,10 +412,12 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-layer
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ;
-  ; @example
+  ; @usage
   ; (read-layer {...} "clj")
   ; =>
   ; {"my-repository/source-code/my_directory/api.clj" {...}
@@ -400,6 +434,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn read-layers!
+  ; @ignore
+  ;
   ; @param (map) options
   [options]
   (let [layers @import.state/LAYERS]

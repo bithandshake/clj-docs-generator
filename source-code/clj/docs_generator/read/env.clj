@@ -10,6 +10,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn alter-filepath
+  ; @ignore
+  ;
   ; @param (map) options
   ; {}
   ; @param (string) layer-name
@@ -31,12 +33,14 @@
                      (some f3 code-dirs)))))
 
 (defn code-filepath
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ; @param (string) alias
   ;
-  ; @example
+  ; @usage
   ; (code-filepath {...} "clj" "my-repository/source-code/my_directory/api.clj" "my-directory.my-file")
   ; =>
   ; "my-repository/source-code/my_directory/my_file.clj"

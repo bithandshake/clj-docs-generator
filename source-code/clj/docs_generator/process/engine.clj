@@ -13,6 +13,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-function-description
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -27,6 +29,8 @@
           (str "@description" description)))
 
 (defn process-function-warning
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -41,6 +45,8 @@
           (str "@warning" warning)))
 
 (defn process-function-params
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -71,6 +77,8 @@
                  (reduce f0 [] params))))
 
 (defn process-function-usages
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -93,6 +101,8 @@
                  (reduce f0 [] usages))))
 
 (defn process-function-examples
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -116,6 +126,8 @@
                  (reduce f0 [] examples))))
 
 (defn process-function-return
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -138,6 +150,8 @@
                   (str "@return ("types")"))))
 
 (defn process-function-header
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -164,6 +178,8 @@
    "warning"     (process-function-warning     options layer-name api-filepath function-data)})
 
 (defn process-function
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -183,6 +199,8 @@
    "name"   (get function-data "name")})
 
 (defn process-api-functions
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -203,6 +221,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-api-links
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -218,6 +238,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-api-file
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -238,6 +260,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-layer
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ;
@@ -258,6 +282,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-layers!
+  ; @ignore
+  ;
   ; @param (map) options
   [options]
   (let [layers @read.state/LAYERS]
@@ -270,6 +296,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-layer-links
+  ; @ignore
+  ;
   ; @param (map) options
   ;  {:output-dir (string)}
   ; @param (string) layer-name
@@ -294,6 +322,8 @@
               (reduce f1 links (vector/abc-items api-files)))))
 
 (defn process-cover-links
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (map)
@@ -307,6 +337,8 @@
               (reduce-kv f0 {} layers))))
 
 (defn process-cover-title
+  ; @ignore
+  ;
   ; @param (map) options
   ; {:lib-name (string)}
   ;
@@ -318,6 +350,8 @@
   (str "### "lib-name))
 
 (defn process-cover
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (map)
@@ -329,6 +363,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-cover!
+  ; @ignore
+  ;
   ; @param (map) options
   [options]
   (reset! process.state/COVER (process-cover options)))
@@ -337,6 +373,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn process-common-subtitle
+  ; @ignore
+  ;
   ; @param (map) options
   ; {:lib-name (string)
   ;  :website (string)(opt)}
@@ -359,6 +397,8 @@
             "library")))
 
 (defn process-common-credits
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @example
@@ -371,6 +411,8 @@
   (str "<sub>This documentation is generated with the [clj-docs-generator](https://github.com/monotech-tools/clj-docs-generator) engine.</sub>\n"))
 
 (defn process-common
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (map)
@@ -379,6 +421,8 @@
    "subtitle" (process-common-subtitle options)})
 
 (defn process-common!
+  ; @ignore
+  ;
   ; @param (map) options
   [options]
   (reset! process.state/COMMON (process-common options)))

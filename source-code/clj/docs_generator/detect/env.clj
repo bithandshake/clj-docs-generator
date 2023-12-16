@@ -7,15 +7,14 @@
 ;; ----------------------------------------------------------------------------
 
 (defn code-dir
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ; @param (string) alias
   ;
   ; @usage
-  ; (code-dir {...} "clj" "submodules/my-repository/source/code/clj/my_directory/api.clj" "api")
-  ;
-  ; @example
   ; (code-dir {...} "clj" "submodules/my-repository/source/code/clj/my_directory/api.clj" "api")
   ; =>
   ; "source-code/clj"

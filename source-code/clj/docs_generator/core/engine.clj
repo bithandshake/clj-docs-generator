@@ -55,10 +55,8 @@
        "</pre>"))
 
 (defn create-documentation!
-  ; @warning
-  ; The create-documentation! function erases the output-dir before printing
-  ; the documentation books!
-  ; Be careful with configuring this function!
+  ; @important
+  ; The 'create-documentation!' function erases the output directory before printing the documentation books!
   ;
   ; @param (map) options
   ; {:author (string)(opt)

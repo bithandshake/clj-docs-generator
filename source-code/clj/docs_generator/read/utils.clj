@@ -8,6 +8,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn function-content
+  ; @ignore
+  ;
   ; @param (string) file-content
   ; @param (string) name
   ;
@@ -34,6 +36,8 @@
                        (throw (Exception. (str "Unable to find end of function content: " name)))))))
 
 (defn function-header
+  ; @ignore
+  ;
   ; @param (string) file-content
   ; @param (string) name
   ;
@@ -47,6 +51,8 @@
                                (string/before-first-occurence "\n  ["  {:return? true}))))
 
 (defn function-code
+  ; @ignore
+  ;
   ; @param (string) file-content
   ; @param (string) name
   ;
@@ -75,19 +81,21 @@
 ;; ----------------------------------------------------------------------------
 
 (defn function-first-param
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (function-first-param "... ; @param (*) my-param ...")
   ; =>
   ; {"name" "my-param" "optional?" false "types" "*"}
   ;
-  ; @example
+  ; @usage
   ; (function-first-param "... ; @param (*)(opt) my-param ...")
   ; =>
   ; {"name" "my-param" "optional?" true "types" "*"}
   ;
-  ; @example
+  ; @usage
   ; (function-first-param "... ; @param (map) my-param {...} ...")
   ; =>
   ; {"name" "my-param" "optional?" false "sample" "{...}" "types" "map"}
@@ -119,9 +127,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn function-first-usage
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (function-first-usage "...")
   ; =>
   ; {"call" "..."}
@@ -146,9 +156,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn function-first-example
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (function-first-example "... ; @example (my-function ...) => 123 ...")
   ; =>
   ; {"call" "(my-function ...)" "result" 123}
@@ -171,9 +183,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn function-warning
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (function-warning "; @warning ...")
   ; =>
   ; "..."
@@ -190,9 +204,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn function-description
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (function-description "; @description ...")
   ; =>
   ; "..."
@@ -209,9 +225,11 @@
 ;; ----------------------------------------------------------------------------
 
 (defn function-return
+  ; @ignore
+  ;
   ; @param (string) n
   ;
-  ; @example
+  ; @usage
   ; (function-return "... ; @return (map) {...} ...")
   ; =>
   ; {"sample" "{...}" "types" "map"}

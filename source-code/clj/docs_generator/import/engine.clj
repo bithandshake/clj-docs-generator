@@ -10,10 +10,12 @@
 ;; ----------------------------------------------------------------------------
 
 (defn import-first-refer
+  ; @ignore
+  ;
   ; @param (string) api-content
   ; @param (integer) cursor
   ;
-  ; @example
+  ; @usage
   ; (import-first-refer "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ..." 42)
   ; =>
   ; {"my-refer" "my-namespace"}
@@ -24,9 +26,11 @@
                   (import.utils/first-refer)))
 
 (defn import-refers
+  ; @ignore
+  ;
   ; @param (string) api-content
   ;
-  ; @example
+  ; @usage
   ; (import-refers "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ...")
   ; =>
   ; {"my-refer"   "my-namespace"
@@ -46,6 +50,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn import-namespace
+  ; @ignore
+  ;
   ; @param (string) api-content
   ;
   ; @return (string)
@@ -58,10 +64,12 @@
 ;; ----------------------------------------------------------------------------
 
 (defn import-first-alias
+  ; @ignore
+  ;
   ; @param (string) api-content
   ; @param (integer) cursor
   ;
-  ; @example
+  ; @usage
   ; (import-first-alias "... [my-namespace :as my-alias] [your-namespace :as your-alias] ..." 42)
   ; =>
   ; {"my-namespace" "my-alias"}
@@ -73,9 +81,11 @@
        {namespace alias}))
 
 (defn import-aliases
+  ; @ignore
+  ;
   ; @param (string) api-content
   ;
-  ; @example
+  ; @usage
   ; (import-aliases "... [my-namespace :as my-alias] [your-namespace :as your-alias] ...")
   ; =>
   ; {"my-namespace"   "my-alias"
@@ -95,10 +105,12 @@
 ;; ----------------------------------------------------------------------------
 
 (defn import-first-def
+  ; @ignore
+  ;
   ; @param (string) api-content
   ; @param (integer) cursor
   ;
-  ; @example
+  ; @usage
   ; (import-first-def "... (def my-name my-value) (def your-name your-value) ..." 42)
   ; =>
   ; ["my-name" "my-value"]
@@ -109,9 +121,11 @@
                   (import.utils/first-def)))
 
 (defn import-defs
+  ; @ignore
+  ;
   ; @param (string) api-content
   ;
-  ; @example
+  ; @usage
   ; (import-defs "... (def my-name my-value) (def your-name your-value) ...")
   ; =>
   ; {"my-name"   "my-value"
@@ -131,12 +145,14 @@
 ;; ----------------------------------------------------------------------------
 
 (defn import-api-file
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; "clj", "cljc", "cljs"
   ; @param (string) api-filepath
   ;
-  ; @example
+  ; @usage
   ; (import-api-file {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {"namespace" "my-directory.api"
@@ -162,11 +178,13 @@
 ;; ----------------------------------------------------------------------------
 
 (defn import-layer
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer
   ; "clj", "cljc", "cljs"
   ;
-  ; @example
+  ; @usage
   ; (import-layer {...} "clj")
   ; =>
   ; {"my-repository/source-code/my_directory/api.clj" {"namespace" "api"
@@ -185,9 +203,11 @@
               (reduce f0 {} api-files))))
 
 (defn import-layers
+  ; @ignore
+  ;
   ; @param (map) options
   ;
-  ; @example
+  ; @usage
   ; (import-layers {...})
   ; =>
   ; {"clj" {"my-repository/source-code/my_directory/api.clj" {"namespace" "api"
@@ -213,6 +233,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn import-layers!
+  ; @ignore
+  ;
   ; @param (map) options
   [options]
   (let [layers (import-layers options)]

@@ -6,6 +6,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn sort-functions
+  ; @ignore
+  ;
   ; @param (maps in vector) functions
   ;
   ; @return (maps in vector)
@@ -13,6 +15,8 @@
   (vector/sort-items-by functions #(get % "name")))
 
 (defn sort-constants
+  ; @ignore
+  ;
   ; @param (maps in vector) constants
   ;
   ; @return (maps in vector)

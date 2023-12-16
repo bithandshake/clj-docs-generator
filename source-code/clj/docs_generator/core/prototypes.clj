@@ -7,6 +7,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn options-prototype
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (map)

@@ -9,6 +9,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn detect-code-dir!
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) code-dir
   [_ code-dir]
@@ -24,12 +26,11 @@
               (reduce f0 {} file-list))))
 
 (defn detect-layers!
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @usage
-  ; (detect-layers! {...})
-  ;
-  ; @example
   ; (detect-layers! {:code-dirs ["submodules/my-repository/source-code"]})
   ; =>
   ; {"clj" [["source-code/clj" "submodules/my-repository/source-code/my_directory/api.clj"]]}

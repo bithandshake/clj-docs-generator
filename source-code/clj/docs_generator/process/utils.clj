@@ -7,15 +7,14 @@
 ;; ----------------------------------------------------------------------------
 
 (defn md-path
+  ; @ignore
+  ;
   ; @param (map) options
   ; {:output-dir (string)}
   ; @param (string) layer-name
   ; @param (string) api-filepath
   ;
   ; @usage
-  ; (md-path {...} "clj" "submodules/my-repository/source-code/api.clj")
-  ;
-  ; @example
   ; (md-path {:output-dir "submodules/my-repository/documentation"}
   ;          "clj" "submodules/my-repository/source-code/my_directory/api.clj")
   ; =>

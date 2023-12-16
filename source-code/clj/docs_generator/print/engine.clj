@@ -13,6 +13,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn print-api-function-description
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -24,6 +26,8 @@
           (str "\n\n```\n" description"```")))
 
 (defn print-api-function-warning
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -35,6 +39,8 @@
           (str "\n\n```\n" warning"```")))
 
 (defn print-api-function-code
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -52,6 +58,8 @@
             "\n\n</details>")))
 
 (defn print-api-function-require
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -80,6 +88,8 @@
             "\n\n</details>")))
 
 (defn print-api-function-params
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -93,6 +103,8 @@
            (str "\n\n```\n" (string/join params "\n") "\n```"))))
 
 (defn print-api-function-usages
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -108,6 +120,8 @@
                   (reduce f0 "" usages)))))
 
 (defn print-api-function-examples
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -123,6 +137,8 @@
                   (reduce f0 "" examples)))))
 
 (defn print-api-function-return
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -135,6 +151,8 @@
           (str "\n\n```\n"return"\n```")))
 
 (defn print-api-function-header
+  ; @ignore
+  ;
   ; @param (map) options
   ; {:print-options (keywords in vector)}
   ; @param (string) layer-name
@@ -161,6 +179,8 @@
            (print-api-function-require     options layer-name api-filepath function-data))))
 
 (defn print-api-function
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -174,6 +194,8 @@
             (print-api-function-header options layer-name api-filepath function-data))))
 
 (defn print-api-functions
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -191,6 +213,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn print-api-constants
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -202,6 +226,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn print-api-links
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -219,6 +245,8 @@
                    "\n\n---"))))
 
 (defn print-api-breadcrumbs
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -233,6 +261,8 @@
               (str "\n\n##### [README](../"steps"README.md) > [DOCUMENTATION]("steps"COVER.md) > "api-namespace""))))
 
 (defn print-api-title
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -246,6 +276,8 @@
             "\n\n---")))
 
 (defn print-api-footer
+  ; @ignore
+  ;
   ; @param (map) options
   ; {:print-options (keywords in vector)}
   ; @param (string) layer-name
@@ -258,6 +290,8 @@
            (str "\n\n---\n\n"credits"\n"))))
 
 (defn print-api-file
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -275,6 +309,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn print-api-file!
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   ; @param (string) api-filepath
@@ -285,6 +321,8 @@
        (io/write-file! api-doc-filepath api-doc {:create? true})))
 
 (defn print-layer!
+  ; @ignore
+  ;
   ; @param (map) options
   ; @param (string) layer-name
   [options layer-name]
@@ -293,6 +331,8 @@
               (reduce-kv f0 nil layer-data))))
 
 (defn print-layers!
+  ; @ignore
+  ;
   ; @param (map) options
   [options]
   (letfn [(f0 [_ layer-name _] (print-layer! options layer-name))]
@@ -302,6 +342,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn print-cover-breadcrumbs
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (string)
@@ -309,6 +351,8 @@
   (str "\n\n##### [README](../README.md) > DOCUMENTATION"))
 
 (defn print-cover-footer
+  ; @ignore
+  ;
   ; @param (map) options
   ; {:print-options (keywords in vector)}
   ;
@@ -319,6 +363,8 @@
            (str "\n\n---\n\n"credits"\n"))))
 
 (defn print-cover-links
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (string)
@@ -332,6 +378,8 @@
                    (if (-> cljs-links empty? not) (reduce f0 "\n\n### ClojureScript namespaces\n" cljs-links))))))
 
 (defn print-cover-subtitle
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (string)
@@ -340,6 +388,8 @@
        (str "\n\n"subtitle"\n\n---\n\n")))
 
 (defn print-cover-title
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (string)
@@ -348,6 +398,8 @@
        (str "\n"title)))
 
 (defn print-cover
+  ; @ignore
+  ;
   ; @param (map) options
   ;
   ; @return (string)
@@ -362,6 +414,8 @@
 ;; ----------------------------------------------------------------------------
 
 (defn print-cover!
+  ; @ignore
+  ;
   ; @param (map) options
   ; {:output-dir (strs)}
   [{:keys [output-dir] :as options}]
