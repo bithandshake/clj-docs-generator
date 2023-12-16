@@ -23,7 +23,7 @@ Check out the latest commit on the [release branch](https://github.com/monotech-
 
 ### Documentation
 
-The <strong>clj-docs-generator</strong> functional documentation is [available here](documentation/COVER.md).
+The <strong>clj-docs-generator</strong> functional documentation is [available here](https://mt-archived.github.io/clj-docs-generator).
 
 ### Changelog
 
