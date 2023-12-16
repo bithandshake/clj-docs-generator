@@ -74,7 +74,7 @@
 ;                         :lib-name   "My library"
 ;                         :output-dir "documentation"})
 ;
-; By using the {:print-options [...]} setting, you can specify what kind of information you want to be printed into the books.
+; By using the {:print-options [...]} setting, you can specify the information you want to be printed into the books.
 ;
 ; @usage
 ; (create-documentation! {:code-dirs  ["src/clj" "src/cljc" "src/cljs"]
