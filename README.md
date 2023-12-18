@@ -9,7 +9,7 @@ The <strong>clj-docs-generator</strong> is a simple documentation book generator
 
 ```
 {:deps {mt-archived/clj-docs-generator {:git/url "https://github.com/mt-archived/clj-docs-generator"
-                                        :sha     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}}
+                                        :sha     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"}}}
 ```
 
 ### Current version
