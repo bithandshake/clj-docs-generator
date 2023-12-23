@@ -28,9 +28,6 @@
                           :and* [vector? #(every? keyword? %)]
                           :not* empty?
                           :e*   ":print-options must be a nonempty vector with keyword items!"}
-      :public-namespaces {:opt* true
-                          :and* [vector?]
-                          :e*   ":public-namespaces must be a vector with regex pattern or string items!"}
       :website           {:opt* true
                           :f*   string?
                           :not* empty?
