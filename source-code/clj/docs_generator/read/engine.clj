@@ -248,7 +248,7 @@
   ;  "type" (strings in vector)}
   [file-content name redirected-to]
   ; pattern: "(def MY-CONSTANT"
-  (let [pattern (str "[(]def[ ]{1,}"name)]
+  (let [pattern (str "[(]def[ ]+"name)]
        (if-let [start-pos (regex/first-dex-of file-content (re-pattern pattern))]
                {"name" name})))
 

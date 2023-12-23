@@ -24,7 +24,7 @@
   ;
   ; Ha a függvény neve kérdőjelre végződik, akkor a regex megsértődik a "function-name?\n"
   ; kifejezésre, mert a kérdőjel különleges karakter, ezért azt külön kell kezelni!
-  (let [open-pattern (-> (str "[(]defn[-]{0,}[ ]{1,}"name"\n")
+  (let [open-pattern (-> (str "[(]defn[-]*[ ]+"name"\n")
                          (string/replace-part "?" "[?]"))]
        (if-let [start-pos (regex/first-dex-of file-content (re-pattern open-pattern))]
                (if-let [end-pos (-> file-content (string/keep-range start-pos)
@@ -58,7 +58,7 @@
   ;
   ; @return (string)
   [file-content name]
-  (let [comment-pattern "[ ]{0,};"]
+  (let [comment-pattern "[ ]*;"]
        (if-let [function-content (function-content file-content name)]
                (letfn [(f0 [function-content lap]
                            (if (= lap 512)
