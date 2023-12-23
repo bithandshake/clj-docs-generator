@@ -6,7 +6,7 @@
 
 ; @ignore
 ;
-; @description
+; @note
 ; https://github.com/bithandshake/cljc-validator
 ;
 ; @constant (map)
