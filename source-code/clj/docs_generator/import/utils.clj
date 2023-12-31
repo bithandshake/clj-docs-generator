@@ -12,7 +12,7 @@
   ; @param (string) n
   ;
   ; @usage
-  ; (first-refer "... [my-namespace :refer [my-refer your-refer]] ...")
+  ; (first-refer "... [my-namespace :refer [my-refer another-refer]] ...")
   ; =>
   ; {"my-refer" "my-namespace"}
   ;

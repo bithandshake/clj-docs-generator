@@ -16,7 +16,7 @@
   ; @param (integer) cursor
   ;
   ; @usage
-  ; (import-first-refer "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ..." 42)
+  ; (import-first-refer "... [my-namespace :refer [my-refer]] [another-namespace :refer [another-refer]] ..." 42)
   ; =>
   ; {"my-refer" "my-namespace"}
   ;
@@ -31,10 +31,10 @@
   ; @param (string) api-content
   ;
   ; @usage
-  ; (import-refers "... [my-namespace :refer [my-refer]] [your-namespace :refer [your-refer]] ...")
+  ; (import-refers "... [my-namespace :refer [my-refer]] [another-namespace :refer [another-refer]] ...")
   ; =>
-  ; {"my-refer"   "my-namespace"
-  ;  "your-refer" "your-namespace"}
+  ; {"my-refer"      "my-namespace"
+  ;  "another-refer" "another-namespace"}
   ;
   ; @return (map)
   [api-content]
@@ -70,7 +70,7 @@
   ; @param (integer) cursor
   ;
   ; @usage
-  ; (import-first-alias "... [my-namespace :as my-alias] [your-namespace :as your-alias] ..." 42)
+  ; (import-first-alias "... [my-namespace :as my-alias] [another-namespace :as another-alias] ..." 42)
   ; =>
   ; {"my-namespace" "my-alias"}
   ;
@@ -86,10 +86,10 @@
   ; @param (string) api-content
   ;
   ; @usage
-  ; (import-aliases "... [my-namespace :as my-alias] [your-namespace :as your-alias] ...")
+  ; (import-aliases "... [my-namespace :as my-alias] [another-namespace :as another-alias] ...")
   ; =>
-  ; {"my-namespace"   "my-alias"
-  ;  "your-namespace" "your-alias"}
+  ; {"my-namespace"      "my-alias"
+  ;  "another-namespace" "another-alias"}
   ;
   ; @return (map)
   [api-content]
@@ -111,7 +111,7 @@
   ; @param (integer) cursor
   ;
   ; @usage
-  ; (import-first-def "... (def my-name my-value) (def your-name your-value) ..." 42)
+  ; (import-first-def "... (def my-name my-value) (def another-name another-value) ..." 42)
   ; =>
   ; ["my-name" "my-value"]
   ;
@@ -126,10 +126,10 @@
   ; @param (string) api-content
   ;
   ; @usage
-  ; (import-defs "... (def my-name my-value) (def your-name your-value) ...")
+  ; (import-defs "... (def my-name my-value) (def another-name another-value) ...")
   ; =>
-  ; {"my-name"   "my-value"
-  ;  "your-name" "your-value"}
+  ; {"my-name"      "my-value"
+  ;  "another-name" "another-value"}
   ;
   ; @return (strings in vectors in vector)
   [api-content]
@@ -156,12 +156,12 @@
   ; (import-api-file {...} "clj" "my-repository/source-code/my_directory/api.clj")
   ; =>
   ; {"namespace" "my-directory.api"
-  ;  "aliases" {"my-namespace"   "my-alias"
-  ;             "your-namespace" "your-alias"}
-  ;  "defs"    [["my-name"   "my-value"]
-  ;             ["your-name" "your-value"]]
-  ;  "refers"  {"my-refer"   "my-namespace"
-  ;             "your-refer" "your-namespace"}}
+  ;  "aliases" {"my-namespace"      "my-alias"
+  ;             "another-namespace" "another-alias"}
+  ;  "defs"    [["my-name"      "my-value"]
+  ;             ["another-name" "another-value"]]
+  ;  "refers"  {"my-refer"      "my-namespace"
+  ;             "another-refer" "another-namespace"}}
   ;
   ; @return (map)
   ; {"aliases" (map)
@@ -188,12 +188,12 @@
   ; (import-layer {...} "clj")
   ; =>
   ; {"my-repository/source-code/my_directory/api.clj" {"namespace" "api"
-  ;                                                    "aliases" {"my-namespace"   "my-alias"
-  ;                                                               "your-namespace" "your-alias"}
-  ;                                                    "defs"    [["my-name"   "my-value"]
-  ;                                                               ["your-name" "your-value"]]
-  ;                                                    "refers"  {"my-refer"   "my-namespace"
-  ;                                                               "your-refer" "your-namespace"}}}
+  ;                                                    "aliases" {"my-namespace"      "my-alias"
+  ;                                                               "another-namespace" "another-alias"}
+  ;                                                    "defs"    [["my-name"      "my-value"]
+  ;                                                               ["another-name" "another-value"]]
+  ;                                                    "refers"  {"my-refer"      "my-namespace"
+  ;                                                               "another-refer" "another-namespace"}}}
   ;
   ; @return (map)
   [options layer-name]
@@ -211,12 +211,12 @@
   ; (import-layers {...})
   ; =>
   ; {"clj" {"my-repository/source-code/my_directory/api.clj" {"namespace" "api"
-  ;                                                           "aliases" {"my-namespace"   "my-alias"}
-  ;                                                                      "your-namespace" "your-alias"}
-  ;                                                           "defs"    [["my-name"   "my-value"]
-  ;                                                                      ["your-name" "your-value"]]
-  ;                                                           "refers"  {"my-refer"   "my-namespace"
-  ;                                                                      "your-refer" "your-namespace"}}}}
+  ;                                                           "aliases" {"my-namespace"      "my-alias"}
+  ;                                                                      "another-namespace" "another-alias"}
+  ;                                                           "defs"    [["my-name"      "my-value"]
+  ;                                                                      ["another-name" "another-value"]]
+  ;                                                           "refers"  {"my-refer"      "my-namespace"
+  ;                                                                      "another-refer" "another-namespace"}}}}
   ;  "cljc" {...}
   ;  "cljs" {...}}
   ;
