@@ -47,7 +47,7 @@
 
 ; @tutorial How to generate documentation books?
 ;
-; The ['docs-generator.api/create-documentation!'](#create-documentation!) function reads the files from the given 'code-dirs' folders,
+; The [docs-generator.api/create-documentation!](#create-documentation_) function reads the files from the given 'code-dirs' folders,
 ; generates the documentation and prints the markdown files to the 'output-dir' folder.
 ;
 ; @important
