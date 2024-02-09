@@ -314,8 +314,8 @@
                (f1 [links api-filepath]
                    (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])
                          md-path   (process.utils/md-path options layer-name api-filepath)
-                         rel-path  (-> md-path (string/not-starts-with! output-dir)
-                                               (string/not-starts-with! "/"))]
+                         rel-path  (-> md-path (string/not-start-with output-dir)
+                                               (string/not-start-with "/"))]
                         (if (f0 api-filepath)
                             (update links layer-name vector/conj-item (str "* ["api-namespace"]("rel-path"/API.md)"))
                             (->     links))))]

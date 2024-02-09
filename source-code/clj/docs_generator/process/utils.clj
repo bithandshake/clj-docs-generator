@@ -25,5 +25,5 @@
   ; It is important to separate the doc files by layers because it is possible
   ; to use the same namespace in both the "clj", "cljc" and "cljs" layers!
   (let [api-namespace (get-in @import.state/LAYERS [layer-name api-filepath "namespace"])]
-       (str output-dir "/" layer-name "/" (-> api-namespace (string/not-ends-with! ".api")
-                                                            (string/replace-part   "." "/")))))
+       (str output-dir "/" layer-name "/" (-> api-namespace (string/not-end-with ".api")
+                                                            (string/replace-part "." "/")))))

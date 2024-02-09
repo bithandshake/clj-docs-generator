@@ -58,7 +58,7 @@
   [api-content]
   (-> api-content (string/after-first-occurence  "(ns " {:return? false})
                   (string/before-first-occurence " "    {:return? false})
-                  (string/not-ends-with!         "\n")))
+                  (string/not-end-with           "\n")))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------

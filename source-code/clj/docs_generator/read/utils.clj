@@ -119,7 +119,7 @@
                          (string/after-first-occurence  "\n"         {:return? false})
                          (string/remove-part            "  ; ")
                          (string/remove-part            "  ;\n")
-                         (string/not-ends-with!         "\n")
+                         (string/not-end-with           "\n")
                          (string/to-nil {:if-empty? true}))]
       {"name" param-name "optional?" optional? "sample" sample "types" types}))
 
@@ -149,7 +149,7 @@
                    (string/before-first-occurence "  ; @"      {:return? true})
                    (string/remove-part            "  ; ")
                    (string/remove-part            "  ;\n")
-                   (string/ends-with!             "\n"))]
+                   (string/end-with               "\n"))]
        {"call" call}))
 
 ;; ----------------------------------------------------------------------------
@@ -176,7 +176,7 @@
                      (string/before-first-occurence "  ; @"        {:return? true})
                      (string/remove-part            "  ; ")
                      (string/remove-part            "  ;\n")
-                     (string/ends-with!             "\n"))]
+                     (string/end-with               "\n"))]
        {"call" call "result" result}))
 
 ;; ----------------------------------------------------------------------------
@@ -198,7 +198,7 @@
         (string/before-first-occurence "  ; @"        {:return? true})
         (string/remove-part            "  ; ")
         (string/remove-part            "  ;\n")
-        (string/ends-with!             "\n")))
+        (string/end-with               "\n")))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
@@ -219,7 +219,7 @@
         (string/before-first-occurence "  ; @"            {:return? true})
         (string/remove-part            "  ; ")
         (string/remove-part            "  ;\n")
-        (string/ends-with!             "\n")))
+        (string/end-with               "\n")))
 
 ;; ----------------------------------------------------------------------------
 ;; ----------------------------------------------------------------------------
