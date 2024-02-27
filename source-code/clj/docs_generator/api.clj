@@ -7,7 +7,7 @@
 
 ; @tutorial Expected syntax
 ;
-; @code
+; @---
 ; (defn my-function
 ;   ; @warning
 ;   ; This is a very useful sample function! Use carefully!
