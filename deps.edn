@@ -5,5 +5,5 @@
          mt-utilities/cljc-io        {:git/url "https://github.com/mt-utilities/cljc-io"
                                       :sha     "29f54d08e2d030fa704c64bdf48efe5f62eada9b"}
          mt-utilities/cljc-validator {:git/url "https://github.com/mt-utilities/cljc-validator"
-                                      :sha     "ae8cf67e1e3c76f91521ba604676540794133787"}
+                                      :sha     "ccef927d63cea9723ec75a5e4b90f17a8d15101d"}
          org.clojure/clojure         {:mvn/version "1.10.1"}}}
